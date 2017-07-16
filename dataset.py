@@ -5,6 +5,7 @@ The file contains the class and methods for loading and aligning datasets
 import pickle
 import numpy as np
 from scipy.io import loadmat
+import pandas as pd
 
 __author__ = "Prateek Vij"
 __copyright__ = "Copyright 2017, Carnegie Mellon University"
@@ -56,14 +57,64 @@ class Dataset():
 		Validates the dataset csv file and loads the features for the dataset
 		from its feature files
 		"""
-
 		def validate_file(self):
-			return True
+			data = pd.read_csv(self.dataset_csv, header=None)
+			data = np.asarray(data)[:100]
+			self.dataset_info = {}
+			modality_count = len(data[0]) - 4
+			self.modalities = {}
+			for i in range(modality_count):
+				key = 'modality_'+str(i)
+				info = {}
+				info["level"] = str(data[1][i+4])
+				info["type"] = str(data[0][i+4])
+
+				self.modalities[key] = info
+
+			for record in data[2:]:
+				video_id = str(record[0])
+				segment_id = str(record[1])
+				if video_id not in self.dataset_info:
+					self.dataset_info[video_id] = {}
+				if segment_id in self.dataset_info[video_id]:
+					#raise exception for redundancy
+					pass
+				segment_data = {}
+				segment_data["start"] = float(record[2])
+				segment_data["end"] = float(record[3])
+				for i in range(modality_count):
+					key = 'modality_'+str(i)
+					segment_data[key] = str(record[i+4])
+				self.dataset_info[video_id][segment_id] = segment_data
+			return
 
 		def load_features(self):
-			return None
+			feat_dict = {}
+			data = self.dataset_info
+			modalities = self.modalities
+			timestamps = self.timestamps
+			for key, value in modalities.iteritems():
+				api = value['type']
+				level = value['level']
+				loader_method = Dataset.__dict__["load_"+api]
+				modality_feats = {}
+				for video_id, video_data in data.iteritems():
+					video_feats = {}
+					for segment_id, segment_data in video_data.iteritems():
+						filepath = str(segment_data[key])
+						start = segment_data["start"]
+						end = segment_data["end"]
+						video_feats[segment_id] = loader_method(self,
+									filepath, start, end, timestamps, level)
+					modality_feats[video_id] = video_feats
+				feat_dict[key] = modality_feats
+						
+			return feat_dict
 
-		return None
+		validate_file(self)
+		feat_dict = load_features(self)
+
+		return feat_dict
 
 	def load_opensmile(self, filepath, start, end, timestamps='absolute', level='s'):
 		"""
