@@ -18,7 +18,8 @@ __status__ = "Production"
 class Dataset():
     """Primary class for loading and aligning dataset"""
 
-    def __init__(self, dataset_file, stored=False, timestamps='absolute'):
+    def __init__(self, dataset_file, stored=False, timestamps='absolute',
+                                                   vocab_file = None):
         """
         Initialise the Dataset class. Support two loading mechanism - 
         from dataset files and from the pickle file, decided by the param
@@ -35,7 +36,10 @@ class Dataset():
         self.stored = stored
         self.dataset_file = dataset_file
         self.phoneme_dict = utils.p2fa_phonemes
+        self.vocab_file = vocab_file
         self.vocab = []
+        if vocab_file:
+            self.vocab = [ w.strip() for w in open(vocab_file).readlines() ]
 
     def load(self):
         """
@@ -72,7 +76,8 @@ class Dataset():
                 info = {}
                 info["level"] = str(data[1][i+4])
                 info["type"] = str(data[0][i+4])
-
+                if info['type'] == "p2fa_w" and not self.vocab:
+                    raise Exception("Need Vocabulary file for 'p2fa_w'")
                 self.modalities[key] = info
 
             for record in data[2:]:
@@ -81,8 +86,8 @@ class Dataset():
                 if video_id not in self.dataset_info:
                     self.dataset_info[video_id] = {}
                 if segment_id in self.dataset_info[video_id]:
-                    #raise exception for redundancy
-                    pass
+                    raise NameError("Multiple instances of segment "
+                                    +segment_id+" for video "+video_id)
                 segment_data = {}
                 segment_data["start"] = float(record[2])
                 segment_data["end"] = float(record[3])
@@ -102,6 +107,7 @@ class Dataset():
                 level = value['level']
                 loader_method = Dataset.__dict__["load_"+api]
                 modality_feats = {}
+                print "Loading features for ",api
                 for video_id, video_data in data.iteritems():
                     video_feats = {}
                     for segment_id, segment_data in video_data.iteritems():
@@ -372,8 +378,14 @@ class Dataset():
 
                 else:
                     if line.startswith('"') and line.endswith('"'):
-                        word = line[1:-1]
-                        feat_val = word 
+                        word = line[1:-1].lower()
+                        if word == "sp":
+                            continue
+                        feat_val = np.zeros(len(self.vocab))
+                        if word not in self.vocab:
+                            raise NameError(word+" is not in vocabulary")
+                        else:
+                            feat_val[self.vocab.index(word)] = 1 
                         features.append((feat_start, feat_end, feat_val))
                     else:
                         print "File format error at line number ",str(i)
@@ -401,7 +413,16 @@ class Dataset():
                            or (feat_start >= start
                               and end - feat_start > feat_time/2)):
 
-                            feat_val = line[1:-1]
+                            word = line[1:-1].lower()
+                            if word == "sp":
+                                continue
+                            feat_val = np.zeros(len(self.vocab))
+                            if word not in self.vocab:
+                                #raise NameError(word+" is not in vocabulary")
+                                print word,"not in vocab"
+                            else:
+                                feat_val[self.vocab.index(word)] = 1
+                            features.append((feat_start, feat_end, feat_val))
                             feat_start = feat_start - start + start_time
                             feat_end = feat_end - start + start_time
                             features.append((feat_start, feat_end, feat_val))
@@ -571,6 +592,6 @@ class Dataset():
         return aligned_feat_dict
 
 
-d = Dataset("../mosi.csv")
+d = Dataset("../mosi.csv", vocab_file="../mosi_vocab.txt")
 feat_dict = d.load()
 #a = d.get_alignments('modality_5')
