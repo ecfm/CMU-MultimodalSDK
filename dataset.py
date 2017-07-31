@@ -6,6 +6,7 @@ import pickle
 import numpy as np
 from scipy.io import loadmat
 import pandas as pd
+import utils
 
 __author__ = "Prateek Vij"
 __copyright__ = "Copyright 2017, Carnegie Mellon University"
@@ -33,6 +34,8 @@ class Dataset():
         self.timestamps = timestamps
         self.stored = stored
         self.dataset_file = dataset_file
+        self.phoneme_dict = utils.p2fa_phonemes
+        self.vocab = []
 
     def load(self):
         """
@@ -60,6 +63,7 @@ class Dataset():
         def validate_file(self):
             data = pd.read_csv(self.dataset_csv, header=None)
             data = np.asarray(data)[:50]
+#            data = data[:,:7]
             self.dataset_info = {}
             modality_count = len(data[0]) - 4
             self.modalities = {}
@@ -227,7 +231,8 @@ class Dataset():
 
                 else:
                     if line.startswith('"') and line.endswith('"'):
-                        feat_val = line[1:-1]
+                        phoneme_val = line[1:-1]
+                        feat_val = utils.phoneme_hotkey_enc(phoneme_val)	
                         features.append((feat_start, feat_end, feat_val))
                     else:
                         print "File format error at line number ",str(i)
@@ -263,7 +268,8 @@ class Dataset():
                            or (feat_start >= start
                               and end - feat_start > feat_time/2)):
 
-                            feat_val = line[1:-1]
+                            phoneme_val = line[1:-1]
+                            feat_val = utils.phoneme_hotkey_enc(phoneme_val)
                             feat_start = feat_start - start + start_time
                             feat_end = feat_end - start + start_time
                             features.append((feat_start, feat_end, feat_val))
@@ -366,7 +372,8 @@ class Dataset():
 
                 else:
                     if line.startswith('"') and line.endswith('"'):
-                        feat_val = line[1:-1]
+                        word = line[1:-1]
+                        feat_val = word 
                         features.append((feat_start, feat_end, feat_val))
                     else:
                         print "File format error at line number ",str(i)
@@ -500,7 +507,19 @@ class Dataset():
                         feat_val = np.asarray(feat_val, dtype=np.float32)
                         features.append((feat_start, feat_end, feat_val))
         return features
-	
+    
+    def align(self, align_modality):
+        aligned_feat_dict = {}
+        modalities = self.modalities
+        alignments = self.get_alignments(align_modality)
+        for modality in modalities:
+            if modality == align_modality:
+                continue
+            aligned_modality = self.align_modality(modality, alignments)
+            aligned_feat_dict[modality] = aligned_modality
+        self.aligned_feature_dict = aligned_feat_dict
+        return aligned_feat_dict
+
     def get_alignments(self, modality):
         alignments = {}
         aligned_feat_dict = self.feature_dict[modality]
@@ -554,4 +573,4 @@ class Dataset():
 
 d = Dataset("../mosi.csv")
 feat_dict = d.load()
-a = d.get_alignments('modality_5')
+#a = d.get_alignments('modality_5')
