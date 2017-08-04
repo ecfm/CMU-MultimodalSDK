@@ -25,7 +25,7 @@ class P2FA_Helper():
                 embed_dict_path=None):
         """
         Initialise P2FA helper class.
-        :param p2fa_csv_file: Path to csv file containing fpaths of p2fa files
+        :param p2fa_csv: Path to csv file containing fpaths of p2fa files
         :param output_dir: Path to the output directory to store computed
                 features. Can be either a string or a list of 3 strings 
                 ( 2 if embed_dict_path is None). If string, subdirectories
@@ -41,6 +41,8 @@ class P2FA_Helper():
         self.embed_dict_path = embed_dict_path
         self.vocabulary = []
         self.feat_count = 2
+        self.dataset_info = {}
+        self.feat_dict = []
         
         if self.embed_dict_path:
             self.feat_count += 1
@@ -69,14 +71,40 @@ class P2FA_Helper():
         word_embedding features and store them.
         :return feature dictionary for phonemes, words, and embeddings
         """
-        return
+        self.validate_csv()
+        phonemes_feat_dict = self.load_phonemes()
+        words_feat_dict = self.load_words()
+        self.feat_dict = [phonemes_feat_dict, words_feat_dict]
+        if self.embed_dict_path:
+            if self.embed_type == "w2v":
+                embed_feat_dict = self.load_w2v()
+            else:
+                embed_feat_dict = self.load_glove()
+            self.feat_dict.append(embed_feat_dict)
+        return self.feat_dict
 
-    def validate_csv(self, csv_file_handle):
+
+    def validate_csv(self):
         """
         Validate the csv file format.
         :raise Exception if file format is not correct
         :returns None
         """
+        data = pd.read_csv(self.p2fa_csv, header=None)
+        data = np.asarray(data)
+        for record in data[2:]:
+            video_id = str(record[0])
+            segment_id = str(record[1])
+            if video_id not in self.dataset_info:
+                self.dataset_info[video_id] = {}
+            if segment_id in self.dataset_info[video_id]:
+                raise NameError("Multiple instances of segment "
+                                +segment_id+" for video "+video_id)
+            segment_data = {}
+            segment_data["start"] = float(record[2])
+            segment_data["end"] = float(record[3])
+            segment_data["p2fa_file"] = str(record[4])
+            self.dataset_info[video_id][segment_id] = segment_data
         return
 
     def load_phonemes(self):
@@ -85,7 +113,7 @@ class P2FA_Helper():
         in the directory path mentioned in self.phonemes_dir.
         :returns segment wise feature dictionary for phoneme
         """
-        return 
+        return None
 
     def load_words(self):
         """
@@ -93,7 +121,7 @@ class P2FA_Helper():
         in the directory path mentioned in self.words_dir.
         :returns segment wise feature dictionary for words
         """
-        return
+        return None
 
     def load_w2v(self):
         """
@@ -102,6 +130,7 @@ class P2FA_Helper():
         directory path mentioned in self.embedding_dir.
         :returns segment wise feature dictionary for embeddings
         """
+        return None
 
     def load_glove(self):
         """
@@ -109,7 +138,7 @@ class P2FA_Helper():
         store them in directory path mentioned in self.embedding_dir.
         :returns segment wise feature dictionary for embeddings
         """
-        return
+        return None
 
     def get_vocabulary(self):
         """
@@ -118,7 +147,7 @@ class P2FA_Helper():
         :returns: list of vocabulary words in the dataset
 
         """
-        return
+        return None
 
 
 
