@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 from os import system
 from os.path import join
+import utils
 
 __author__ = "Prateek Vij"
 __copyright__ = "Copyright 2017, Carnegie Mellon University"
@@ -43,6 +44,7 @@ class P2FA_Helper():
         self.feat_count = 2
         self.dataset_info = {}
         self.feat_dict = []
+        self.phonemes = utils.p2fa_phonemes
         
         if self.embed_dict_path:
             self.feat_count += 1
@@ -92,6 +94,9 @@ class P2FA_Helper():
         """
         data = pd.read_csv(self.p2fa_csv, header=None)
         data = np.asarray(data)
+        self.p2fa_feat_level = str(data[1][-1])
+        if self.p2fa_feat_level not in ('s', 'v'):
+            raise ValueError("P2FA feature level must be 's' or 'v'")
         for record in data[2:]:
             video_id = str(record[0])
             segment_id = str(record[1])
@@ -113,7 +118,20 @@ class P2FA_Helper():
         in the directory path mentioned in self.phonemes_dir.
         :returns segment wise feature dictionary for phoneme
         """
-        return None
+        features = {}
+        data = self.dataset_info
+        for video_id, video_data in data.iteritems():
+            video_feats = {}
+            for segment_id, segment_data in video_data.iteritems():
+                filepath = str(segment_data["p2fa_file"])
+                start = segment_data["start"]
+                end = segment_data["end"]
+                level = self.p2fa_feat_level
+                video_feats[segment_id] = self.load_phonemes_for_seg(filepath,
+                                                            start, end, level)
+                
+            features[video_id] = video_feats
+        return features
 
     def load_words(self):
         """
@@ -149,6 +167,78 @@ class P2FA_Helper():
         """
         return None
 
+    def load_phonemes_for_seg(self, filepath, start, end, level):
+        features = []
+        if level == 's':
+            with open(filepath,'r') as f_handle:
+                # Read the file content after the first 12 header lines
+                f_content = f_handle.readlines()[12:]
+
+            for i in range(len(f_content)):
+                line = f_content[i].strip()
+                if not line:
+                    continue
+
+                # When phonemes are over, stop reading the file
+                if line == '"IntervalTier"':
+                    break           
+
+                if i%3 == 0:
+                    feat_start = float(line)
+
+                elif i%3 == 1:
+                    feat_end = float(line)
+
+                else:
+                    if line.startswith('"') and line.endswith('"'):
+                        phoneme_val = line[1:-1]
+                        feat_val = utils.phoneme_hotkey_enc(phoneme_val)    
+                        features.append((feat_start, feat_end, feat_val))
+                    else:
+                        print "File format error at line number ",str(i)
+        else:
+            # Read the file content after the first 12 header lines
+            with open(filepath,'r') as f_handle:
+                f_content = f_handle.readlines()[12:]
+
+            for i in range(len(f_content)):
+                line = f_content[i].strip()
+                if not line:
+                    continue
+
+                # When phonemes are over, stop reading the file
+                if line == '"IntervalTier"':
+                    break           
+
+                if i%3 == 0:
+                    feat_start = float(line)
+
+                elif i%3 == 1:
+                    feat_end = float(line)
+
+                else:
+                    if line.startswith('"') and line.endswith('"'):
+                        feat_time = feat_end - feat_start
+
+                        # Ensuring the feature lies in the segment
+                        if ((feat_start <= start and feat_end > end) 
+                           or (feat_start >= start and feat_end < end)
+                           or (feat_start <= start 
+                              and start-feat_start < feat_time/2)
+                           or (feat_start >= start
+                              and end - feat_start > feat_time/2)):
+
+                            phoneme_val = line[1:-1]
+                            feat_val = utils.phoneme_hotkey_enc(phoneme_val)
+                            features.append((feat_start, feat_end, feat_val))
+                    else:
+                        print "File format error at line number ",str(i)
+
+        return features
+
+    def load_words_for_seg(self, filepath, start, end, level):
+        features = {}
+        
 
 
 
