@@ -74,7 +74,8 @@ class P2FA_Helper():
         :return feature dictionary for phonemes, words, and embeddings
         """
         self.validate_csv()
-        phonemes_feat_dict = self.load_phonemes()
+        # phonemes_feat_dict = self.load_phonemes()
+        phonemes_feat_dict = None
         words_feat_dict = self.load_words()
         self.feat_dict = [phonemes_feat_dict, words_feat_dict]
         if self.embed_dict_path:
@@ -119,6 +120,7 @@ class P2FA_Helper():
         :returns segment wise feature dictionary for phoneme
         """
         features = {}
+        system("mkdir -p "+self.phonemes_dir)
         data = self.dataset_info
         for video_id, video_data in data.iteritems():
             video_feats = {}
@@ -127,9 +129,21 @@ class P2FA_Helper():
                 start = segment_data["start"]
                 end = segment_data["end"]
                 level = self.p2fa_feat_level
-                video_feats[segment_id] = self.load_phonemes_for_seg(filepath,
+                segment_feats = self.load_phonemes_for_seg(filepath,
                                                             start, end, level)
-                
+                video_feats[segment_id] = segment_feats
+                fname = segment_id
+                fpath = join(self.phonemes_dir,video_id+"_"+segment_id+".csv")
+                with open(fpath,"wb") as fh:
+                    # Writing each feature in csv file for segment
+                    for f in segment_feats:
+                        f_start = str(f[0])
+                        f_end = str(f[1])
+                        f_val = [str(val) for val in f[2].tolist()]
+                        str2write = ",".join([f_start, f_end] + f_val)
+                        str2write += "\n"
+                        fh.write(str2write)
+
             features[video_id] = video_feats
         return features
 
@@ -139,7 +153,39 @@ class P2FA_Helper():
         in the directory path mentioned in self.words_dir.
         :returns segment wise feature dictionary for words
         """
-        return None
+        word_dict = {}
+        system("mkdir -p "+self.words_dir)
+        data = self.dataset_info
+        for video_id, video_data in data.iteritems():
+            video_word_dict = {}
+            for segment_id, segment_data in video_data.iteritems():
+                filepath = str(segment_data["p2fa_file"])
+                start = segment_data["start"]
+                end = segment_data["end"]
+                level = self.p2fa_feat_level
+                segment_feats = self.load_words_for_seg(filepath, start,
+                                                        end, level)
+                words = [ str(val[2]).lower() for val in segment_feats ]
+                for w in words:
+                    if w not in self.vocabulary:
+                        self.vocabulary.append(w)
+                video_word_dict[segment_id] = segment_feats
+                
+            word_dict[video_id] = video_word_dict
+        
+        features = {}
+        for video_id, video_word_data in word_dict.iteritems():
+            video_feats = {}
+            for segment_id, segment_word_data in video_word_data.iteritems():
+                video_feats[segment_id] = []
+                for word_feat in segment_word_data:
+                    start = word_feat[0]
+                    end = word_feat[1]
+                    value = np.zeros(len(self.vocabulary))
+                    value[self.vocabulary.index(word_feat[2].lower())] = 1
+                    video_feats[segment_id].append((start, end, value))
+            features[video_id] = video_feats
+        return features
 
     def load_w2v(self):
         """
@@ -148,6 +194,7 @@ class P2FA_Helper():
         directory path mentioned in self.embedding_dir.
         :returns segment wise feature dictionary for embeddings
         """
+
         return None
 
     def load_glove(self):
@@ -237,7 +284,73 @@ class P2FA_Helper():
         return features
 
     def load_words_for_seg(self, filepath, start, end, level):
-        features = {}
+        features = []
+
+        file_offset = 0
+        header_offset = 12
+        with open(filepath,'r') as f_handle:
+            f_content = f_handle.readlines()[header_offset:]
+            for i in range(len(f_content)):
+                line = f_content[i].rstrip()
+                if line == '"IntervalTier"':
+                    file_offset = i + 5
+        
+        f_content = f_content[file_offset:]
+        if level == 's':
+            for i in range(len(f_content)):
+                line = f_content[i].strip()
+                if not line:
+                    continue
+
+                if i%3 == 0:
+                    feat_start = float(line)
+
+                elif i%3 == 1:
+                    feat_end = float(line)
+
+                else:
+                    if line.startswith('"') and line.endswith('"'):
+                        word = line[1:-1].lower()
+                        if word == "sp":
+                            continue
+                        feat_val = word
+                        features.append((feat_start, feat_end, feat_val))
+                    else:
+                        print "File format error at line number ",str(i)
+        else:
+            for i in range(len(f_content)):
+                line = f_content[i].strip()
+                if not line:
+                    continue
+
+                if i%3 == 0:
+                    feat_start = float(line)
+
+                elif i%3 == 1:
+                    feat_end = float(line)
+
+                else:
+                    if line.startswith('"') and line.endswith('"'):
+                        feat_time = feat_end - feat_start
+
+                        # Ensuring the feature lies in the segment
+                        if ((feat_start <= start and feat_end > end) 
+                           or (feat_start >= start and feat_end < end)
+                           or (feat_start <= start 
+                              and start-feat_start < feat_time/2)
+                           or (feat_start >= start
+                              and end - feat_start > feat_time/2)):
+
+                            word = line[1:-1].lower()
+                            if word == "sp":
+                                continue
+                            feat_val = word
+                           
+                            features.append((feat_start, feat_end, feat_val))
+                    else:
+                        print "File format error at line number ",str(i)
+
+        return features
         
 
 
