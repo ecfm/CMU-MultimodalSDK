@@ -45,6 +45,8 @@ class P2FA_Helper():
         self.dataset_info = {}
         self.feat_dict = []
         self.phonemes = utils.p2fa_phonemes
+        self.embed_model = None
+        self.word_dict = {}
         
         if self.embed_dict_path:
             self.feat_count += 1
@@ -74,9 +76,10 @@ class P2FA_Helper():
         :return feature dictionary for phonemes, words, and embeddings
         """
         self.validate_csv()
-        # phonemes_feat_dict = self.load_phonemes()
-        phonemes_feat_dict = None
+        phonemes_feat_dict = self.load_phonemes()
+        # phonemes_feat_dict = None
         words_feat_dict = self.load_words()
+        # words_feat_dict = None
         self.feat_dict = [phonemes_feat_dict, words_feat_dict]
         if self.embed_dict_path:
             if self.embed_type == "w2v":
@@ -132,8 +135,8 @@ class P2FA_Helper():
                 segment_feats = self.load_phonemes_for_seg(filepath,
                                                             start, end, level)
                 video_feats[segment_id] = segment_feats
-                fname = segment_id
-                fpath = join(self.phonemes_dir,video_id+"_"+segment_id+".csv")
+                fname = video_id+"_"+segment_id+".csv"
+                fpath = join(self.phonemes_dir,fname)
                 with open(fpath,"wb") as fh:
                     # Writing each feature in csv file for segment
                     for f in segment_feats:
@@ -173,6 +176,8 @@ class P2FA_Helper():
                 
             word_dict[video_id] = video_word_dict
         
+        self.word_dict = word_dict
+
         features = {}
         for video_id, video_word_data in word_dict.iteritems():
             video_feats = {}
@@ -184,6 +189,17 @@ class P2FA_Helper():
                     value = np.zeros(len(self.vocabulary))
                     value[self.vocabulary.index(word_feat[2].lower())] = 1
                     video_feats[segment_id].append((start, end, value))
+                fname = video_id+"_"+segment_id+".csv"
+                fpath = join(self.words_dir, fname)
+                with open(fpath,"wb") as fh:
+                    # Writing each feature in csv file for segment
+                    for f in video_feats[segment_id]:
+                        f_start = str(f[0])
+                        f_end = str(f[1])
+                        f_val = [str(val) for val in f[2].tolist()]
+                        str2write = ",".join([f_start, f_end] + f_val)
+                        str2write += "\n"
+                        fh.write(str2write)
             features[video_id] = video_feats
         return features
 
@@ -203,16 +219,55 @@ class P2FA_Helper():
         store them in directory path mentioned in self.embedding_dir.
         :returns segment wise feature dictionary for embeddings
         """
-        return None
+        self.embed_model = {}
+        self.embed_length = 0
+        with open(self.embed_dict_path, "r") as fh:
+            for line in fh:
+                splits = line.rstrip().split()
+                word = splits[0]
+                embedding = np.asarray([float(val) for val in splits[1:]])
+                self.embed_model[word] = embedding
+                if not self.embed_length:
+                    self.embed_length = len(embedding)
+
+        if not self.word_dict:
+            self.load_words()
+        
+        features = {}
+        system("mkdir -p "+self.embedding_dir)
+        for video_id, video_word_data in self.word_dict.iteritems():
+            video_feats = {}
+            for segment_id, segment_word_data in video_word_data.iteritems():
+                video_feats[segment_id] = []
+                for word_feat in segment_word_data:
+                    start, end, word = word_feat
+                    try:
+                        embed = self.embed_model[word]
+                    except:
+                        embed = np.zeros(self.embed_length)
+                    video_feats[segment_id].append((start, end, embed))
+
+                fname = video_id+"_"+segment_id+".csv"
+                fpath = join(self.embedding_dir, fname)
+                with open(fpath,"wb") as fh:
+                    # Writing each feature in csv file for segment
+                    for f in video_feats[segment_id]:
+                        f_start = str(f[0])
+                        f_end = str(f[1])
+                        f_val = [str(val) for val in f[2].tolist()]
+                        str2write = ",".join([f_start, f_end] + f_val)
+                        str2write += "\n"
+                        fh.write(str2write)
+            features[video_id] = video_feats
+        return features
 
     def get_vocabulary(self):
         """
         Return Vocabulary. Must be called after calling method load or 
         load_words
         :returns: list of vocabulary words in the dataset
-
         """
-        return None
+        return self.vocabulary
 
     def load_phonemes_for_seg(self, filepath, start, end, level):
         features = []
