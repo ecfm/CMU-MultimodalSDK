@@ -18,8 +18,7 @@ __status__ = "Production"
 class Dataset():
     """Primary class for loading and aligning dataset"""
 
-    def __init__(self, dataset_file, stored=False, timestamps='absolute',
-                                                   vocab_file = None):
+    def __init__(self, dataset_file, stored=False, timestamps='absolute'):
         """
         Initialise the Dataset class. Support two loading mechanism - 
         from dataset files and from the pickle file, decided by the param
@@ -36,10 +35,6 @@ class Dataset():
         self.stored = stored
         self.dataset_file = dataset_file
         self.phoneme_dict = utils.p2fa_phonemes
-        self.vocab_file = vocab_file
-        self.vocab = []
-        if vocab_file:
-            self.vocab = [ w.strip() for w in open(vocab_file).readlines() ]
 
     def load(self):
         """
@@ -66,8 +61,8 @@ class Dataset():
         """
         def validate_file(self):
             data = pd.read_csv(self.dataset_csv, header=None)
-            data = np.asarray(data)[:50]
-#            data = data[:,:7]
+            data = np.asarray(data)
+            #data = data[:,:7]
             self.dataset_info = {}
             modality_count = len(data[0]) - 4
             self.modalities = {}
@@ -76,8 +71,6 @@ class Dataset():
                 info = {}
                 info["level"] = str(data[1][i+4])
                 info["type"] = str(data[0][i+4])
-                if info['type'] == "p2fa_w" and not self.vocab:
-                    raise Exception("Need Vocabulary file for 'p2fa_w'")
                 self.modalities[key] = info
 
             for record in data[2:]:
@@ -197,7 +190,7 @@ class Dataset():
                 feat_start += time_period
         return features
 
-    def load_p2fa_p(self, filepath, start, end, timestamps='absolute', level='v'):
+    def load_phonemes(self, filepath, start, end, timestamps='absolute', level='v'):
         """
         Load P2FA phonemes as Features from the file corresponding to the 
         param filepath
@@ -216,72 +209,37 @@ class Dataset():
             start_time, end_time = 0.0, end - start
 
         if level == 's':
-            with open(filepath,'r') as f_handle:
-                # Read the file content after the first 12 header lines
-                f_content = f_handle.readlines()[12:]
-
-            for i in range(len(f_content)):
-                line = f_content[i].strip()
-                if not line:
-                    continue
-
-                # When phonemes are over, stop reading the file
-                if line == '"IntervalTier"':
-                    break           
-
-                if i%3 == 0:
-                    feat_start = float(line) + start_time
-
-                elif i%3 == 1:
-                    feat_end = float(line) + start_time
-
-                else:
-                    if line.startswith('"') and line.endswith('"'):
-                        phoneme_val = line[1:-1]
-                        feat_val = utils.phoneme_hotkey_enc(phoneme_val)	
-                        features.append((feat_start, feat_end, feat_val))
-                    else:
-                        print "File format error at line number ",str(i)
+            with open(filepath, 'r') as f_handle:
+                for line in f_handle.readlines():
+                    line = line.strip()
+                    if not line:
+                        break
+                    feat_start = float(line.split(",")[1]) + start_time
+                    feat_end = float(line.split(",")[2]) + start_time
+                    feat_val = [float(val) for val in line.split(",")[3:]]
+                    feat_val = np.asarray(feat_val)
+                    features.append((feat_start, feat_end, feat_val))
         else:
-            # Read the file content after the first 12 header lines
             with open(filepath,'r') as f_handle:
-                f_content = f_handle.readlines()[12:]
-
-            for i in range(len(f_content)):
-                line = f_content[i].strip()
-                if not line:
-                    continue
-
-                # When phonemes are over, stop reading the file
-                if line == '"IntervalTier"':
-                    break           
-
-                if i%3 == 0:
-                    feat_start = float(line)
-
-                elif i%3 == 1:
-                    feat_end = float(line)
-
-                else:
-                    if line.startswith('"') and line.endswith('"'):
-                        feat_time = feat_end - feat_start
-
-                        # Ensuring the feature lies in the segment
-                        if ((feat_start <= start and feat_end > end) 
-                           or (feat_start >= start and feat_end < end)
-                           or (feat_start <= start 
-                              and start-feat_start < feat_time/2)
-                           or (feat_start >= start
-                              and end - feat_start > feat_time/2)):
-
-                            phoneme_val = line[1:-1]
-                            feat_val = utils.phoneme_hotkey_enc(phoneme_val)
-                            feat_start = feat_start - start + start_time
-                            feat_end = feat_end - start + start_time
-                            features.append((feat_start, feat_end, feat_val))
-                    else:
-                        print "File format error at line number ",str(i)
-
+                for line in f_handle.readlines():
+                    line = line.strip()
+                    if not line:
+                        break
+                    feat_start = float(line.split(",")[1])
+                    feat_end = float(line.split(",")[2])
+                    feat_time = feat_end - feat_start
+                    if ((feat_start <= start and feat_end > end) 
+                       or (feat_start >= start and feat_end < end)
+                       or (feat_start <= start 
+                          and start-feat_start < feat_time/2)
+                       or (feat_start >= start
+                          and end - feat_start > feat_time/2)):
+                        
+                        feat_start = feat_start - start + start_time
+                        feat_end = feat_end - start + start_time
+                        feat_val = [float(val) for val in line.split(",")[3:]]
+                        feat_val = np.asarray(feat_val)
+                        features.append((feat_start, feat_end, feat_val))
         return features
 
     def load_embeddings(self, filepath, start, end, timestamps='absolute', level='v'):
@@ -336,10 +294,10 @@ class Dataset():
                         features.append((feat_start, feat_end, feat_val))
         return features
 
-    def load_p2fa_w(self, filepath, start, end, timestamps='absolute', level='v'):
+    def load_words(self, filepath, start, end, timestamps='absolute', level='v'):
         """
-        Load P2FA words as features from the file corresponding to the param 
-        filepath
+        Load one hot embeddings for words as features from the file 
+        corresponding to the param filepath
         :param start: Start time of the segment
         :param end: End time of the segment
         :param filepath: Path to the opensmile feature files
@@ -354,81 +312,38 @@ class Dataset():
         if timestamps == "relative":
             start_time, end_time = 0.0, end - start
 
-        file_offset = 0
-        header_offset = 12
-        with open(filepath,'r') as f_handle:
-            f_content = f_handle.readlines()[header_offset:]
-            for i in range(len(f_content)):
-                line = f_content[i].rstrip()
-                if line == '"IntervalTier"':
-                    file_offset = i + 5
-        
-        f_content = f_content[file_offset:]
         if level == 's':
-            for i in range(len(f_content)):
-                line = f_content[i].strip()
-                if not line:
-                    continue
-
-                if i%3 == 0:
-                    feat_start = float(line) + start_time
-
-                elif i%3 == 1:
-                    feat_end = float(line) + start_time
-
-                else:
-                    if line.startswith('"') and line.endswith('"'):
-                        word = line[1:-1].lower()
-                        if word == "sp":
-                            continue
-                        feat_val = np.zeros(len(self.vocab))
-                        if word not in self.vocab:
-                            raise NameError(word+" is not in vocabulary")
-                        else:
-                            feat_val[self.vocab.index(word)] = 1 
-                        features.append((feat_start, feat_end, feat_val))
-                    else:
-                        print "File format error at line number ",str(i)
+            with open(filepath, 'r') as f_handle:
+                for line in f_handle.readlines():
+                    line = line.strip()
+                    if not line:
+                        break
+                    feat_start = float(line.split(",")[1]) + start_time
+                    feat_end = float(line.split(",")[2]) + start_time
+                    feat_val = [float(val) for val in line.split(",")[3:]]
+                    feat_val = np.asarray(feat_val)
+                    features.append((feat_start, feat_end, feat_val))
         else:
-            for i in range(len(f_content)):
-                line = f_content[i].strip()
-                if not line:
-                    continue
-
-                if i%3 == 0:
-                    feat_start = float(line)
-
-                elif i%3 == 1:
-                    feat_end = float(line)
-
-                else:
-                    if line.startswith('"') and line.endswith('"'):
-                        feat_time = feat_end - feat_start
-
-                        # Ensuring the feature lies in the segment
-                        if ((feat_start <= start and feat_end > end) 
-                           or (feat_start >= start and feat_end < end)
-                           or (feat_start <= start 
-                              and start-feat_start < feat_time/2)
-                           or (feat_start >= start
-                              and end - feat_start > feat_time/2)):
-
-                            word = line[1:-1].lower()
-                            if word == "sp":
-                                continue
-                            feat_val = np.zeros(len(self.vocab))
-                            if word not in self.vocab:
-                                #raise NameError(word+" is not in vocabulary")
-                                print word,"not in vocab"
-                            else:
-                                feat_val[self.vocab.index(word)] = 1
-                            features.append((feat_start, feat_end, feat_val))
-                            feat_start = feat_start - start + start_time
-                            feat_end = feat_end - start + start_time
-                            features.append((feat_start, feat_end, feat_val))
-                    else:
-                        print "File format error at line number ",str(i)
-
+            with open(filepath,'r') as f_handle:
+                for line in f_handle.readlines():
+                    line = line.strip()
+                    if not line:
+                        break
+                    feat_start = float(line.split(",")[1])
+                    feat_end = float(line.split(",")[2])
+                    feat_time = feat_end - feat_start
+                    if ((feat_start <= start and feat_end > end) 
+                       or (feat_start >= start and feat_end < end)
+                       or (feat_start <= start 
+                          and start-feat_start < feat_time/2)
+                       or (feat_start >= start
+                          and end - feat_start > feat_time/2)):
+                        
+                        feat_start = feat_start - start + start_time
+                        feat_end = feat_end - start + start_time
+                        feat_val = [float(val) for val in line.split(",")[3:]]
+                        feat_val = np.asarray(feat_val)
+                        features.append((feat_start, feat_end, feat_val))
         return features
 
     def load_openface(self, filepath, start, end, timestamps='absolute', level='v'):
@@ -589,7 +504,3 @@ class Dataset():
 
         return aligned_feat_dict
 
-
-d = Dataset("../mosi.csv", vocab_file="../mosi_vocab.txt")
-feat_dict = d.load()
-#a = d.get_alignments('modality_5')
