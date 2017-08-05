@@ -574,12 +574,10 @@ class Dataset():
                         feat_start = feat_tuple[0]
                         feat_end = feat_tuple[1]
                         feat_val = feat_tuple[2]
-                        if (( feat_start >= start_interval 
-                                and feat_start < end_interval)
-                            or (feat_end <= end_interval 
-                                and feat_end > start_interval)):
+                        if ( feat_start < end_interval 
+                                and feat_end >= start_interval):
                             feat_weight = ( min(end_interval, feat_end) -
-                                min(start_interval, feat_start))/time_interval
+                                max(start_interval, feat_start))/time_interval
                             weighted_feat = np.multiply(feat_val, feat_weight)
                             aligned_feat = np.add(aligned_feat, weighted_feat)
 
