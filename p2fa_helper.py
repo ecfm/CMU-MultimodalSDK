@@ -23,23 +23,25 @@ class P2FA_Helper():
     """
 
     def __init__(self, p2fa_csv, output_dir="./", embed_type = "w2v",
-                embed_dict_path=None):
+                embed_model_path=None, embed_model_type='text'):
         """
         Initialise P2FA helper class.
         :param p2fa_csv: Path to csv file containing fpaths of p2fa files
         :param output_dir: Path to the output directory to store computed
                 features. Can be either a string or a list of 3 strings 
-                ( 2 if embed_dict_path is None). If string, subdirectories
+                ( 2 if embed_model_path is None). If string, subdirectories
                 shall be created to store different features
         :param embed_type: Embeddding type - glove or w2v depending upon the
-                type of embedding dictionary you provide in embed_dict_path
-        :param embed_dict_path: Path to the embedding dictionary
+                type of embedding dictionary you provide in embed_model_path
+        :param embed_model_path: Path to the embedding dictionary
+        :param embed_dict_type: text or binary, valid only for word2vec model
+                file.
         return None
         """
         self.p2fa_csv = p2fa_csv
         self.output_dir = output_dir
         self.embed_type = embed_type
-        self.embed_dict_path = embed_dict_path
+        self.embed_model_path = embed_model_path
         self.vocabulary = []
         self.feat_count = 2
         self.dataset_info = {}
@@ -47,12 +49,17 @@ class P2FA_Helper():
         self.phonemes = utils.p2fa_phonemes
         self.embed_model = None
         self.word_dict = {}
-        
-        if self.embed_dict_path:
+        self.embed_model_type = embed_model_type
+
+        if self.embed_model_path:
             self.feat_count += 1
 
         if embed_type not in ( "w2v", "glove"):
-            raise NameError("Param embed_type must be 'w2v' or 'glove'")
+            raise ValueError("Param embed_type must be 'w2v' or 'glove'")
+
+        if embed_model_type not in ("text", "binary"):
+            raise ValueError("Param embed_model_type must be either text \
+                              or binary")
 
         
         if isinstance(output_dir, str):
@@ -66,7 +73,7 @@ class P2FA_Helper():
             self.words_dir = output_dir[1]
             self.phonemes = output_dir[2]
         else:
-            raise TypeError("Invalid value for the param output_dir")
+            raise ValueError("Invalid value for the param output_dir")
         return
 
     def load(self):
@@ -77,11 +84,13 @@ class P2FA_Helper():
         """
         self.validate_csv()
         phonemes_feat_dict = self.load_phonemes()
+        print "Loaded phonemes"
         # phonemes_feat_dict = None
         words_feat_dict = self.load_words()
+        print "Loaded Words"
         # words_feat_dict = None
         self.feat_dict = [phonemes_feat_dict, words_feat_dict]
-        if self.embed_dict_path:
+        if self.embed_model_path:
             if self.embed_type == "w2v":
                 embed_feat_dict = self.load_w2v()
             else:
@@ -206,12 +215,50 @@ class P2FA_Helper():
     def load_w2v(self):
         """
         Load Word2Vec embeddings from P2FA files and pre-trained Word2Vec 
-        KeyedVectors binary file and store them in the 
+        KeyedVectors text file and store them in the 
         directory path mentioned in self.embedding_dir.
         :returns segment wise feature dictionary for embeddings
+        :Note: Do not provide KeyedVector file in binary format
         """
+        from gensim.models.keyedvectors import KeyedVectors
+        from gensim.models import Word2Vec
+        
+        is_binary = True if self.embed_model_type == "binary" else False
+        model = KeyedVectors.load_word2vec_format(self.embed_model_path, 
+                                                  binary = is_binary )
+        print "Word2Vec model Loaded"
+        self.embed_model = model
+        self.embed_length = model.vector_size
+        if not self.word_dict:
+            self.load_words()
+        
+        features = {}
+        system("mkdir -p "+self.embedding_dir)
+        for video_id, video_word_data in self.word_dict.iteritems():
+            video_feats = {}
+            for segment_id, segment_word_data in video_word_data.iteritems():
+                video_feats[segment_id] = []
+                for word_feat in segment_word_data:
+                    start, end, word = word_feat
+                    try:
+                        embed = self.embed_model[word]
+                    except:
+                        embed = np.zeros(self.embed_length)
+                    video_feats[segment_id].append((start, end, embed))
 
-        return None
+                fname = video_id+"_"+segment_id+".csv"
+                fpath = join(self.embedding_dir, fname)
+                with open(fpath,"wb") as fh:
+                    # Writing each feature in csv file for segment
+                    for f in video_feats[segment_id]:
+                        f_start = str(f[0])
+                        f_end = str(f[1])
+                        f_val = [str(val) for val in f[2].tolist()]
+                        str2write = ",".join([f_start, f_end] + f_val)
+                        str2write += "\n"
+                        fh.write(str2write)
+            features[video_id] = video_feats
+        return features
 
     def load_glove(self):
         """
@@ -221,7 +268,7 @@ class P2FA_Helper():
         """
         self.embed_model = {}
         self.embed_length = 0
-        with open(self.embed_dict_path, "r") as fh:
+        with open(self.embed_model_path, "r") as fh:
             for line in fh:
                 splits = line.rstrip().split()
                 word = splits[0]
@@ -297,7 +344,7 @@ class P2FA_Helper():
                         feat_val = utils.phoneme_hotkey_enc(phoneme_val)    
                         features.append((feat_start, feat_end, feat_val))
                     else:
-                        print "File format error at line number ",str(i)
+                        raise ValueError("File format error at line "+str(i))
         else:
             # Read the file content after the first 12 header lines
             with open(filepath,'r') as f_handle:
@@ -334,7 +381,7 @@ class P2FA_Helper():
                             feat_val = utils.phoneme_hotkey_enc(phoneme_val)
                             features.append((feat_start, feat_end, feat_val))
                     else:
-                        print "File format error at line number ",str(i)
+                        raise ValueError("File format error at line "+str(i))
 
         return features
 
@@ -371,7 +418,7 @@ class P2FA_Helper():
                         feat_val = word
                         features.append((feat_start, feat_end, feat_val))
                     else:
-                        print "File format error at line number ",str(i)
+                        raise ValueError("File format error at line "+str(i))
         else:
             for i in range(len(f_content)):
                 line = f_content[i].strip()
@@ -403,7 +450,7 @@ class P2FA_Helper():
                            
                             features.append((feat_start, feat_end, feat_val))
                     else:
-                        print "File format error at line number ",str(i)
+                        raise ValueError("File format error at line "+str(i))
 
         return features
         
