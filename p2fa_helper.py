@@ -69,9 +69,11 @@ class P2FA_Helper():
         elif (isinstance(output_dir,list) 
                 and len(output_dir) == self.feat_count
                 and all(isinstance(n,str) for n in output_dir) ):
-            self.embedding_dir = output_dir[0]
+            self.phonemes_dir = output_dir[0]            
             self.words_dir = output_dir[1]
-            self.phonemes = output_dir[2]
+            if self.embed_model_path:
+                self.embedding_dir = output_dir[2]
+
         else:
             raise ValueError("Invalid value for the param output_dir")
         return
