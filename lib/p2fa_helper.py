@@ -16,7 +16,7 @@ __license__ = "GPL"
 __version__ = "1.0.1"
 __status__ = "Production"
 
-class P2FA_Helper():
+class P2FA_Helper_v2():
     """
     Class for loading words, embeddings and phonemes as features from 
     P2FA files
@@ -54,8 +54,8 @@ class P2FA_Helper():
         if self.embed_model_path:
             self.feat_count += 1
 
-        if embed_type not in ( "w2v", "glove"):
-            raise ValueError("Param embed_type must be 'w2v' or 'glove'")
+        if embed_type not in ( "w2v", "glove", "spanish"):
+            raise ValueError("Param embed_type must be 'w2v' or 'glove' or 'spanish'")
 
         if embed_model_type not in ("text", "binary"):
             raise ValueError("Param embed_model_type must be either text \
@@ -100,6 +100,24 @@ class P2FA_Helper():
             self.feat_dict.append(embed_feat_dict)
         return self.feat_dict
 
+    def load_spanish(self):
+        """
+        Calls method validate_csv, compute phonemes, words, and
+        word_embedding features and store them.
+        :return feature dictionary for phonemes, words, and embeddings
+        """
+        self.validate_csv()
+        #phonemes_feat_dict = self.load_phonemes()
+        #print "Loaded phonemes"
+        phonemes_feat_dict = None
+        words_feat_dict = self.load_spanish_words()
+        print "Loaded spanish Words"
+        # words_feat_dict = None
+        self.feat_dict = [phonemes_feat_dict, words_feat_dict]
+        embed_feat_dict = self.load_spanish_wv()
+        self.feat_dict.append(embed_feat_dict)
+        return self.feat_dict
+
 
     def validate_csv(self):
         """
@@ -130,7 +148,7 @@ class P2FA_Helper():
     def load_phonemes(self):
         """
         Load phonemes as one-hot embeddings from P2FA files and store them
-        in the directory path mentioned in self.phonemes_dir.
+        in the directory path mentioned in self.phonenzmes_dir.
         :returns segment wise feature dictionary for phoneme
         """
         features = {}
@@ -178,6 +196,59 @@ class P2FA_Helper():
                 end = segment_data["end"]
                 level = self.p2fa_feat_level
                 segment_feats = self.load_words_for_seg(filepath, start,
+                                                        end, level)
+                words = [ str(val[2]).lower() for val in segment_feats ]
+                for w in words:
+                    if w not in self.vocabulary:
+                        self.vocabulary.append(w)
+                video_word_dict[segment_id] = segment_feats
+                
+            word_dict[video_id] = video_word_dict
+        
+        self.word_dict = word_dict
+
+        features = {}
+        for video_id, video_word_data in word_dict.iteritems():
+            video_feats = {}
+            for segment_id, segment_word_data in video_word_data.iteritems():
+                video_feats[segment_id] = []
+                for word_feat in segment_word_data:
+                    start = word_feat[0]
+                    end = word_feat[1]
+                    value = np.zeros(len(self.vocabulary))
+                    value[self.vocabulary.index(word_feat[2].lower())] = 1
+                    video_feats[segment_id].append((start, end, value))
+                fname = video_id+"_"+segment_id+".csv"
+                fpath = join(self.words_dir, fname)
+                with open(fpath,"wb") as fh:
+                    # Writing each feature in csv file for segment
+                    for f in video_feats[segment_id]:
+                        f_start = str(f[0])
+                        f_end = str(f[1])
+                        f_val = [str(val) for val in f[2].tolist()]
+                        str2write = ",".join([f_start, f_end] + f_val)
+                        str2write += "\n"
+                        fh.write(str2write)
+            features[video_id] = video_feats
+        return features
+
+    def load_spanish_words(self):
+        """
+        Load words as one-hot embeddings from P2FA files and store them
+        in the directory path mentioned in self.words_dir.
+        :returns segment wise feature dictionary for words
+        """
+        word_dict = {}
+        system("mkdir -p "+self.words_dir)
+        data = self.dataset_info
+        for video_id, video_data in data.iteritems():
+            video_word_dict = {}
+            for segment_id, segment_data in video_data.iteritems():
+                filepath = str(segment_data["p2fa_file"])
+                start = segment_data["start"]
+                end = segment_data["end"]
+                level = self.p2fa_feat_level
+                segment_feats = self.load_spanish_words_for_seg(filepath, start,
                                                         end, level)
                 words = [ str(val[2]).lower() for val in segment_feats ]
                 for w in words:
@@ -304,6 +375,53 @@ class P2FA_Helper():
                         f_start = str(f[0])
                         f_end = str(f[1])
                         f_val = [str(val) for val in f[2].tolist()]
+                        str2write = ",".join([f_start, f_end] + f_val)
+                        str2write += "\n"
+                        fh.write(str2write)
+            features[video_id] = video_feats
+        return features
+
+    def load_spanish_wv(self):
+        self.embed_model = {}
+        self.embed_length = 0
+        with open(self.embed_model_path, "r") as fh:
+            i = 0
+            for line in fh:
+                i += 1
+                if i == 1:
+                    continue
+                line = line.split()
+                word = line[0]
+                embedding = [float(x) for x in line[1:]]
+                self.embed_model[word] = embedding
+                if not self.embed_length:
+                    self.embed_length = len(embedding)
+
+        if not self.word_dict:
+            self.load_words()
+
+        features = {}
+        system("mkdir -p "+self.embedding_dir)
+        for video_id, video_word_data in self.word_dict.iteritems():
+            video_feats = {}
+            for segment_id, segment_word_data in video_word_data.iteritems():
+                video_feats[segment_id] = []
+                for word_feat in segment_word_data:
+                    start, end, word = word_feat
+                    try:
+                        embed = self.embed_model[word]
+                    except:
+                        embed = np.zeros(self.embed_length)
+                    video_feats[segment_id].append((start, end, embed))
+
+                fname = video_id+"_"+segment_id+".csv"
+                fpath = join(self.embedding_dir, fname)
+                with open(fpath,"wb") as fh:
+                    # Writing each feature in csv file for segment
+                    for f in video_feats[segment_id]:
+                        f_start = str(f[0])
+                        f_end = str(f[1])
+                        f_val = [str(val) for val in f[2]]
                         str2write = ",".join([f_start, f_end] + f_val)
                         str2write += "\n"
                         fh.write(str2write)
@@ -455,7 +573,26 @@ class P2FA_Helper():
                         raise ValueError("File format error at line "+str(i))
 
         return features
-        
 
+
+    def load_spanish_words_for_seg(self, filepath, start, end, level):
+        features = []
+        file_offset = 0
+        header_offset = 0
+        with open(filepath,'r') as f_handle:
+            f_content = f_handle.readlines()[header_offset:]
+            if level == 's':
+                for i in range(len(f_content)):
+                    line = f_content[i].strip()
+                    if line.startswith('"') and line.endswith('"'):
+                        word = line[1:-1].lower()
+                        feat_val = word
+                    elif i%3 == 1:
+                        feat_start = float(line)
+                    elif i%3 == 2:
+                        feat_end = float(line)
+                        features.append((feat_start, feat_end, feat_val))
+        return features
+        
 
 
