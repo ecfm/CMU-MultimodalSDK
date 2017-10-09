@@ -78,7 +78,7 @@ Features = { modality_0: {
             .	 
           }
 ```
-### Specify Features You Want To Load ###
+## Specify Features You Want To Load ##
 
 The CMU Multimodal Data SDK uses CSV files to store queries for features. Typically you can specify everything you need in one CSV per dataset.
 
@@ -130,3 +130,5 @@ and the COVAREP path is:
 since it is on segment level.  
 
  
+## Tutorial ##
+A short tutorial on how to develop machine learning models using CMU-MultimodalDataSDK and Keras is available as `text_lstm.py`. You can simply use `python text_lstm.py` to train a unimodal text-based sentiment analysis model on MOSI. Feel free to explore the code.
