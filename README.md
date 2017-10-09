@@ -69,9 +69,9 @@ Features = { modality_0: {
                             . 
                           },
 
-			      modality_1: {
-							            ...
-						            }, 
+      	    modality_1: {	
+			   ...
+			}, 
             .
             .
             .
