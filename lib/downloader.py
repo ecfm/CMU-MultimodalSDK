@@ -27,6 +27,7 @@ else:
     file_path = os.path.join('temp', file_name) # temp path for storing the zip file
     output_path = os.path.join("..", "datasets") # path for the folder storing the directory
     target = os.path.join("..", "datasets", file_name.split(".")[0]) # path of the dataset directory
+    call(['mkdir', output_path]) # if datasets directory not present mv command will have different behavior later
     
     giveup_or_down = None
     if os.path.exists(target):
