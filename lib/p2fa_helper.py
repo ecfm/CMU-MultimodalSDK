@@ -16,7 +16,7 @@ __license__ = "GPL"
 __version__ = "1.0.1"
 __status__ = "Production"
 
-class P2FA_Helper_v2():
+class P2FA_Helper():
     """
     Class for loading words, embeddings and phonemes as features from 
     P2FA files
@@ -462,7 +462,7 @@ class P2FA_Helper_v2():
                     if line.startswith('"') and line.endswith('"'):
                         phoneme_val = line[1:-1]
                         feat_val = utils.phoneme_hotkey_enc(phoneme_val)    
-                        features.append((feat_start, feat_end, feat_val))
+                        features.append((feat_start-start, feat_end-start, feat_val))
                     else:
                         raise ValueError("File format error at line "+str(i))
         else:
@@ -499,7 +499,7 @@ class P2FA_Helper_v2():
 
                             phoneme_val = line[1:-1]
                             feat_val = utils.phoneme_hotkey_enc(phoneme_val)
-                            features.append((feat_start, feat_end, feat_val))
+                            features.append((feat_start-start, feat_end-start, feat_val))
                     else:
                         raise ValueError("File format error at line "+str(i))
 
@@ -536,7 +536,7 @@ class P2FA_Helper_v2():
                         if word == "sp":
                             continue
                         feat_val = word
-                        features.append((feat_start, feat_end, feat_val))
+                        features.append((feat_start-start, feat_end-start, feat_val))
                     else:
                         raise ValueError("File format error at line "+str(i))
         else:
@@ -568,7 +568,7 @@ class P2FA_Helper_v2():
                                 continue
                             feat_val = word
                            
-                            features.append((feat_start, feat_end, feat_val))
+                            features.append((feat_start-start, feat_end-start, feat_val))
                     else:
                         raise ValueError("File format error at line "+str(i))
 
@@ -591,7 +591,7 @@ class P2FA_Helper_v2():
                         feat_start = float(line)
                     elif i%3 == 2:
                         feat_end = float(line)
-                        features.append((feat_start, feat_end, feat_val))
+                        features.append((feat_start-start, feat_end-start, feat_val))
         return features
         
 
