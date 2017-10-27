@@ -10,11 +10,17 @@ This script shows you how to:
 from __future__ import print_function
 import numpy as np
 import pandas as pd
-from collections import defaultdict
 
+from subprocess import call
+from collections import defaultdict
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional
 from dataset import Dataset
+
+
+# Download the data if not present
+MOSI_url = "http://sorena.multicomp.cs.cmu.edu/downloads/MOSI.tar.gz"
+call(['python', 'downloader.py', '--dataset', 'MOSI'])
 
 # Arguments for Dataset class
 csv_fpath = "../configs/CMU_MOSI_all.csv"

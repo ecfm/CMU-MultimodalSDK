@@ -111,7 +111,7 @@ class Dataset():
                         start = segment_data["start"]
                         end = segment_data["end"]
                         video_feats[segment_id] = loader_method(self,
-                                                                filepath, start, end, timestamps, level)
+                                                                filepath, start, end, level=level)
                     modality_feats[video_id] = video_feats
                 feat_dict[key] = modality_feats
 
@@ -193,7 +193,7 @@ class Dataset():
                 feat_start += time_period
         return features
 
-    def load_phonemes(self, filepath, start, end, timestamps='absolute', level='v'):
+    def load_phonemes(self, filepath, start, end, timestamps='relative', level='s'):
         """
         Load P2FA phonemes as Features from the file corresponding to the 
         param filepath
@@ -217,9 +217,9 @@ class Dataset():
                     line = line.strip()
                     if not line:
                         break
-                    feat_start = float(line.split(",")[1]) + start_time
-                    feat_end = float(line.split(",")[2]) + start_time
-                    feat_val = [float(val) for val in line.split(",")[3:]]
+                    feat_start = float(line.split(",")[0]) + start_time
+                    feat_end = float(line.split(",")[1]) + start_time
+                    feat_val = [float(val) for val in line.split(",")[2:]]
                     feat_val = np.asarray(feat_val)
                     features.append((feat_start, feat_end, feat_val))
         else:
@@ -245,7 +245,7 @@ class Dataset():
                         features.append((feat_start, feat_end, feat_val))
         return features
 
-    def load_embeddings(self, filepath, start, end, timestamps='absolute', level='v'):
+    def load_embeddings(self, filepath, start, end, timestamps='relative', level='s'):
         """
         Load Word Embeddings from the file corresponding to the param 
         filepath
@@ -297,7 +297,7 @@ class Dataset():
                         features.append((feat_start, feat_end, feat_val))
         return features
 
-    def load_words(self, filepath, start, end, timestamps='absolute', level='v'):
+    def load_words(self, filepath, start, end, timestamps='relative', level='s'):
         """
         Load one hot embeddings for words as features from the file 
         corresponding to the param filepath
@@ -351,7 +351,7 @@ class Dataset():
                         features.append((feat_start, feat_end, feat_val))
         return features
 
-    def load_openface(self, filepath, start, end, timestamps='absolute', level='v'):
+    def load_openface(self, filepath, start, end, timestamps='absolute', level='s'):
         """
         Load OpenFace features from the file corresponding to the param 
         filepath
@@ -377,9 +377,9 @@ class Dataset():
                     line = line.strip()
                     if not line:
                         break
-                    feat_start = float(line.split(",")[0]) + start_time
+                    feat_start = float(line.split(",")[1]) + start_time
                     feat_end = feat_start + time_period
-                    feat_val = [float(val) for val in line.split(",")[1:]]
+                    feat_val = [float(val) for val in line.split(",")[2:]]
                     feat_val = np.asarray(feat_val, dtype=np.float32)
                     features.append((feat_start, feat_end, feat_val))
 
