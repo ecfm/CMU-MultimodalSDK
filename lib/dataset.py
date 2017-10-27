@@ -111,7 +111,9 @@ class Dataset():
                         start = segment_data["start"]
                         end = segment_data["end"]
                         video_feats[segment_id] = loader_method(self,
-                                                                filepath, start, end, level=level)
+                                                                filepath, start,
+                                                                end, timestamps=self.timestamps,
+                                                                level=level)
                     modality_feats[video_id] = video_feats
                 feat_dict[key] = modality_feats
 
