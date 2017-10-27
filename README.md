@@ -6,10 +6,10 @@ MultimodalSDK provides tools to easily apply machine learning algorithms on well
 CMU Multimodal Data SDK simplifies loading complex multimodal data. Often cases in different multimodal datasets, data comes from multiple sources and is processed in different ways. The difference in the nature of the data and the difference in the processing makes loading this form of data very challenging. Often the researchers find themselves dedicating significant time and energy to loading the data before building models. CMU Multimodal Data SDK allows you to load and align multimodal datasets very easily. These datasets normally come in the form of video segments with labels. This SDK comes with functionalities already implemented for a variety of processed outputs. Furthermore it is easy to add functionalities to load new form of outputs to the SDK. In its core the following format is the underlying structure of the SDK:
 - Loading time-distributed data coming in the form of start_time, end_time, feature 1, feature 2, ...
 
-## Usage:
+## Usage
 The structure of the CMU-MultimodalDataSDK is such that as per requirement, individual features or all cumulative features may be loaded for use. Given below is an elaborate description of the multifarious features that this module provides along with their respective links for download. This readme also dives into the dictionary structure of the loaded multimodal data as well as alignment strategies used to leverage this data to the maximum.
 
-## Links for Features: 
+## Links for Features 
 
 ### Full Feature Set:
 
@@ -65,7 +65,7 @@ Labels:
 
 1. labels
 
-## Dictionary Structure:
+## Dictionary Structure
 
 As also mentioned above, most of the times, apart from the Raw data, we also provide a dictionary loaded with the segmented features of each segment in each video in each modality.
 
@@ -102,7 +102,7 @@ Features = { modality_0: {
           }
 ```
 
-## Alignment Strategies:
+## Alignment Strategies
 
 Alignment of modalities form an important component in Multimodal Machine Learning. To completely leverage the power of the modalities combined together, there should be a uniform convention or reference point over which each modality is aligned to help capture them together. Here, we take any one of the modalities as our reference point with which other modalities are aligned.
 
