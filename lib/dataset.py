@@ -20,7 +20,7 @@ __status__ = "Production"
 class Dataset():
     """Primary class for loading and aligning dataset"""
 
-    def __init__(self, dataset_file, stored=False, timestamps='absolute'):
+    def __init__(self, dataset_file, stored=False):
         """
         Initialise the Dataset class. Support two loading mechanism - 
         from dataset files and from the pickle file, decided by the param
@@ -33,7 +33,7 @@ class Dataset():
         :timestamps: absolute or relative.
         """
         self.feature_dict = None
-        self.timestamps = timestamps
+        self.timestamps = 'absolute' # this is fixed, we no longer support relative timestamps
         self.stored = stored
         self.dataset_file = dataset_file
         self.phoneme_dict = utils.p2fa_phonemes
