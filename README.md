@@ -1,13 +1,13 @@
 # CMU-MultimodalDataSDK
-MultimodalSDK provides tools to easily apply machine learning algorithms on well-known affective computing datasets such as CMU-MOSI, CMU-MOSI2, POM, and ICT-MMMO. 
+MultimodalSDK provides tools to easily apply machine learning algorithms on well-known multimodal datasets such as CMU-MOSI, CMU-MOSI2, POM, and ICT-MMMO. 
 
 ## CMU Multimodal Data SDK
 
 CMU Multimodal Data SDK simplifies loading complex multimodal data. Often cases in different multimodal datasets, data comes from multiple sources and is processed in different ways. The difference in the nature of the data and the difference in the processing makes loading this form of data very challenging. Often the researchers find themselves dedicating significant time and energy to loading the data before building models. CMU Multimodal Data SDK allows you to load and align multimodal datasets very easily. These datasets normally come in the form of video segments with labels. This SDK comes with functionalities already implemented for a variety of processed outputs. Furthermore it is easy to add functionalities to load new form of outputs to the SDK. In its core the following format is the underlying structure of the SDK:
 - Loading time-distributed data coming in the form of start_time, end_time, feature 1, feature 2, ...
 
-Usage:
-The structure of the CMU-MultimodalDataSDK is such that as per requirement, individual features or all cumulative features may be loaded for use. Given below is an elaborate description of the multifarious features that this module provides along with their respective links for download. This readme also dives into the dictionary structure of the loaded multimodal data as well as alignment startegies used to leverage this data to the maximum.
+## Usage:
+The structure of the CMU-MultimodalDataSDK is such that as per requirement, individual features or all cumulative features may be loaded for use. Given below is an elaborate description of the multifarious features that this module provides along with their respective links for download. This readme also dives into the dictionary structure of the loaded multimodal data as well as alignment strategies used to leverage this data to the maximum.
 
 ## Links for Features: 
 
@@ -23,27 +23,27 @@ When the full dataset is downloaded, the full feature set can be loaded onto the
 ```
 from dataset import Dataset	
 
-csv_fpath = "configs/CMU_MOSI_all.csv"
+csv_fpath = "../configs/CMU_MOSI_all.csv"
 timestamps = "relative" # absolute or relative 
 
 # Code for loading
 d = Dataset(csv_fpath, timestamps=timestamps)
 features = d.load()
 ```
-This loads the features into a dictionary for use. The structure of the dictionary is explained below.
+This loads the features into a dictionary for use. The structure of the dictionary is explained below under the section "Dictionary Structure".
 
 2. Download a pickled dictionary file containing the unaligned feature set for direct use:
 Link: http://sorena.multicomp.cs.cmu.edu/downloads/mosi/full/MOSI_before_align.pkl
 
-When the dictionary is downloaded, it bypasses the load step mentioned above and can be directly used as the feature dictionary (the structure of the dictionary is mentioned below)
+When the dictionary is downloaded, it bypasses the load step mentioned above and can be directly used as the feature dictionary (the structure of the dictionary is mentioned below under the section "Dictionary Structure")
 
-It is worthy to note here that this dictionary is the unaligned dictionary. This was done to provide more freedom to the user to choose their own plan of action to perform on the unaligned loaded dictionary. The section below on alignment startegies explains the simple method to align the features and return the aligned dictionary of features for use. 
+It is worthy to note here that this dictionary is the unaligned dictionary. This was done to provide more freedom to the user to choose their own plan of action to perform on the unaligned loaded dictionary. The section below on alignment strategies explains the simple method to align the features and return the aligned dictionary of features for use. 
 
 ### Individual Features:
 
 Input the name of the feature you want to download in the link below to obtain the tarball.
 
-http://sorena.multicomp.cs.cmu.edu/downloads/mosi/separate/<your-feature-name-here>.tar.gz
+http://sorena.multicomp.cs.cmu.edu/downloads/mosi/separate/ [your-feature-name-here].tar.gz
 
 Visual Features:
 
