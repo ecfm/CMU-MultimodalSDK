@@ -3,48 +3,71 @@ MultimodalSDK provides tools to easily apply machine learning algorithms on well
 
 ## CMU Multimodal Data SDK
 
-CMU Multimodal Data SDK simplifies loading complex multimodal data. Often cases in many different multimodal datasets, data comes from multiple sources and is processed in different ways. The difference in the nature of the data and the difference in the processing makes loading this form of data very challenging. Often the researchers find themselves dedicating significant time and energy to loading the data before building models. CMU Multimodal Data SDK allows you to load and align multimodal datasets very easily. These datasets normally come in the form of video segments with labels. This SDK comes with functionalities already implemented for a variety of processed outputs. Furthermore it is easy to add functionalities to load new form of outputs to the SDK. In its core the following outputs are already supported:
-1. Loading time-distributed data coming in the form of start_time, end_time, feature 1, feature 2, ...
-2. JSON file for alignment between words and phonemes with audio
+CMU Multimodal Data SDK simplifies loading complex multimodal data. Often cases in different multimodal datasets, data comes from multiple sources and is processed in different ways. The difference in the nature of the data and the difference in the processing makes loading this form of data very challenging. Often the researchers find themselves dedicating significant time and energy to loading the data before building models. CMU Multimodal Data SDK allows you to load and align multimodal datasets very easily. These datasets normally come in the form of video segments with labels. This SDK comes with functionalities already implemented for a variety of processed outputs. Furthermore it is easy to add functionalities to load new form of outputs to the SDK. In its core the following format is the underlying structure of the SDK:
+- Loading time-distributed data coming in the form of start_time, end_time, feature 1, feature 2, ...
 
-## Alignment Strategies:
+Usage:
+The structure of the CMU-MultimodalDataSDK is such that as per requirement, individual features or all cumulative features may be loaded for use. Given below is an elaborate description of the multifarious features that this module provides along with their respective links for download. This readme also dives into the dictionary structure of the loaded multimodal data as well as alignment startegies used to leverage this data to the maximum.
 
-Alignment of modalities form an important component in Multimodal Machine Learning. To completely leverage the power of the modalities combined together, there should be a uniform convention or reference point over which each modality is aligned to help capture them together. Here, we take any one of the modalities as our reference point with which other modalities are aligned.
+## Links for Features: 
 
-Given a reference modality, our objective is to match as accurately as possible the exact time frames of occurrence of the same event among all other modalities. 
+### Full Feature Set:
 
-The beginning and end of the reference modality is denoted by the variables start_interval and end_interval respectively. The beginning and end of the other modality that is to be aligned with the reference is denoted by feat_start and feat_end respectively 
+For the full feature set, there are two options:
 
-There are three possible alignment strategies in this regard:
+1. Download the entire dataset along with Raw video, audio and text files with processed features also.
+Link: http://sorena.multicomp.cs.cmu.edu/downloads/mosi/full/MOSI.tar.gz
 
-**1) Weighted Averaging**
-
-In the weighted averaging method, the extent of overlap of segments of each modality with the reference modality segment is considered as the weight of each modality. An average is taken with these weights to align them to the reference.
-
-**2) Subsampling**
-
-In the subsampling method, given a large segment of the reference modality, we repeatedly fit as many multiple identical blocks of a modality segment to match the length of the reference. 
-
-**3) Supersampling** 
-
-In the supersampling method, a small piece of the reference modality is replicated to match the length of the larger modality segment.
-
-The given dictionary (it is also present as a downloadable file in the repository) when loaded with the data can be aligned by simply calling the align() function. A sample code snippet is as shown below:
+When the full dataset is downloaded, the full feature set can be loaded onto the doctionary simply by calling the load() function as mentioned below. All code files are present in the lib/ directory.
 
 ```
-# Assuming the dictionary is stored in the variable "mosi_dict"
+from dataset import Dataset	
 
-	print mosi_dict.modalities	# shows all modalities loaded in the dictionary and the modality corresponding to its modality codes (eg: {word_embeddings: modality_0, phonemes: modality_1, etc..} )
+csv_fpath = "configs/CMU_MOSI_all.csv"
+timestamps = "relative" # absolute or relative 
 
-	mosi_dict_aligned = mosi_dict.align('modality_0') # Function to align all modalities with respect to modality_0. 
-
-# In the dictionary, each key is only the modality_code and not the name of the modality itself. So please be careful to pass only the modality_code to the align() function.	
-
+# Code for loading
+d = Dataset(csv_fpath, timestamps=timestamps)
+features = d.load()
 ```
+This loads the features into a dictionary for use. The structure of the dictionary is explained below.
+
+2. Download a pickled dictionary file containing the unaligned feature set for direct use:
+Link: http://sorena.multicomp.cs.cmu.edu/downloads/mosi/full/MOSI_before_align.pkl
+
+When the dictionary is downloaded, it bypasses the load step mentioned above and can be directly used as the feature dictionary (the structure of the dictionary is mentioned below)
+
+It is worthy to note here that this dictionary is the unaligned dictionary. This was done to provide more freedom to the user to choose their own plan of action to perform on the unaligned loaded dictionary. The section below on alignment startegies explains the simple method to align the features and return the aligned dictionary of features for use. 
+
+### Individual Features:
+
+Input the name of the feature you want to download in the link below to obtain the tarball.
+
+http://sorena.multicomp.cs.cmu.edu/downloads/mosi/separate/<your-feature-name-here>.tar.gz
+
+Visual Features:
+
+1. FACET
+2. OpenFace
+
+Audio features:
+
+1. COVAREP
+2. OpenSmile
+3. phonemes
+
+Text Features:
+
+1. embeddings
+2. words
+
+Labels:
+
+1. labels
 
 ## Dictionary Structure:
 
-As also mentioned above, most of the times, apart from the Raw data, we also provide a dictionary loaded with the segmented features of each segment in each video in each modality. This can be downloaded as a file: <file_name>
+As also mentioned above, most of the times, apart from the Raw data, we also provide a dictionary loaded with the segmented features of each segment in each video in each modality.
 
 The dictionary of loaded features contains the following structure:
 
@@ -78,6 +101,42 @@ Features = { modality_0: {
             .	 
           }
 ```
+
+## Alignment Strategies:
+
+Alignment of modalities form an important component in Multimodal Machine Learning. To completely leverage the power of the modalities combined together, there should be a uniform convention or reference point over which each modality is aligned to help capture them together. Here, we take any one of the modalities as our reference point with which other modalities are aligned.
+
+Given a reference modality, our objective is to match as accurately as possible the exact time frames of occurrence of the same event among all other modalities. 
+
+The beginning and end of the reference modality is denoted by the variables start_interval and end_interval respectively. The beginning and end of the other modality that is to be aligned with the reference is denoted by feat_start and feat_end respectively 
+
+There are three possible alignment strategies in this regard:
+
+**1) Weighted Averaging**
+
+In the weighted averaging method, the extent of overlap of segments of each modality with the reference modality segment is considered as the weight of each modality. An average is taken with these weights to align them to the reference.
+
+**2) Subsampling**
+
+In the subsampling method, given a large segment of the reference modality, we repeatedly fit as many multiple identical blocks of a modality segment to match the length of the reference. 
+
+**3) Supersampling** 
+
+In the supersampling method, a small piece of the reference modality is replicated to match the length of the larger modality segment.
+
+The given dictionary (it is also present as a downloadable file in the repository) when loaded with the data can be aligned by simply calling the align() function. A sample code snippet is as shown below:
+
+```
+# Assuming the dictionary is stored in the variable "mosi_dict"
+
+	print mosi_dict.modalities	# shows all modalities loaded in the dictionary and the modality corresponding to its modality codes (eg: {word_embeddings: modality_0, phonemes: modality_1, etc..} )
+
+	mosi_dict_aligned = mosi_dict.align('modality_0') # Function to align all modalities with respect to modality_0. 
+
+# In the dictionary, each key is only the modality_code and not the name of the modality itself. Hence only the modality_code needs to be passed to the function.	
+
+```
+
 ## Specify Features You Want To Load ##
 
 The CMU Multimodal Data SDK uses CSV files to store queries for features. Typically you can specify everything you need in one CSV per dataset.
