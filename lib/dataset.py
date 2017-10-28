@@ -8,6 +8,7 @@ from scipy.io import loadmat
 import pandas as pd
 import utils
 import warnings
+from collections import OrderedDict
 
 __author__ = "Prateek Vij"
 __copyright__ = "Copyright 2017, Carnegie Mellon University"
@@ -115,6 +116,7 @@ class Dataset():
                                                                 end, timestamps=self.timestamps,
                                                                 level=level)
                     modality_feats[video_id] = video_feats
+                    modality_feats = OrderedDict(sorted(modality_feats.items(), key=lambda t: t[0]))
                 feat_dict[key] = modality_feats
 
             return feat_dict
