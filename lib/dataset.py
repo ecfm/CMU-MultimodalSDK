@@ -732,6 +732,7 @@ class Dataset():
                         for sid, seg_data in modality_feat_dict[video_id].items():
                             if seg_data != []:
                                 feats = seg_data
+                                break
                     #assert False
                     aligned_feat = np.zeros(len(feats[0][2]))
 
