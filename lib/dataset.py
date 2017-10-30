@@ -728,11 +728,10 @@ class Dataset():
                             print "\nModality {} for video {} segment {} is (partially) missing and is thus being replaced by zeros!\n".format(modality.split("_")[-1], video_id, segment_id)
                             warning_hist.add((video_id, segment_id))
                         # print modality, video_id, segment_id, feats
-                        if segment_id = 1:
-                            adjacent_id = str(segment_id + 1)
-                        else:
-                            adjacent_id = str(segment_id - 1)
-                        feats = modality_feat_dict[video_id][adjacent_id]
+                        # find a non empty segment features
+                        for sid, seg_data in modality_feat_dict[video_id].items():
+                            if seg_data != []:
+                                feats = seg_data
                     #assert False
                     aligned_feat = np.zeros(len(feats[0][2]))
 
