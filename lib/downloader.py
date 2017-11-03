@@ -10,9 +10,7 @@ parser.add_argument("--dataset", help="Specify the name of the dataset you want,
 args = parser.parse_args()
 
 datasets = {
-    "MOSI": "http://sorena.multicomp.cs.cmu.edu/downloads/MOSI.tar.gz",
-    "POM": "url.for.pom.tar",
-    "IEMOCAP": "url.for.iemocap.tar"
+    "MOSI": "http://sorena.multicomp.cs.cmu.edu/downloads/mosi/full/MOSI.tar.gz",
 }
 
 if args.dataset == None:
@@ -25,14 +23,14 @@ else:
     url = datasets[args.dataset]
     file_name = url.split('/')[-1]
     file_path = os.path.join('temp', file_name) # temp path for storing the zip file
-    output_path = os.path.join("..", "datasets") # path for the folder storing the directory
-    target = os.path.join("..", "datasets", file_name.split(".")[0]) # path of the dataset directory
-    call(['mkdir', output_path]) # if datasets directory not present mv command will have different behavior later
+    output_path = os.path.join("..", "datasets") # path for parent folder of all datasets
+    target = os.path.join("..", "datasets", file_name.split(".")[0]) # path of the dataset
+    call(['mkdir', '-p', output_path]) # if "datasets" directory not present mv command will have different behavior later
     
     giveup_or_down = None
     if os.path.exists(target):
         while giveup_or_down not in ['Y', 'N']:
-            giveup_or_down = raw_input("Dataset folder already exists, do you want to override it? [Y]es\\[N]o\n")
+            giveup_or_down = raw_input("Dataset directory already exists, do you want to override it? [Y]es\\[N]o\n")
             giveup_or_down = giveup_or_down.upper()
         if giveup_or_down == 'N':
             sys.exit()
