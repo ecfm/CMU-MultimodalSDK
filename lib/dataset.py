@@ -232,8 +232,8 @@ class Dataset():
                     line = line.strip()
                     if not line:
                         break
-                    feat_start = float(line.split(",")[1])
-                    feat_end = float(line.split(",")[2])
+                    feat_start = float(line.split(",")[0])
+                    feat_end = float(line.split(",")[1])
                     feat_time = feat_end - feat_start
                     if ((feat_start <= start and feat_end > end)
                         or (feat_start >= start and feat_end < end)
@@ -244,7 +244,7 @@ class Dataset():
 
                         feat_start = feat_start - start + start_time
                         feat_end = feat_end - start + start_time
-                        feat_val = [float(val) for val in line.split(",")[3:]]
+                        feat_val = [float(val) for val in line.split(",")[2:]]
                         feat_val = np.asarray(feat_val)
                         features.append((feat_start, feat_end, feat_val))
         return features
@@ -284,8 +284,8 @@ class Dataset():
                     line = line.strip()
                     if not line:
                         break
-                    feat_start = float(line.split(",")[1])
-                    feat_end = float(line.split(",")[2])
+                    feat_start = float(line.split(",")[0])
+                    feat_end = float(line.split(",")[1])
                     feat_time = feat_end - feat_start
                     if ((feat_start <= start and feat_end > end)
                         or (feat_start >= start and feat_end < end)
@@ -296,7 +296,7 @@ class Dataset():
 
                         feat_start = feat_start - start + start_time
                         feat_end = feat_end - start + start_time
-                        feat_val = [float(val) for val in line.split(",")[3:]]
+                        feat_val = [float(val) for val in line.split(",")[2:]]
                         feat_val = np.asarray(feat_val)
                         features.append((feat_start, feat_end, feat_val))
         return features
@@ -338,8 +338,8 @@ class Dataset():
                     line = line.strip()
                     if not line:
                         break
-                    feat_start = float(line.split(",")[1])
-                    feat_end = float(line.split(",")[2])
+                    feat_start = float(line.split(",")[0])
+                    feat_end = float(line.split(",")[1])
                     feat_time = feat_end - feat_start
                     if ((feat_start <= start and feat_end > end)
                         or (feat_start >= start and feat_end < end)
@@ -350,7 +350,7 @@ class Dataset():
 
                         feat_start = feat_start - start + start_time
                         feat_end = feat_end - start + start_time
-                        feat_val = [float(val) for val in line.split(",")[3:]]
+                        feat_val = [float(val) for val in line.split(",")[2:]]
                         feat_val = np.asarray(feat_val)
                         features.append((feat_start, feat_end, feat_val))
         return features
@@ -728,7 +728,6 @@ class Dataset():
                             print "\nModality {} for video {} segment {} is (partially) missing and is thus being replaced by zeros!\n".format(modality.split("_")[-1], video_id, segment_id)
                             warning_hist.add((video_id, segment_id))
                         # print modality, video_id, segment_id, feats
-                        # find a non empty segment features
                         for sid, seg_data in modality_feat_dict[video_id].items():
                             if seg_data != []:
                                 feats = seg_data
