@@ -1,4 +1,7 @@
+## The datasets are not available for download for maintenance reasons, please come back later! ##
+
 # CMU-MultimodalDataSDK
+
 MultimodalSDK provides tools to easily apply machine learning algorithms on well-known multimodal datasets such as CMU-MOSI, CMU-MOSI2, POM, and ICT-MMMO. 
 
 ## CMU Multimodal Data SDK
@@ -16,7 +19,7 @@ The structure of the CMU-MultimodalDataSDK is such that as per requirement, indi
 For the full feature set, there are two options:
 
 1. Download the entire dataset along with Raw video, audio and text files with processed features also.
-Link: http://sorena.multicomp.cs.cmu.edu/downloads/mosi/full/MOSI.tar.gz
+  Link: http://sorena.multicomp.cs.cmu.edu/downloads/mosi/full/MOSI.tar.gz
 
 When the full dataset is downloaded, the full feature set can be loaded onto the doctionary simply by calling the load() function as mentioned below. All code files are present in the lib/ directory.
 
@@ -33,7 +36,7 @@ features = d.load()
 This loads the features into a dictionary for use. The structure of the dictionary is explained below under the section "Dictionary Structure".
 
 2. Download a pickled dictionary file containing the unaligned feature set for direct use:
-Link: http://sorena.multicomp.cs.cmu.edu/downloads/mosi/full/MOSI_before_align.pkl
+  Link: http://sorena.multicomp.cs.cmu.edu/downloads/mosi/full/MOSI_before_align.pkl
 
 When the dictionary is downloaded, it bypasses the load step mentioned above and can be directly used as the feature dictionary (the structure of the dictionary is mentioned below under the section "Dictionary Structure")
 
@@ -188,6 +191,6 @@ and the COVAREP path is:
 
 since it is on segment level.  
 
- 
+
 ## Tutorial ##
 A short tutorial on how to develop machine learning models using CMU-MultimodalDataSDK and Keras is available as `text_lstm.py`. You can simply use `python text_lstm.py` to train a unimodal text-based sentiment analysis model on MOSI. Feel free to explore the code.
