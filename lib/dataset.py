@@ -183,7 +183,7 @@ class Dataset():
             for feat in feats:
                 feat_end = feat_start + time_period
                 feat_val = np.asarray(feat)
-                features.append((feat_start, feat_end, feat_val))
+                features.append((max(feat_start - start_time, 0), max(feat_end - start_time, 0), feat_val))
                 feat_start += time_period
         else:
             feat_count = feats.shape[0]
@@ -193,7 +193,7 @@ class Dataset():
             for feat in feats[start_index:end_index]:
                 feat_end = feat_start + time_period
                 feat_val = np.asarray(feat)
-                features.append((feat_start, feat_end, feat_val))
+                features.append((max(feat_start - start_time, 0), max(feat_end - start_time, 0), feat_val))
                 feat_start += time_period
         return features
 
@@ -221,11 +221,11 @@ class Dataset():
                     line = line.strip()
                     if not line:
                         break
-                    feat_start = float(line.split(",")[0]) + start_time
-                    feat_end = float(line.split(",")[1]) + start_time
+                    feat_start = float(line.split(",")[0])
+                    feat_end = float(line.split(",")[1])
                     feat_val = [float(val) for val in line.split(",")[2:]]
                     feat_val = np.asarray(feat_val)
-                    features.append((feat_start, feat_end, feat_val))
+                    features.append((max(feat_start, 0), max(feat_end, 0), feat_val))
         else:
             with open(filepath, 'r') as f_handle:
                 for line in f_handle.readlines():
@@ -242,11 +242,11 @@ class Dataset():
                         or (feat_start >= start
                             and end - feat_start > feat_time / 2)):
 
-                        feat_start = feat_start - start + start_time
-                        feat_end = feat_end - start + start_time
+                        feat_start = feat_start - start
+                        feat_end = feat_end - start
                         feat_val = [float(val) for val in line.split(",")[2:]]
                         feat_val = np.asarray(feat_val)
-                        features.append((feat_start, feat_end, feat_val))
+                        features.append((max(feat_start, 0), max(feat_end, 0), feat_val))
         return features
 
     def load_embeddings(self, filepath, start, end, timestamps='relative', level='s'):
@@ -273,11 +273,11 @@ class Dataset():
                     line = line.strip()
                     if not line:
                         break
-                    feat_start = float(line.split(",")[0]) + start_time
-                    feat_end = float(line.split(",")[1]) + start_time
+                    feat_start = float(line.split(",")[0])
+                    feat_end = float(line.split(",")[1])
                     feat_val = [float(val) for val in line.split(",")[2:]]
                     feat_val = np.asarray(feat_val)
-                    features.append((feat_start, feat_end, feat_val))
+                    features.append((max(feat_start, 0), max(feat_end, 0), feat_val))
         else:
             with open(filepath, 'r') as f_handle:
                 for line in f_handle.readlines():
@@ -294,11 +294,11 @@ class Dataset():
                         or (feat_start >= start
                             and end - feat_start > feat_time / 2)):
 
-                        feat_start = feat_start - start + start_time
-                        feat_end = feat_end - start + start_time
+                        feat_start = feat_start - start
+                        feat_end = feat_end - start
                         feat_val = [float(val) for val in line.split(",")[2:]]
                         feat_val = np.asarray(feat_val)
-                        features.append((feat_start, feat_end, feat_val))
+                        features.append((max(feat_start, 0), max(feat_end, 0), feat_val))
         return features
 
     def load_words(self, filepath, start, end, timestamps='relative', level='s'):
@@ -325,13 +325,13 @@ class Dataset():
                     line = line.strip()
                     if not line:
                         break
-                    feat_start = float(line.split(",")[0]) + start_time
-                    feat_end = float(line.split(",")[1]) + start_time
+                    feat_start = float(line.split(",")[0])
+                    feat_end = float(line.split(",")[1])
                     feat_val = [float(val) for val in line.split(",")[2:]]
                     feat_val = np.asarray(feat_val)
                     #print (feat_start, feat_end)
                     #assert False
-                    features.append((feat_start, feat_end, feat_val))
+                    features.append((max(feat_start, 0), max(feat_end, 0), feat_val))
         else:
             with open(filepath, 'r') as f_handle:
                 for line in f_handle.readlines():
@@ -348,11 +348,11 @@ class Dataset():
                         or (feat_start >= start
                             and end - feat_start > feat_time / 2)):
 
-                        feat_start = feat_start - start + start_time
-                        feat_end = feat_end - start + start_time
+                        feat_start = feat_start - start
+                        feat_end = feat_end - start
                         feat_val = [float(val) for val in line.split(",")[2:]]
                         feat_val = np.asarray(feat_val)
-                        features.append((feat_start, feat_end, feat_val))
+                        features.append((max(feat_start, 0), max(feat_end, 0), feat_val))
         return features
 
     def load_openface(self, filepath, start, end, timestamps='absolute', level='s'):
@@ -381,11 +381,11 @@ class Dataset():
                     line = line.strip()
                     if not line:
                         break
-                    feat_start = float(line.split(",")[1]) + start_time
+                    feat_start = float(line.split(",")[1])
                     feat_end = feat_start + time_period
                     feat_val = [float(val) for val in line.split(",")[2:]]
                     feat_val = np.asarray(feat_val, dtype=np.float32)
-                    features.append((feat_start, feat_end, feat_val))
+                    features.append((max(feat_start, 0), max(feat_end, 0), feat_val))
 
         else:
             with open(filepath, 'r') as f_handle:
@@ -397,11 +397,11 @@ class Dataset():
 
                     if (feat_start >= start and feat_start < end):
                         # To adjust the timestamps
-                        feat_start = feat_start - start + start_time
+                        feat_start = feat_start - start
                         feat_end = feat_start + time_period
                         feat_val = [float(val) for val in line.split(",")[2:]]
                         feat_val = np.asarray(feat_val, dtype=np.float32)
-                        features.append((feat_start, feat_end, feat_val))
+                        features.append((fmax(feat_start, 0), max(feat_end, 0), feat_val))
         return features
     
     # note that this is implicity new facet
@@ -434,7 +434,7 @@ class Dataset():
                     line = line.strip()
                     if not line:
                         break
-                    feat_start = float(line.split(",")[0]) + start_time
+                    feat_start = float(line.split(",")[0])
                     feat_end = feat_start + time_period
                     feat_val = []
                     for val in line.split(",")[1:-1]:
@@ -443,7 +443,7 @@ class Dataset():
                         except:
                             feat_val.append(0.0)
                     feat_val = np.asarray(feat_val, dtype=np.float32)
-                    features.append((feat_start, feat_end, feat_val))
+                    features.append((max(feat_start, 0), max(feat_end, 0), feat_val))
 
         else:
             with open(filepath, 'r') as f_handle:
@@ -455,7 +455,7 @@ class Dataset():
 
                     if (feat_start >= start and feat_start < end):
                         # To adjust the timestamps
-                        feat_start = feat_start - start + start_time
+                        feat_start = feat_start - start
                         feat_end = feat_start + time_period
                         feat_val = []
                         for val in line.split(",")[1:-1]:
@@ -464,7 +464,7 @@ class Dataset():
                             except:
                                 feat_val.append(0.0)
                         feat_val = np.asarray(feat_val, dtype=np.float32)
-                        features.append((feat_start, feat_end, feat_val))
+                        features.append((max(feat_start, 0), max(feat_end, 0), feat_val))
         return features
 
     def load_facet1(self, filepath, start, end, timestamps='absolute', level='v'):
