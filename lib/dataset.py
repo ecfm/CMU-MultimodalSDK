@@ -403,56 +403,7 @@ class Dataset():
                         feat_val = np.asarray(feat_val, dtype=np.float32)
                         features.append((feat_start, feat_end, feat_val))
         return features
-
-    def load_old_facet(self, filepath, start, end, timestamps='absolute', level='v'):
-        """
-        Load FACET features from the file corresponding to the param 
-        filepath
-        :param start: Start time of the segment
-        :param end: End time of the segment
-        :param filepath: Path to the opensmile feature files
-        :param level: 's' if the file contains features only for the segment,
-                      i.e. interval (start, end), 'v' if for the entire video 
-        :param timestamps: relative or absolute
-        :returns: List of tuples (feat_start, feat_end, feat_value)
-                  corresponding to the features in the interval.
-        """
-        features = []
-        time_period = 0.03333
-
-        start_time, end_time = start, end
-        if timestamps == "relative":
-            start_time, end_time = 0.0, end - start
-
-        if level == 's':
-            with open(filepath, 'r') as f_handle:
-                for line in f_handle.readlines()[1:]:
-                    line = line.strip()
-                    if not line:
-                        break
-                    feat_start = float(line.split(",")[0]) + start_time
-                    feat_end = feat_start + time_period
-                    feat_val = [float(val) for val in line.split(",")[1:]]
-                    feat_val = np.asarray(feat_val, dtype=np.float32)
-                    features.append((feat_start, feat_end, feat_val))
-
-        else:
-            with open(filepath, 'r') as f_handle:
-                for line in f_handle.readlines()[1:]:
-                    line = line.strip()
-                    if not line:
-                        break
-                    feat_start = float(line.split(",")[0])
-
-                    if (feat_start >= start and feat_start < end):
-                        # To adjust the timestamps
-                        feat_start = feat_start - start + start_time
-                        feat_end = feat_start + time_period
-                        feat_val = [float(val) for val in line.split(",")[1:]]
-                        feat_val = np.asarray(feat_val, dtype=np.float32)
-                        features.append((feat_start, feat_end, feat_val))
-        return features
-
+    
     # note that this is implicity new facet
     def load_facet(self, filepath, start, end, timestamps='absolute', level='v'):
         """
@@ -468,7 +419,10 @@ class Dataset():
                   corresponding to the features in the interval.
         """
         features = []
-        time_period = 0.03333
+        with open(filepath, 'r') as f_handle:
+            for line in f_handle.readlines()[1:]:
+                time_period = float(line.split(",")[0])
+                break
 
         start_time, end_time = start, end
         if timestamps == "relative":
@@ -480,9 +434,14 @@ class Dataset():
                     line = line.strip()
                     if not line:
                         break
-                    feat_start = float(line.split(",")[1]) + start_time
+                    feat_start = float(line.split(",")[0]) + start_time
                     feat_end = feat_start + time_period
-                    feat_val = [float(val) for val in line.split(",")[2:-1]]
+                    feat_val = []
+                    for val in line.split(",")[1:-1]:
+                        try:
+                            feat_val.append(float(val))
+                        except:
+                            feat_val.append(0.0)
                     feat_val = np.asarray(feat_val, dtype=np.float32)
                     features.append((feat_start, feat_end, feat_val))
 
@@ -498,15 +457,12 @@ class Dataset():
                         # To adjust the timestamps
                         feat_start = feat_start - start + start_time
                         feat_end = feat_start + time_period
-                        # print line.split(",")[1:-1]
-                        #assert False
                         feat_val = []
                         for val in line.split(",")[1:-1]:
                             try:
                                 feat_val.append(float(val))
                             except:
                                 feat_val.append(0.0)
-                        #feat_val = [float(val) for val in line.split(",")[2:-1]]
                         feat_val = np.asarray(feat_val, dtype=np.float32)
                         features.append((feat_start, feat_end, feat_val))
         return features
@@ -524,49 +480,8 @@ class Dataset():
         :returns: List of tuples (feat_start, feat_end, feat_value)
                   corresponding to the features in the interval.
         """
-        features = []
-        time_period = 0.03333
+        return self.load_facet(filepath, start, end, timestamps=timestamps, level=level)
 
-        start_time, end_time = start, end
-        if timestamps == "relative":
-            start_time, end_time = 0.0, end - start
-
-        if level == 's':
-            with open(filepath, 'r') as f_handle:
-                for line in f_handle.readlines()[0:]:
-                    line = line.strip()
-                    if not line:
-                        break
-                    feat_start = float(line.split(",")[1]) + start_time
-                    feat_end = feat_start + time_period
-                    feat_val = [float(val) for val in line.split(",")[2:-1]]
-                    feat_val = np.asarray(feat_val, dtype=np.float32)
-                    features.append((feat_start, feat_end, feat_val))
-
-        else:
-            with open(filepath, 'r') as f_handle:
-                for line in f_handle.readlines()[0:]:
-                    line = line.strip()
-                    if not line:
-                        break
-                    feat_start = float(line.split(",")[1])
-
-                    if (feat_start >= start and feat_start < end):
-                        # To adjust the timestamps
-                        feat_start = feat_start - start + start_time
-                        feat_end = feat_start + time_period
-                        # print line.split(",")[1:-1]
-                        #assert False
-                        feat_val = []
-                        for val in line.split(",")[2:-1]:
-                            try:
-                                feat_val.append(float(val))
-                            except:
-                                feat_val.append(0.0)
-                        #feat_val = [float(val) for val in line.split(",")[2:-1]]
-                        feat_val = np.asarray(feat_val, dtype=np.float32)
-                        features.append((feat_start, feat_end, feat_val))
-        return features
 
     def load_facet2(self, filepath, start, end, timestamps='absolute', level='v'):
         """
@@ -581,49 +496,7 @@ class Dataset():
         :returns: List of tuples (feat_start, feat_end, feat_value)
                   corresponding to the features in the interval.
         """
-        features = []
-        time_period = 0.03333
-
-        start_time, end_time = start, end
-        if timestamps == "relative":
-            start_time, end_time = 0.0, end - start
-
-        if level == 's':
-            with open(filepath, 'r') as f_handle:
-                for line in f_handle.readlines()[0:]:
-                    line = line.strip()
-                    if not line:
-                        break
-                    feat_start = float(line.split(",")[1]) + start_time
-                    feat_end = feat_start + time_period
-                    feat_val = [float(val) for val in line.split(",")[2:-1]]
-                    feat_val = np.asarray(feat_val, dtype=np.float32)
-                    features.append((feat_start, feat_end, feat_val))
-
-        else:
-            with open(filepath, 'r') as f_handle:
-                for line in f_handle.readlines()[0:]:
-                    line = line.strip()
-                    if not line:
-                        break
-                    feat_start = float(line.split(",")[1])
-
-                    if (feat_start >= start and feat_start < end):
-                        # To adjust the timestamps
-                        feat_start = feat_start - start + start_time
-                        feat_end = feat_start + time_period
-                        # print line.split(",")[1:-1]
-                        #assert False
-                        feat_val = []
-                        for val in line.split(",")[2:-1]:
-                            try:
-                                feat_val.append(float(val))
-                            except:
-                                feat_val.append(0.0)
-                        #feat_val = [float(val) for val in line.split(",")[2:-1]]
-                        feat_val = np.asarray(feat_val, dtype=np.float32)
-                        features.append((feat_start, feat_end, feat_val))
-        return features
+        return self.load_facet(filepath, start, end, timestamps=timestamps, level=level)
 
 
     def load_misc(self, filepath, start, end, timestamps='absolute', level='v'):
@@ -722,7 +595,7 @@ class Dataset():
                     time_interval = end_interval - start_interval
                     feats = modality_feat_dict[video_id][segment_id]
                     try:
-                        a = len(feats[0][2])
+                        aligned_feat = np.zeros(len(feats[0][2]))
                     except:
                         if (video_id, segment_id) not in warning_hist:
                             print "\nModality {} for video {} segment {} is (partially) missing and is thus being replaced by zeros!\n".format(modality.split("_")[-1], video_id, segment_id)
@@ -732,8 +605,10 @@ class Dataset():
                             if seg_data != []:
                                 feats = seg_data
                                 break
-                    #assert False
-                    aligned_feat = np.zeros(len(feats[0][2]))
+                    try: 
+                        aligned_feat = np.zeros(len(feats[0][2]))
+                    except:
+                        aligned_feat = np.zeros(0)
 
                     for feat_tuple in feats:
                         feat_start = feat_tuple[0]
@@ -744,7 +619,10 @@ class Dataset():
                             feat_weight = (min(end_interval, feat_end) -
                                            max(start_interval, feat_start)) / time_interval
                             weighted_feat = np.multiply(feat_val, feat_weight)
-                            aligned_feat = np.add(aligned_feat, weighted_feat)
+                            if np.shape(aligned_feat) == (0,):
+                                aligned_feat = weighted_feat
+                            else:
+                                aligned_feat = np.add(aligned_feat, weighted_feat)
 
                     aligned_feat_tuple = (start_interval, end_interval,
                                           aligned_feat)
