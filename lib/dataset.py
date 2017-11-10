@@ -9,6 +9,7 @@ import pandas as pd
 import utils
 import warnings
 from collections import OrderedDict
+from copy import deepcopy
 
 __author__ = "Prateek Vij"
 __copyright__ = "Copyright 2017, Carnegie Mellon University"
@@ -21,7 +22,7 @@ __status__ = "Production"
 class Dataset():
     """Primary class for loading and aligning dataset"""
 
-    def __init__(self, dataset_file, stored=False):
+    def __init__(self, dataset_file='', stored=False):
         """
         Initialise the Dataset class. Support two loading mechanism - 
         from dataset files and from the pickle file, decided by the param
@@ -106,7 +107,7 @@ class Dataset():
                 level = value['level']
                 loader_method = Dataset.__dict__["load_" + api]
                 modality_feats = {}
-                print "Loading features for ", api
+                print "Loading features for", api
                 for video_id, video_data in data.iteritems():
                     video_feats = {}
                     for segment_id, segment_data in video_data.iteritems():
@@ -596,3 +597,23 @@ class Dataset():
             aligned_feat_dict[video_id] = aligned_video_feats
 
         return aligned_feat_dict
+
+    @staticmethod
+    def merge(dataset1, dataset2):
+        # ensure the merged objects are indeed Datasets
+        assert isinstance(dataset1, Dataset)
+        assert isinstance(dataset2, Dataset)
+        # merge the feature_dict and modalities attributes
+        merged_modalities = Dataset.merge_dict(dataset1.modalities, dataset2.modalities)
+        merged_feat_dict = Dataset.merge_dict(dataset1.feature_dict, dataset2.feature_dict)
+        mergedDataset = Dataset()
+        mergedDataset.feature_dict = merged_feat_dict
+        mergedDataset.modalities = merged_modalities
+        return mergedDataset
+
+
+    @staticmethod
+    def merge_dict(dict1, dict2):
+        merged = deepcopy(dict1)
+        merged.update(dict2)
+        return merged
