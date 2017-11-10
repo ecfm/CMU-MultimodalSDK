@@ -1,3 +1,6 @@
 datasets/
 *.pyc
 *.csv
+*.pkl
+*.hdf5
+*.tar
