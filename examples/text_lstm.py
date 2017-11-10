@@ -17,8 +17,9 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional
 
 import sys
-sys.path.append('../lib')
-from dataset import Dataset
+sys.path.append('../')
+
+from lib.dataset import Dataset
 
 
 # Download the data if not present
@@ -95,7 +96,7 @@ model.add(Dense(1, activation='sigmoid'))
 
 
 # try using different optimizers and different optimizer configs
-model.compile('adam', 'binary_crossentropy', metrics=['accuracy'])
+model.compile('adam', 'binary_crossentropy', metrics=['accuracy', 'precision', 'recall'])
 batch_size = 32
 
 print('Train...')
