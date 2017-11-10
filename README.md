@@ -2,19 +2,108 @@
 
 # CMU-MultimodalDataSDK
 
-MultimodalSDK provides tools to easily apply machine learning algorithms on well-known multimodal datasets such as CMU-MOSI, CMU-MOSI2, POM, and ICT-MMMO. 
+CMU-MultimodalDataSDK provides tools that facilitates simple and fast prototyping of machine learning algorithms on well-known multimodal datasets such as CMU-MOSI, CMU-MOSI2, POM, and ICT-MMMO. 
 
-## CMU Multimodal Data SDK
+## 1. CMU Multimodal Data SDK
 
-CMU Multimodal Data SDK simplifies loading complex multimodal data. Often cases in different multimodal datasets, data comes from multiple sources and is processed in different ways. The difference in the nature of the data and the difference in the processing makes loading this form of data very challenging. Often the researchers find themselves dedicating significant time and energy to loading the data before building models. CMU Multimodal Data SDK allows you to load and align multimodal datasets very easily. These datasets normally come in the form of video segments with labels. This SDK comes with functionalities already implemented for a variety of processed outputs. Furthermore it is easy to add functionalities to load new form of outputs to the SDK. In its core the following format is the underlying structure of the SDK:
+CMU Multimodal Data SDK simplifies loading complex multimodal data. Often cases in different multimodal datasets, data comes from multiple sources and is processed in different ways. The difference in the nature of the data and the difference in the processing makes loading this form of data very challenging. Often the researchers find themselves dedicating significant time and energy to loading the data before building models. CMU Multimodal Data SDK allows you to load and align multimodal datasets very easily. These datasets normally come in the form of video segments with labels. This SDK comes with functionalities already implemented for a variety of processed features. Furthermore it is easy to add functionalities for loading custom features to the SDK. In its core the following format is the underlying structure of the SDK:
+
 - Loading time-distributed data coming in the form of start_time, end_time, feature 1, feature 2, ...
 
-## Usage
-The structure of the CMU-MultimodalDataSDK is such that as per requirement, individual features or all cumulative features may be loaded for use. Given below is an elaborate description of the multifarious features that this module provides along with their respective links for download. This readme also dives into the dictionary structure of the loaded multimodal data as well as alignment strategies used to leverage this data to the maximum.
+## 2. Citations
 
-## Links for Features 
+If you used this toolkit in your research, please cite the following publication:
 
-### Full Feature Set:
+```latex
+@inproceedings{tensoremnlp17,
+title={Tensor Fusion Network for Multimodal Sentiment Analysis},
+author={Zadeh, Amir and Chen, Minghai and Poria, Soujanya and Cambria, Erik and Morency, Louis-Philippe},
+booktitle={Empirical Methods in Natural Language Processing, EMNLP},
+year={2017}
+}
+```
+
+
+
+## 3. Usage
+
+Here we illustrate a simple use case for loading part of the CMU-MOSI dataset.
+
+### 3.1 Getting Started and Getting Data
+
+To start using this toolkit, simply clone this repository.
+
+```bash
+git clone git@github.com:A2Zadeh/CMU-MultimodalDataSDK.git
+```
+
+Then navigate into the `lib` directory.
+
+```bash
+cd CMU-MultimodalDataSDK/lib/
+```
+
+From there invoke the script `downloader.py` with argument `--dataset` being `MOSI_facet` and `MOSI_words`.
+
+```bash
+python downloader.py --dataset MOSI_facet MOSI_words
+```
+
+This will download the data for individual facet and words (1-hot encodings) features (individual features are referred to as "sub-datasets" below as opposed to the full dataset that contains all features) of the MOSI dataset. They're located in `CMU-MultimodalDataSDK/datasets/MOSI`.
+
+Before moving forward, here's a bit explanation about the data structure Multimodal Data SDK uses: every downloaded (sub-)dataset is a pickled `Dataset` class instance (class defined in `lib/dataset.py`), it supports merging different sub-datasets into one dataset and feature alignment, etc. So in order to use the downloaded (sub-)datasets, always remember to import the `Dataset` class.
+
+### 3.2 Load and Merge
+
+Here's an example of loading the sub-datasets and merge them. Start Python while you're still inside the `lib` directory.
+
+```python
+>>> from dataset import Dataset
+>>> from cPickle import load
+>>> facet_path = "../datasets/MOSI/facet.pkl"
+>>> words_path = "../datasets/MOSI/words.pkl"
+>>> ff = open(facet_path, 'rb')
+>>> fw = open(words_path, 'rb')
+>>> facet = load(ff)
+>>> words = load(fw)
+>>> ff.close()
+>>> fw.close()
+>>> facet_n_words = Dataset.merge(facet, words) # merge the 2 sub-datasets into 1
+```
+
+The `facet_n_words` is still a `Dataset` instance, but it now contains 2 types of features. You can access them from the `.feature_dict` attribute. As the name suggests, the features data are stored in a nested dictionaries structure.
+
+```python
+>>> feats = facet_n_words.feature_dict
+>>> feats.keys()
+['facet', 'words']
+```
+
+The structure of `feats` is a nested dictionary with 3 levels. You can access the data of a particular feature for a particular segment in a particular video by the following: `feats[modality_name][video_id][segment_id]`. Here `modality_name` is just the name of the feature you want to access, e.g. 'facet'. Video and segment IDs are strings that characterizes the video and segments in the dataset. While segment IDs are just strings of integers (e.g. '1', '2', '3', '16') indicating which segment it is within the video, video IDs usually doesn't have a pattern. But you can access them by looking at the keys of the second hierarchy of the nested dictionary.
+
+```python
+>>> vids = feats['facet'].keys() # extract the list of all video ids
+>>> vid = vids[0] # pick the first video
+>>> segment_data = feats['facet'][vid]['3'] # access the facet data for the 3rd segment
+```
+
+For a more detailed explanation, refer to section 4.
+
+### 3.3 Feature Alignment
+
+Next is the most important functionality of the Dataset class: align the features based on a 'pivot' feature. For how exactly the alignment is done, please refer to section 5.
+
+```python
+>>> aligned = facet_n_words.align('words')
+```
+
+The resulting `aligned` is another nested dictionary that is of the same structure as the `feats` we've discussed before. Note that the pivot feature that is aligned to is dropped in this dictionary.
+
+### 3.4 A Demo on Loading the Full Dataset and Train Text-based LSTM
+
+For a more comprehensive usage, you can refer to the demo `text_lstm.py` in the `CMU-MultimodalDataSDK/` directory. In order to run this demo, you'll need to install Keras and at least one of the backends (Tensorflow or Theano) it uses. This demo shows you how to download the full dataset and Links for Features
+
+### 3.5 Full Feature Set:
 
 For the full feature set, there are two options:
 
@@ -23,15 +112,14 @@ For the full feature set, there are two options:
 
 When the full dataset is downloaded, the full feature set can be loaded onto the doctionary simply by calling the load() function as mentioned below. All code files are present in the lib/ directory.
 
-```
+```python
 from dataset import Dataset	
 
 csv_fpath = "../configs/CMU_MOSI_all.csv"
-timestamps = "relative" # absolute or relative 
 
 # Code for loading
-d = Dataset(csv_fpath, timestamps=timestamps)
-features = d.load()
+d = Dataset(csv_fpath)
+features = d.load() # this gives you the feature_dict
 ```
 This loads the features into a dictionary for use. The structure of the dictionary is explained below under the section "Dictionary Structure".
 
@@ -42,7 +130,7 @@ When the dictionary is downloaded, it bypasses the load step mentioned above and
 
 It is worthy to note here that this dictionary is the unaligned dictionary. This was done to provide more freedom to the user to choose their own plan of action to perform on the unaligned loaded dictionary. The section below on alignment strategies explains the simple method to align the features and return the aligned dictionary of features for use. 
 
-### Individual Features:
+### 3.6 Individual Features:
 
 Input the name of the feature you want to download in the link below to obtain the tarball.
 
@@ -68,7 +156,7 @@ Labels:
 
 1. labels
 
-## Dictionary Structure
+## 4. Dictionary Structure
 
 As also mentioned above, most of the times, apart from the Raw data, we also provide a dictionary loaded with the segmented features of each segment in each video in each modality.
 
@@ -105,7 +193,7 @@ Features = { modality_0: {
           }
 ```
 
-## Alignment Strategies
+## 5. Alignment Strategies
 
 Alignment of modalities form an important component in Multimodal Machine Learning. To completely leverage the power of the modalities combined together, there should be a uniform convention or reference point over which each modality is aligned to help capture them together. Here, we take any one of the modalities as our reference point with which other modalities are aligned.
 
@@ -129,7 +217,7 @@ In the supersampling method, a small piece of the reference modality is replicat
 
 The given dictionary (it is also present as a downloadable file in the repository) when loaded with the data can be aligned by simply calling the align() function. A sample code snippet is as shown below:
 
-```
+```python
 # Assuming the dictionary is stored in the variable "mosi_dict"
 
 	print mosi_dict.modalities	# shows all modalities loaded in the dictionary and the modality corresponding to its modality codes (eg: {word_embeddings: modality_0, phonemes: modality_1, etc..} )
@@ -139,58 +227,3 @@ The given dictionary (it is also present as a downloadable file in the repositor
 # In the dictionary, each key is only the modality_code and not the name of the modality itself. Hence only the modality_code needs to be passed to the function.	
 
 ```
-
-## Specify Features You Want To Load ##
-
-The CMU Multimodal Data SDK uses CSV files to store queries for features. Typically you can specify everything you need in one CSV per dataset.
-
-These CSV files should have $n+4$ columns, with $n$ columns corresponding to the different types of features you want to load, and an additional $4$ columns that stores information as to for which video segment you want these features. Take for example you want to load FACET and COVAREP features, then your columns should be:
-
-| video_id | segment | start | end  | facet | covarep |
-| -------- | ------- | ----- | ---- | ----- | ------- |
-| ...      | ...     | ...   | ...  | ...   | ...     |
-
-The first 4 columns are for specifying the video segment. They're the video ID (basically the file name of the video), the segment ID, the start time of the segment and the end time. For videos that doesn't come in segments, segment ID is always set to 1. Then the trailing columns are for specific features. Please note that if you're using standard features shipped together with the dataset, then please remember to use a standard alias of the features (listed below) for the columns, since those strings will be used to determine which loading subprocess to go through.
-
-List of possible off-the-shelf features and their standard aliases:
-
-```
-One-hot vectors of words: words
-Glove word embeddings: embeddings
-Phonemes: phonemes
-OpenFace: openface
-FACET: facet
-Opensmile: opensmile
-COVAREP: covarep
-```
-
-Note that a very important feature of the CMU Multimodal Data SDK is that it supports loading both features stored at segment level and video level, but you always HAVE TO explicitly specify that. Continued from the previous example where you load FACET which is stored at video level, and COVAREP which is stored segment level, the first two rows of your CSV should be:
-
-| video_id | segment | start | end  | facet | covarep |
-| -------- | ------- | ----- | ---- | ----- | ------- |
-|          |         |       |      | v     | s       |
-
-Notice how for the second row the first 4 columns are left as blank, and for each of the feature columns, there is a flag "v" or "s", indicating whether this feature should be loaded at video level or segment level. So this structure of 2-row header determines which features to use and on what level they are loaded. Below the 2-row header, we'll store actual queries. Let's see an example.
-
-For loading FACET and COVAREP for a video segment with video ID `testvideo123` and segment ID 3, starting from 23.32s to 32.12s in the original video, we use the following CSV:
-
-|    video_id    | segment | start |  end  |       facet       |       covarep       |
-| :------------: | :-----: | :---: | :---: | :---------------: | :-----------------: |
-|                |         |       |       |         v         |          s          |
-| `testvideo123` |    3    | 23.32 | 32.12 | \<path/to/facet\> | \<path/to/covarep\> |
-
-The feature columns contains paths to the files that stores the feature. Paths to features always follows the following format: `/dataset/processed/features/[modality]/[feature alias]/[video_id]_[segment_id].[suffix]`. The ones with square brackets should be replaced with the actual modality, feature, video and segment ID, etc., you use. **Note that the segment ID is omitted for video level feature files.**
-
-Following this pattern, the FACET path for `testvideo123` will be:
-
-`/dataset/processed/features/visual/testvideo123.csv`
-
-and the COVAREP path is:
-
-`/dataset/processed/features/audio/testvideo123_3.mat`
-
-since it is on segment level.  
-
-
-## Tutorial ##
-A short tutorial on how to develop machine learning models using CMU-MultimodalDataSDK and Keras is available as `text_lstm.py`. You can simply use `python text_lstm.py` to train a unimodal text-based sentiment analysis model on MOSI. Feel free to explore the code.
