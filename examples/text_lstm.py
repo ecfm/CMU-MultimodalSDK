@@ -15,6 +15,9 @@ from subprocess import call
 from collections import defaultdict
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional
+
+import sys
+sys.path.append('../lib')
 from dataset import Dataset
 
 
@@ -24,10 +27,9 @@ call(['python', 'downloader.py', '--dataset', 'MOSI'])
 
 # Arguments for Dataset class
 csv_fpath = "../configs/CMU_MOSI_all.csv"
-timestamps = "relative" # absolute or relative, relative will output features relative to segment time 
 
 # Code for loading
-d = Dataset(csv_fpath, timestamps=timestamps)
+d = Dataset(csv_fpath)
 features = d.load()
 
 # View modalities
