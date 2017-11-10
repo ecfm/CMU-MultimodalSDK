@@ -498,62 +498,6 @@ class Dataset():
         """
         return self.load_facet(filepath, start, end, timestamps=timestamps, level=level)
 
-
-    def load_misc(self, filepath, start, end, timestamps='absolute', level='v'):
-        """
-        Load customizable time-distributed features from the file
-        corresponding to the param filepath
-        :param start: Start time of the segment
-        :param end: End time of the segment
-        :param filepath: Path to the time-distributed misc feature files
-        :param level: 's' if the file contains features only for the segment,
-                      i.e. interval (start, end), 'v' if for the entire video
-        :param timestamps: relative or absolute
-        :returns: List of tuples (feat_start, feat_end, feat_value)
-                  corresponding to the features in the interval.
-        """
-        features = []
-        start_time, end_time = start, end
-        if timestamps == "relative":
-            start_time, end_time = 0.0, end - start
-
-        if level == 's':
-            with open(filepath, 'r') as f_handle:
-                for line in f_handle.readlines():
-                    line = line.strip()
-                    if not line:
-                        break
-                    feat_start = float(line.split(",")[0]) + start_time
-                    feat_end = float(line.split(",")[1]) + start_time
-                    feat_val = [float(val) for val in line.split(",")[2:]]
-                    feat_val = np.asarray(feat_val)
-                    #print (feat_start, feat_end)
-                    #assert False
-                    features.append((feat_start, feat_end, feat_val))
-        else:
-            with open(filepath, 'r') as f_handle:
-                for line in f_handle.readlines():
-                    line = line.strip()
-                    if not line:
-                        break
-                    feat_start = float(line.split(",")[0])
-                    feat_end = float(line.split(",")[1])
-                    feat_time = feat_end - feat_start
-                    if ((feat_start <= start and feat_end > end)
-                        or (feat_start >= start and feat_end < end)
-                        or (feat_start <= start
-                            and start - feat_start < feat_time / 2)
-                        or (feat_start >= start
-                            and end - feat_start > feat_time / 2)):
-
-                        feat_start = feat_start - start + start_time
-                        feat_end = feat_end - start + start_time
-                        feat_val = [float(val) for val in line.split(",")[3:]]
-                        feat_val = np.asarray(feat_val)
-                        features.append((feat_start, feat_end, feat_val))
-        return features
-
-
     def align(self, align_modality):
         aligned_feat_dict = {}
         modalities = self.modalities
