@@ -71,7 +71,8 @@ class Dataset():
             modality_count = len(data[0]) - 4
             self.modalities = {}
             for i in range(modality_count):
-                key = 'modality_' + str(i)
+                # key = 'modality_' + str(i)
+                key = str(data[0][i + 4])
                 info = {}
                 info["level"] = str(data[1][i + 4])
                 info["type"] = str(data[0][i + 4])
@@ -89,7 +90,8 @@ class Dataset():
                 segment_data["start"] = float(record[2])
                 segment_data["end"] = float(record[3])
                 for i in range(modality_count):
-                    key = 'modality_' + str(i)
+                    # key = 'modality_' + str(i)
+                    key = str(data[0][i + 4])
                     segment_data[key] = str(record[i + 4])
                 self.dataset_info[video_id][segment_id] = segment_data
             return
@@ -116,7 +118,7 @@ class Dataset():
                                                                 end, timestamps=self.timestamps,
                                                                 level=level)
                     modality_feats[video_id] = video_feats
-                    modality_feats = OrderedDict(sorted(modality_feats.items(), key=lambda t: t[0]))
+                    modality_feats = OrderedDict(sorted(modality_feats.items()))
                 feat_dict[key] = modality_feats
 
             return feat_dict
@@ -419,25 +421,44 @@ class Dataset():
                   corresponding to the features in the interval.
         """
         features = []
+
+        # load a subset of current segment and infer its format
+        start_row = 0
+        start_col = 0
         with open(filepath, 'r') as f_handle:
-            for line in f_handle.readlines()[1:]:
-                time_period = float(line.split(",")[0])
-                break
+            splitted = []
+            for line in f_handle.readlines()[0:10]:
+                splitted.append(line.split(","))
+
+            # check if the first row is a header by checking if the first field is a number
+            try:
+                float(splitted[start_row][start_col])
+            except:
+                start_row = 1
+
+            # check if the first column is a index column by checking if it increments by 1 everytime
+            for i in range(1, len(splitted) - 1):
+                if (float(splitted[i+1][0]) - float(splitted[i][0])) != 1:
+                    start_col = 0
+                    break
+                start_col = 1
+
+            time_period = float(splitted[start_row][start_col])
 
         start_time, end_time = start, end
-        if timestamps == "relative":
-            start_time, end_time = 0.0, end - start
+        # if timestamps == "relative":
+        #     start_time, end_time = 0.0, end - start
 
         if level == 's':
             with open(filepath, 'r') as f_handle:
-                for line in f_handle.readlines()[1:]:
+                for line in f_handle.readlines()[start_row:]:
                     line = line.strip()
                     if not line:
                         break
-                    feat_start = float(line.split(",")[0])
+                    feat_start = float(line.split(",")[start_col])
                     feat_end = feat_start + time_period
                     feat_val = []
-                    for val in line.split(",")[1:-1]:
+                    for val in line.split(",")[start_col + 1:-1]:
                         try:
                             feat_val.append(float(val))
                         except:
@@ -447,18 +468,18 @@ class Dataset():
 
         else:
             with open(filepath, 'r') as f_handle:
-                for line in f_handle.readlines()[1:]:
+                for line in f_handle.readlines()[start_row:]:
                     line = line.strip()
                     if not line:
                         break
-                    feat_start = float(line.split(",")[0])
+                    feat_start = float(line.split(",")[start_col])
 
                     if (feat_start >= start and feat_start < end):
                         # To adjust the timestamps
                         feat_start = feat_start - start
                         feat_end = feat_start + time_period
                         feat_val = []
-                        for val in line.split(",")[1:-1]:
+                        for val in line.split(",")[start_col + 1:-1]:
                             try:
                                 feat_val.append(float(val))
                             except:
@@ -506,7 +527,7 @@ class Dataset():
             if modality == align_modality:
                 continue
             aligned_modality = self.align_modality(modality, alignments)
-            aligned_feat_dict[modality] = aligned_modality
+            aligned_feat_dict[modality] = OrderedDict(sorted(aligned_modality.items()))
         self.aligned_feature_dict = aligned_feat_dict
         return aligned_feat_dict
 
