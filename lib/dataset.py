@@ -119,7 +119,7 @@ class Dataset():
                                                                 end, timestamps=self.timestamps,
                                                                 level=level)
                     modality_feats[video_id] = video_feats
-                    modality_feats = OrderedDict(sorted(modality_feats.items()))
+                    modality_feats = OrderedDict(sorted(modality_feats.items(), key=lambda x: x[0]))
                 feat_dict[key] = modality_feats
 
             return feat_dict
@@ -528,7 +528,7 @@ class Dataset():
             if modality == align_modality:
                 continue
             aligned_modality = self.align_modality(modality, alignments)
-            aligned_feat_dict[modality] = OrderedDict(sorted(aligned_modality.items()))
+            aligned_feat_dict[modality] = OrderedDict(sorted(aligned_modality.items(), key=lambda x: x[0]))
         self.aligned_feature_dict = aligned_feat_dict
         return aligned_feat_dict
 
