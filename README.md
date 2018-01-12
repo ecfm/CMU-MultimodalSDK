@@ -1,14 +1,16 @@
-## The datasets are not currently available for download until 01/18/2018. Please check the ACL 2018 workshop page: http://multicomp.cs.cmu.edu/multimodalacl2018 ##
+## The datasets are currently unavailable for download until 01/18/2018. Please check the ACL 2018 workshop page: http://multicomp.cs.cmu.edu/multimodalacl2018 ##
 
 # CMU-MultimodalDataSDK
 
-CMU-MultimodalDataSDK provides tools that facilitates simple and fast prototyping of machine learning algorithms on well-known multimodal datasets such as CMU-MOSI, CMU-MOSI2, POM, and ICT-MMMO. 
+CMU-MultimodalDataSDK provides tools that facilitates simple and fast loading of well-known multimodal machine learning datasets such as CMU-MOSEI, CMU-MOSI, POM, and ICT-MMMO. 
 
 ## 1. CMU Multimodal Data SDK
 
-CMU Multimodal Data SDK simplifies loading complex multimodal data. Often cases in different multimodal datasets, data comes from multiple sources and is processed in different ways. The difference in the nature of the data and the difference in the processing makes loading this form of data very challenging. Often the researchers find themselves dedicating significant time and energy to loading the data before building models. CMU Multimodal Data SDK allows you to load and align multimodal datasets very easily. These datasets normally come in the form of video segments with labels. This SDK comes with functionalities already implemented for a variety of processed features. Furthermore it is easy to add functionalities for loading custom features to the SDK. In its core the following format is the underlying structure of the SDK:
+CMU Multimodal Data SDK simplifies loading complex multimodal data. Often cases in different multimodal datasets, data comes from multiple sources and is processed in different ways which makes loading this form of data very challenging. Often the researchers find themselves dedicating significant time and energy to loading the data before building models. CMU Multimodal Data SDK allows you to:
 
-- Loading time-distributed data coming in the form of start_time, end_time, feature 1, feature 2, ...
+1. load multimodal datasets very easily and align their modalities.
+2. donwload well-known multimodal datasets easily.
+3. extend the SDK to your own data and publicizing your dataset. 
 
 ## 2. Citations
 
@@ -22,8 +24,6 @@ booktitle={Empirical Methods in Natural Language Processing, EMNLP},
 year={2017}
 }
 ```
-
-
 
 ## 3. Usage
 
