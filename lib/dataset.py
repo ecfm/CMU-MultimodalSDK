@@ -404,7 +404,7 @@ class Dataset():
                         feat_end = feat_start + time_period
                         feat_val = [float(val) for val in line.split(",")[2:]]
                         feat_val = np.asarray(feat_val, dtype=np.float32)
-                        features.append((max(feat_start, 0), max(feat_end, 0), feat_val))
+                        features.append((fmax(feat_start, 0), max(feat_end, 0), feat_val))
         return features
     
     # note that this is implicity new facet
