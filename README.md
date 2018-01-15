@@ -58,7 +58,7 @@ Simple as that. Now to explain the returned `mosi_facet` and `mosi_emb`. All the
 
 ### 3.2 Merging and Accessing Datasets
 
-Now that we have loaded the embeddings and facet features for CMU-MOSI, we may want to merge the two sub-`Dataset`s into one `Dataset` to make them ready for the next step. And we also want to access the actual data inside. We'll go through the respectively.
+Now that we have loaded the embeddings and facet features for CMU-MOSI, we may want to merge these two uni-feature `Dataset` into one `Dataset` to make them ready for the next step. And we also want to access the actual data inside. We'll go through the respectively.
 
  Here's an example of merging different features.
 
@@ -76,7 +76,7 @@ The resulting `mosi_facet_n_words` is still a `Dataset` object, but now it conta
 The data of any `Dataset` object can be accessed from its `feature_dict` attribute. As the name suggests, the actual features are stored in a nested dictionaries structure.
 
 ```python
->>> feats = mosi_facet_n_words.feature_dict
+>>> feats = mosi_facet_n_words.feature_dict # the actual data now in the feats variable
 >>> feats.keys() # the first hierarchy of the nested dict is the feature types
 ['facet', 'embeddings']
 ```
@@ -112,10 +112,10 @@ For the full feature set, there are two options:
 1. Download the entire dataset along with Raw video, audio and text files with processed features also.
   Link: http://sorena.multicomp.cs.cmu.edu/downloads/mosi/full/MOSI.tar.gz
 
-When the full dataset is downloaded, the full feature set can be loaded onto the doctionary simply by calling the load() function as mentioned below. All code files are present in the lib/ directory.
+When the full dataset is downloaded, the full feature set can be loaded onto the dictionary simply by calling the load() function as mentioned below. All code files are present in the lib/ directory.
 
 ```python
-from dataset import Dataset	
+from mmdata.dataset import Dataset	
 
 csv_fpath = "../configs/CMU_MOSI_all.csv"
 
@@ -147,12 +147,12 @@ Audio features:
 
 1. COVAREP
 2. OpenSmile
-3. phonemes
 
 Text Features:
 
 1. embeddings
 2. words
+3. phonemes
 
 Labels:
 
