@@ -8,8 +8,7 @@ class Dataloader(object):
 
     def __init__(self, dataset):
         self.path = os.path.abspath(__file__)
-        # do not remove "/" from replace() together with rstrip(), it'll cause a mysterious bug occasionally
-        self.folder = self.path.replace("/dataloader.py", "/").rstrip("/")
+        self.folder = self.path.replace("dataloader.pyc", "").replace("dataloader.py", "")
         self.location = os.path.join(self.folder, 'data', dataset, 'pickled')
         self.dataset = dataset
     

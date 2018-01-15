@@ -5,6 +5,7 @@ The file contains the class and methods for loading and aligning datasets
 import numpy as np
 import urllib2
 import sys
+import os
 from subprocess import call
 
 __author__ = "Prateek Vij"
@@ -28,7 +29,8 @@ def phoneme_hotkey_enc(phoneme):
 def download(dataset, feature, dest):
     call(['mkdir', '-p', dest])
     url = "http://sorena.multicomp.cs.cmu.edu/downloads/" + dataset + '/' + feature + '.pkl'
-    file_path = dest  + feature + '.pkl'
+    file_path = os.path.join(dest, feature + '.pkl')
+    print file_path
 
     u = urllib2.urlopen(url)
     with open(file_path, 'wb') as f:
@@ -47,3 +49,4 @@ def download(dataset, feature, dest):
             sys.stdout.write('\r')
             sys.stdout.write("[%-20s] [%3.2f%%]" % ('='*int((file_size_dl * 100. / file_size)/5), file_size_dl * 100. / file_size))
             sys.stdout.flush()
+    sys.stdout.write('\n')
