@@ -4,3 +4,4 @@ datasets/
 *.pkl
 *.hdf5
 *.tar
+.vscode/

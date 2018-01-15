@@ -19,7 +19,7 @@ __version__ = "1.0.1"
 __status__ = "Production"
 
 
-class Dataset():
+class Dataset(object):
     """Primary class for loading and aligning dataset"""
 
     def __init__(self, dataset_file='', stored=False):
