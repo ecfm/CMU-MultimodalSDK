@@ -1,4 +1,4 @@
-## The datasets are currently unavailable for download until 01/18/2018. Please check the ACL 2018 workshop page: http://multicomp.cs.cmu.edu/multimodalacl2018 ##
+## The datasets are currently unavailable for download until 01/18/2018. Please check the ACL 2018 workshop page: http://multicomp.cs.cmu.edu/acl2018multimodalchallenge/ ##
 
 # CMU-MultimodalDataSDK
 
