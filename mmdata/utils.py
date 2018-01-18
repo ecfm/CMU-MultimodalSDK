@@ -32,7 +32,11 @@ def download(dataset, feature, dest):
     file_path = os.path.join(dest, feature + '.pkl')
     print file_path
 
-    u = urllib2.urlopen(url)
+    try:
+        u = urllib2.urlopen(url)
+    except urllib2.HTTPError:
+        print "The requested data is not available for {} dataset.".format(dataset)
+        return False
     with open(file_path, 'wb') as f:
         meta = u.info()
         file_size = int(meta.getheaders("Content-Length")[0])
