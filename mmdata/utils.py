@@ -50,3 +50,4 @@ def download(dataset, feature, dest):
             sys.stdout.write("[%-20s] [%3.2f%%]" % ('='*int((file_size_dl * 100. / file_size)/5), file_size_dl * 100. / file_size))
             sys.stdout.flush()
     sys.stdout.write('\n')
+    return True

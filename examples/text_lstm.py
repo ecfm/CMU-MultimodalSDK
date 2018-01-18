@@ -20,7 +20,9 @@ from mmdata import MOSI
 mosi = MOSI()
 embeddings = mosi.embeddings()
 sentiments = mosi.sentiments()
-train_ids, valid_ids, test_ids = mosi.split()
+train_ids = mosi.train()
+valid_ids = mosi.valid()
+test_ids = mosi.test()
 
 # Some data preprocessing
 maxlen = 15 # Each utterance will be truncated/padded to 15 words

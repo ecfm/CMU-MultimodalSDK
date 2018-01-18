@@ -16,7 +16,9 @@ class Dataloader(object):
         feature_path = os.path.join(self.location, feature + '.pkl')
         feature_present = os.path.exists(feature_path)
         if not feature_present:
-            download(self.dataset, feature, self.location)
+            downloaded = download(self.dataset, feature, self.location)
+            if not downloaded:
+                return None
 
         # TODO: check MD5 values and etc. to ensure the downloaded dataset's intact
         with open(feature_path, 'rb') as fp:
@@ -24,7 +26,9 @@ class Dataloader(object):
                 feature_values = load(fp)
             except:
                 print "The previously downloaded dataset is compromised, downloading a new copy..."
-                download(self.dataset, self.location)
+                download(self.dataset, feature, self.location)
+                if not downloaded:
+                    return None
         return feature_values
 
     def facet(self):
@@ -72,11 +76,20 @@ class Dataloader(object):
         emotions_values = self.get_feature('emotions')
         return emotions_values
 
-    def split(self):
+    def train(self):
         """Returns three sets of video ids: train, dev, test"""
-        split_sets = self.get_feature('split')
-        train_set, dev_set, test_set = split_sets
-        return train_set, dev_set, test_set
+        train_ids = self.get_feature('train')
+        return train_ids
+
+    def valid(self):
+        """Returns three sets of video ids: train, dev, test"""
+        valid_ids = self.get_feature('valid')
+        return valid_ids
+
+    def test(self):
+        """Returns three sets of video ids: train, dev, test"""
+        test_ids = self.get_feature('test')
+        return test_ids
 
 class MOSI(Dataloader):
     """Dataloader for CMU-MOSI dataset"""

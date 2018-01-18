@@ -121,7 +121,9 @@ The resulting `aligned` is another nested dictionary that is of the same structu
 In the CMU Multimodal Data SDK, train/validation/test splits are given as three Python `set`s of video IDs. Users can partition their obtained data according to the affiliations of their video IDs. The splits are obtained through the `.splits()` method. Such splits guarantees that segments from the same video will not be scattered across train/valid/test set.
 
 ```python
->>> train_ids, valid_ids, test_ids = mosi.splits()
+>>> train_ids = mosi.train()
+>>> valid_ids = mosi.valid()
+>>> test_ids = mosi.test()
 ```
 
 Sentiment labels will be provided in nested dictionaries. The dictionary has two levels, such that one can access the labels by `labels[video_id][segment_id]`. labels are obtained through the following method:
@@ -130,7 +132,7 @@ Sentiment labels will be provided in nested dictionaries. The dictionary has two
 >>> labels = mosi.sentiments()
 ```
 
-
+(For MOSEI dataset, the test set data as well as the sentiment labels will be released later.)
 
 ### 3.6 A Demo on Data Loading and Training Text-based LSTM
 
@@ -203,16 +205,3 @@ In the subsampling method, given a large segment of the reference modality, we r
 **3) Supersampling** 
 
 In the supersampling method, a small piece of the reference modality is replicated to match the length of the larger modality segment.
-
-The given dictionary (it is also present as a downloadable file in the repository) when loaded with the data can be aligned by simply calling the align() function. A sample code snippet is as shown below:
-
-```python
-# Assuming the dictionary is stored in the variable "mosi_dict"
-
-	print mosi_dict.modalities	# shows all modalities loaded in the dictionary and the modality corresponding to its modality codes (eg: {word_embeddings: modality_0, phonemes: modality_1, etc..} )
-
-	mosi_dict_aligned = mosi_dict.align('modality_0') # Function to align all modalities with respect to modality_0. 
-
-# In the dictionary, each key is only the modality_code and not the name of the modality itself. Hence only the modality_code needs to be passed to the function.	
-
-```
