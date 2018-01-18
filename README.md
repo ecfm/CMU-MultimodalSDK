@@ -2,7 +2,7 @@
 
 # CMU-MultimodalDataSDK
 
-CMU-MultimodalDataSDK provides tools that facilitates simple and fast loading of well-known multimodal machine learning datasets such as CMU-MOSEI, CMU-MOSI, POM, and ICT-MMMO. 
+CMU-MultimodalDataSDK provides tools that facilitates simple and fast loading of well-known multimodal machine learning datasets such as CMU-MOSEI and CMU-MOSI. (The POM and ICT-MMMO datasets are coming soon!)
 
 ## 1. CMU Multimodal Data SDK
 
