@@ -39,6 +39,19 @@ class Dataset(object):
         self.stored = stored
         self.dataset_file = dataset_file
         self.phoneme_dict = utils.p2fa_phonemes
+        self.loaded = False
+
+    def __getitem__(self, key):
+        """Adding direct access of internal data"""
+        return self.feature_dict[key]
+
+    def keys(self):
+        """Wrapper for .keys() for the feature_dict"""
+        return self.feature_dict.keys()
+
+    def items(self):
+        """Wrapper for .items() for the feature_dict"""
+        return self.feature_dict.items()
 
     def load(self):
         """
@@ -56,6 +69,7 @@ class Dataset(object):
         # Load the feature dictionary from the dataset files
         self.dataset_csv = self.dataset_file
         self.feature_dict = self.controller()
+        self.loaded = True
         return self.feature_dict
 
     def controller(self):

@@ -5,3 +5,4 @@ datasets/
 *.hdf5
 *.tar
 .vscode/
+misc/

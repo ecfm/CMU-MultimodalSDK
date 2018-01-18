@@ -10,56 +10,27 @@ This script shows you how to:
 from __future__ import print_function
 import numpy as np
 import pandas as pd
-
-from subprocess import call
 from collections import defaultdict
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Embedding, LSTM, Bidirectional
-
-import sys
-sys.path.append('../')
-
-from lib.dataset import Dataset
+from mmdata import MOSI
 
 
 # Download the data if not present
-MOSI_url = "http://sorena.multicomp.cs.cmu.edu/downloads/MOSI.tar.gz"
-call(['python', 'downloader.py', '--dataset', 'MOSI'])
-
-# Arguments for Dataset class
-csv_fpath = "../configs/CMU_MOSI_all.csv"
-
-# Code for loading
-d = Dataset(csv_fpath)
-features = d.load()
-
-# View modalities
-print(d.modalities) # Modalities are numbered as modality_0, modality_1, ....
-
-# load the labels
-print("Loading labels...")
-labels_dict = defaultdict(lambda: dict())
-label_table = pd.read_csv("../datasets/MOSI/labels/OpinionLevelSentiment.csv", header=None)
-for i in range(label_table.shape[0]):
-    vid = label_table.iloc[i][2]
-    sid = str(label_table.iloc[i][3]) # in the feature dict sid is a number in string format
-    label = (label_table.iloc[i][4] > 0) # for this tutorial we only predict positive or negative
-    labels_dict[vid][sid] = label
-print("Finished!")
-
+mosi = MOSI()
+embeddings = mosi.embeddings()
+sentiments = mosi.sentiments()
+train_ids, valid_ids, test_ids = mosi.split()
 
 # Some data preprocessing
-maxlen = 15 # Each utterance should not have more than 15 words
-video_count = 0
+maxlen = 15 # Each utterance will be truncated/padded to 15 words
 x_train = []
 y_train = []
 x_test = []
 y_test = []
 
 print("Preparing train and test data...")
-# By looking at the d.modalities we can know that modality_3 is the embeddings
-for vid, vdata in features['modality_3'].items():
-    video_count += 1 # keep track of how many videos we have seen, only the first 63 used for train
+for vid, vdata in embeddings['embeddings'].items(): # note that even Dataset with one feature will require explicit indexing of features
     for sid, sdata in vdata.items():
         if sdata == []:
             continue
@@ -73,9 +44,10 @@ for vid, vdata in features['modality_3'].items():
         for i in range(maxlen - len(sdata)):
             example.append(np.zeros(sdata[0][2].shape)) # padding each example to maxlen
         example = np.asarray(example)
-        label = labels_dict[vid][sid]
+        label = 1 if sentiments[vid][sid] >= 0 else 0 # binarize the labels
 
-        if video_count <= 63:
+        # here we just use everything except training set as the test set
+        if vid in train_ids:
             x_train.append(example)
             y_train.append(label)
         else:
@@ -96,7 +68,7 @@ model.add(Dense(1, activation='sigmoid'))
 
 
 # try using different optimizers and different optimizer configs
-model.compile('adam', 'binary_crossentropy', metrics=['accuracy', 'precision', 'recall'])
+model.compile('adam', 'binary_crossentropy', metrics=['binary_accuracy'])
 batch_size = 32
 
 print('Train...')

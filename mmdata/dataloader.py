@@ -5,7 +5,6 @@ from utils import download
 
 class Dataloader(object):
     """Loader object for datasets"""
-
     def __init__(self, dataset):
         self.path = os.path.abspath(__file__)
         self.folder = self.path.replace("dataloader.pyc", "").replace("dataloader.py", "")
@@ -21,7 +20,11 @@ class Dataloader(object):
 
         # TODO: check MD5 values and etc. to ensure the downloaded dataset's intact
         with open(feature_path, 'rb') as fp:
-            feature_values = load(fp)
+            try:
+                feature_values = load(fp)
+            except:
+                print "The previously downloaded dataset is compromised, downloading a new copy..."
+                download(self.dataset, self.location)
         return feature_values
 
     def facet(self):
@@ -58,9 +61,30 @@ class Dataloader(object):
         """Returns a single-field dataset object for opensmile features"""
         opensmile_values = self.get_feature('opensmile')
         return opensmile_values
-    
+
+    def sentiments(self):
+        """Returns a nested dictionary that stores the sentiment values"""
+        sentiments_values = self.get_feature('sentiments')
+        return sentiments_values
+
+    def emotions(self):
+        """Returns a nested dictionary that stores the emotion distributions"""
+        emotions_values = self.get_feature('emotions')
+        return emotions_values
+
+    def split(self):
+        """Returns three sets of video ids: train, dev, test"""
+        split_sets = self.get_feature('split')
+        train_set, dev_set, test_set = split_sets
+        return train_set, dev_set, test_set
 
 class MOSI(Dataloader):
     """Dataloader for CMU-MOSI dataset"""
     def __init__(self):
         super(MOSI, self).__init__('MOSI')
+
+
+class MOSEI(Dataloader):
+    """Dataloader for CMU-MOSEI dataset"""
+    def __init__(self):
+        super(MOSEI, self).__init__('MOSEI')

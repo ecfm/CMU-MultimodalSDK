@@ -29,7 +29,7 @@ year={2017}
 
 In this section we outline how a user can utilize the CMU Multimodal Data SDK to easily load large-scale multimodal datasets. We demonstrate the usage through an example which involves three steps: 1) Fetching Datasets 2) Loading and Merging Data 3) Feature Alignment. 
 
-### 3.1 Fetching Datasets
+### 3.1 Installation
 
 To start using this toolkit, simply clone this repository.
 
@@ -45,18 +45,20 @@ export PYTHONPATH="/path/to/cloned/directory/CMU-MultimodalDataSDK:$PYTHONPATH"
 
 Then it's all set.
 
-Now let's get started by an example loading the CMU-MOSI dataset. We provide several different multi-modal features for each of our datasets. For example, if we want to load the FACET features and word embeddings of CMU-MOSI, we do so by
+### 3.2 Fetching Datasets ###
+
+Now let's get started by an example for loading the CMU-MOSI dataset. We can choose from a variety of features for each dataset (for available features for each dataset, refer to section 3.8). For example, if we want to load the FACET features and word embeddings of CMU-MOSI, we do so by
 
 ```python
->>> import mmdata
+>>> import mmdata # import the multimodal data SDK
 >>> mosi = mmdata.MOSI() # create a loader object for MOSI dataset
 >>> mosi_facet = mosi.facet() # download the facet features for the first time and load it
 >>> mosi_emb = mosi.embeddings() # download & load word embeddings
 ```
 
-Simple as that. Now to explain the returned `mosi_facet` and `mosi_emb`. All the features are provided as `Dataset` class objects (whose definition can be found in `mmdata/dataset.py`). They are designed so that different features can be merged into a larger `Dataset`, and most importantly, once you have a `Dataset` with multiple features, there's a class method for aligning the features' timestamps. We'll cover those details in the following sections.
+Simple as that. Now to explain the returned `mosi_facet` and `mosi_emb`. They are all provided as `Dataset` class objects (whose definition can be found in `mmdata/dataset.py`). These objects are designed so that different features can be merged into a larger `Dataset` easily, and most importantly, once you have a `Dataset` with multiple features, there's a class method for aligning the features' timestamps. We'll cover those details in the following sections.
 
-### 3.2 Merging and Accessing Datasets
+### 3.3 Merging and Accessing Datasets
 
 Now that we have loaded the embeddings and facet features for CMU-MOSI, we may want to merge these two uni-feature `Dataset` into one `Dataset` to make them ready for the next step. And we also want to access the actual data inside. We'll go through the respectively.
 
@@ -73,90 +75,75 @@ Now that we have loaded the embeddings and facet features for CMU-MOSI, we may w
 
 The resulting `mosi_facet_n_words` is still a `Dataset` object, but now it contains 2 types of features.
 
-The data of any `Dataset` object can be accessed from its `feature_dict` attribute. As the name suggests, the actual features are stored in a nested dictionaries structure.
+The data of any `Dataset` object can be accessed as if it is a nested dictionary. It has three levels, the first level of keys are the names of the features it contains, i.e 'embeddings', 'facet', 'covarep'.
 
 ```python
->>> feats = mosi_facet_n_words.feature_dict # the actual data now in the feats variable
->>> feats.keys() # the first hierarchy of the nested dict is the feature types
+>>> mosi_facet.keys() # the first hierarchy of the nested dict is the feature names
+['facet']
+>>> mosi_facet_n_emb.keys()
 ['facet', 'embeddings']
 ```
 
-The structure of `feats` is a nested dictionary with 3 levels. You can access the data of a particular type of feature for a particular segment in a particular video by the following indexing: `feats[modality_name][video_id][segment_id]`. Here `modality_name` is just the name of the feature you want to access, e.g. 'facet', 'embeddings'. Video and segment IDs are strings that characterizes the video and segments in the dataset. While segment IDs are just strings of integers (e.g. '1', '2', '3', '16') indicating which segment it is within the video, video IDs usually doesn't have a pattern. But if you want to take a look at the video IDs, you can access them by looking at the keys of the second hierarchy of the nested dictionary.
+The structure of a Dataset object is the same as a nested dictionary with 3 levels. You can access the data of a particular type of feature for a particular segment in a particular video by the following indexing: `feats[modality_name][video_id][segment_id]`. Here `modality_name` is just the name of the feature you want to access, e.g. 'facet', 'embeddings'. Video and segment IDs are strings that characterizes the video and segments in the dataset. While segment IDs are just strings of integers (e.g. '1', '2', '3', '16') indicating which segment it is within the video, video IDs usually doesn't have a pattern. But if you want to take a look at the video IDs, you can access them by looking at the keys of the second hierarchy of the nested dictionary.
 
 ```python
->>> vids = feats['facet'].keys() # extract the list of all video ids
+>>> vids = mosi_facet_n_emb['facet'].keys() # extract the list of all video ids
 >>> vid = vids[0] # pick the first video
 >>> segment_data = feats['facet'][vid]['3'] # access the facet data for the 3rd segment
 ```
 
-As a side note, `Dataset` that has only one type of features (usually obtained through methods mentioned in section 3.1) will have only one key in the first level, with the key being the same as the method that is used to load the feature. For a more detailed explanation for the feature dictionaries, refer to section 4.
+Here, each segment data is a `list` of `tuple`s with the following format:
 
-### 3.3 Feature Alignment
+```python
+segment_data = [
+  (start_time_1, end_time_1, numpy.array([...])),
+  (start_time_2, end_time_2, numpy.array([...])),
+  (start_time_3, end_time_3, numpy.array([...])),
+  				...			...
+  (start_time_t, end_time_t, numpy.array([...])),
+]
+```
 
-Next comes the most important functionality of the Dataset class: aligning the features based on a specified 'pivot' feature. For what exactly the alignment algorithm does, please refer to section 5. Here's an example for aligning features according to the word embeddings.
+Each tuple contains a time slice indicated by start and end time and the corresponding feature vector for that time slice. And each segment has many such slices.
+
+### 3.4 Feature Alignment
+
+Next comes the most important functionality of the Dataset class: aligning the features based on a specified 'pivot' feature. It is a common problem that different features in multimodal machine learning are in different temporal frequencies, thus hard to combine. The alignment basically tries to make sure that the features are re-sampled so that they are all temporally aligned. For what exactly the alignment algorithm does, please refer to section 5. Here's the example code for aligning features according to the word embeddings.
 
 ```python
 >>> aligned = mosi_facet_n_words.align('embeddings')
 ```
 
-The resulting `aligned` is another nested dictionary that is of the same structure as the `feats` we've discussed before. Note that the pivot feature that is aligned to is dropped in this dictionary. Note that `align` does not modify the original `Dataset`, so its `feature_dict` will still be the original, unaligned version.
+The resulting `aligned` is another nested dictionary that is of the same structure as the `feats` we've discussed before. After alignment, the pivot feature that is aligned to is dropped in this dictionary, so we usually use the feature `words` (which is one-hot vector features) as the pivot for word-level alignment. Note that `align` does not modify the original `Dataset`, so you'll have to keep the returned data in another variable.
 
-### 3.4 A Demo on Loading the Full Dataset and Train Text-based LSTM
+### 3.5 Loading Train/Validation/Test Splits and Labels
 
-For a more comprehensive usage, you can refer to the demo `text_lstm.py` in the `CMU-MultimodalDataSDK/` directory. In order to run this demo, you'll need to install Keras and at least one of the backends (Tensorflow or Theano) it uses. This demo shows you how to download the full dataset and Links for Features
-
-### 3.5 Full Feature Set:
-
-For the full feature set, there are two options:
-
-1. Download the entire dataset along with Raw video, audio and text files with processed features also.
-  Link: http://sorena.multicomp.cs.cmu.edu/downloads/mosi/full/MOSI.tar.gz
-
-When the full dataset is downloaded, the full feature set can be loaded onto the dictionary simply by calling the load() function as mentioned below. All code files are present in the lib/ directory.
+In the CMU Multimodal Data SDK, train/validation/test splits are given as three Python `set`s of video IDs. Users can partition their obtained data according to the affiliations of their video IDs. The splits are obtained through the `.splits()` method. Such splits guarantees that segments from the same video will not be scattered across train/valid/test set.
 
 ```python
-from mmdata.dataset import Dataset	
-
-csv_fpath = "../configs/CMU_MOSI_all.csv"
-
-# Code for loading
-d = Dataset(csv_fpath)
-features = d.load() # this gives you the feature_dict
+>>> train_ids, valid_ids, test_ids = mosi.splits()
 ```
-This loads the features into a dictionary for use. The structure of the dictionary is explained below under the section "Dictionary Structure".
 
-2. Download a pickled dictionary file containing the unaligned feature set for direct use:
-  Link: http://sorena.multicomp.cs.cmu.edu/downloads/mosi/full/MOSI_before_align.pkl
+Sentiment labels will be provided in nested dictionaries. The dictionary has two levels, such that one can access the labels by `labels[video_id][segment_id]`. labels are obtained through the following method:
 
-When the dictionary is downloaded, it bypasses the load step mentioned above and can be directly used as the feature dictionary (the structure of the dictionary is mentioned below under the section "Dictionary Structure")
+```python
+>>> labels = mosi.sentiments()
+```
 
-It is worthy to note here that this dictionary is the unaligned dictionary. This was done to provide more freedom to the user to choose their own plan of action to perform on the unaligned loaded dictionary. The section below on alignment strategies explains the simple method to align the features and return the aligned dictionary of features for use. 
 
-### 3.6 Individual Features:
 
-Input the name of the feature you want to download in the link below to obtain the tarball.
+### 3.6 A Demo on Data Loading and Training Text-based LSTM
 
-http://sorena.multicomp.cs.cmu.edu/downloads/mosi/separate/ [your-feature-name-here].tar.gz
+For a more comprehensive usage, you can refer to the demo `text_lstm.py` in the `CMU-MultimodalDataSDK/examples` directory. In order to run this demo, you'll need to install Keras and at least one of the backends (Tensorflow or Theano) it uses. This demo shows you how to download the embeddings and prepare the data to train an LSTM model.
 
-Visual Features:
+### 3.7 Available Datasets and Features
 
-1. FACET
-2. OpenFace
+Currently available datasets and multimodal features are:
 
-Audio features:
-
-1. COVAREP
-2. OpenSmile
-
-Text Features:
-
-1. embeddings
-2. words
-3. phonemes
-
-Labels:
-
-1. labels
+|           | Visual          | Audio              | Textual                     |
+| --------- | --------------- | ------------------ | --------------------------- |
+| CMU-MOSI  | facet, openface | covarep, opensmile | words, embeddings, phonemes |
+| CMU-MOSEI | facet           | covarep            | words, embeddings, phonemes |
 
 ## 4. Dictionary Structure
 
