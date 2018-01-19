@@ -26,7 +26,7 @@ class Dataloader(object):
                 feature_values = load(fp)
             except:
                 print "The previously downloaded dataset is compromised, downloading a new copy..."
-                download(self.dataset, feature, self.location)
+                dowloaded = download(self.dataset, feature, self.location)
                 if not downloaded:
                     return None
         return feature_values
