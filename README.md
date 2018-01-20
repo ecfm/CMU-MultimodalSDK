@@ -19,7 +19,7 @@ If you used this toolkit in your research, please cite the following publication
 
 ```latex
 @inproceedings{zadeh2018multi,
-  title={Multi-attention recurrent network for human communication comprehension},
+  title={Multi-attention Recurrent Network for Human Communication Comprehension},
   author={Zadeh, A and Liang, PP and Poria, S and Vij, P and Cambria, E and Morency, LP},
   booktitle={AAAI},
   year={2018}
