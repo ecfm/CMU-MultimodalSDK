@@ -7,7 +7,7 @@ CMU-MultimodalDataSDK provides tools that manage the **retrieval, loading and pr
 
 ## 1. CMU Multimodal Data SDK
 
-CMU Multimodal Data SDK simplifies loading complex multimodal data. Often cases in different multimodal datasets, data comes from multiple sources and is processed in different ways which makes loading this form of data very challenging. Often the researchers find themselves dedicating significant time and energy to loading the data before building models. CMU Multimodal Data SDK allows both users and developer to:
+CMU Multimodal Data SDK simplifies loading complex multimodal data. Often cases in multimodal datasets, data comes from multiple sources and is processed in different ways which makes loading this form of data very challenging. Often the researchers find themselves dedicating significant time and energy to loading the data before building models. CMU Multimodal Data SDK allows both users and developer to:
 
 1. [user] load multimodal datasets very easily and align their modalities.
 2. [user] donwload well-known multimodal datasets easily.
@@ -156,15 +156,16 @@ Currently available datasets and multimodal features are:
 
 |           | Visual          | Audio              | Textual                     |
 | --------- | --------------- | ------------------ | --------------------------- |
-| CMU-MOSI  | facet, openface | covarep, opensmile | words, embeddings, phonemes |
 | CMU-MOSEI | facet           | covarep            | words, embeddings, phonemes |
+| CMU-MOSI  | facet, openface | covarep, opensmile | words, embeddings, phonemes |
+
 
 Below are the URLs for each dataset:
 
 | Dataset   | URL                                      |
 | --------- | ---------------------------------------- |
-| CMU-MOSI  | http://sorena.multicomp.cs.cmu.edu/downloads/MOSI |
 | CMU-MOSEI | http://sorena.multicomp.cs.cmu.edu/downloads/MOSEI |
+| CMU-MOSI  | http://sorena.multicomp.cs.cmu.edu/downloads/MOSI |
 
 ## 4. Dictionary Structure
 
