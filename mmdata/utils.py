@@ -28,7 +28,7 @@ def phoneme_hotkey_enc(phoneme):
 
 def download(dataset, feature, dest):
     call(['mkdir', '-p', dest])
-    url = "http://sorena.multicomp.cs.cmu.edu/downloads/" + dataset + '/' + feature + '.pkl'
+    url = dataset + '/' + feature + '.pkl'
     file_path = os.path.join(dest, feature + '.pkl')
     print file_path
 

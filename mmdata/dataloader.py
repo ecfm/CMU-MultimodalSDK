@@ -5,11 +5,12 @@ from utils import download
 
 class Dataloader(object):
     """Loader object for datasets"""
-    def __init__(self, dataset):
+    def __init__(self, dataset_url):
         self.path = os.path.abspath(__file__)
         self.folder = self.path.replace("dataloader.pyc", "").replace("dataloader.py", "")
-        self.location = os.path.join(self.folder, 'data', dataset, 'pickled')
-        self.dataset = dataset
+        self.dataset_folder = dataset_url.split('/')[-1]
+        self.location = os.path.join(self.folder, 'data', self.dataset_folder, 'pickled')
+        self.dataset = dataset_url.lstrip('/')
     
     def get_feature(self, feature):
         """The unified API for getting specified features"""
@@ -94,10 +95,12 @@ class Dataloader(object):
 class MOSI(Dataloader):
     """Dataloader for CMU-MOSI dataset"""
     def __init__(self):
-        super(MOSI, self).__init__('MOSI')
+        super(MOSI, self).__init__('http://sorena.multicomp.cs.cmu.edu/downloads/MOSI')
+        print "This API will be deprecated in the future versions. Please check the Github page for the current API"
 
 
 class MOSEI(Dataloader):
     """Dataloader for CMU-MOSEI dataset"""
     def __init__(self):
-        super(MOSEI, self).__init__('MOSEI')
+        super(MOSEI, self).__init__('http://sorena.multicomp.cs.cmu.edu/downloads/MOSEI')
+        print "This API will be deprecated in the future versions. Please check the Github page for the current API"

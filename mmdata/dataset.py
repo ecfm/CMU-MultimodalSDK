@@ -539,8 +539,8 @@ class Dataset(object):
         modalities = self.modalities
         alignments = self.get_alignments(align_modality)
         for modality in modalities:
-            if modality == align_modality:
-                continue
+            # if modality == align_modality:
+            #     continue
             aligned_modality = self.align_modality(modality, alignments)
             aligned_feat_dict[modality] = OrderedDict(sorted(aligned_modality.items(), key=lambda x: x[0]))
         self.aligned_feature_dict = aligned_feat_dict

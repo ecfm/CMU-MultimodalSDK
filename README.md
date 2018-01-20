@@ -3,7 +3,7 @@ CMU MultimodalDataSDK is introduced in ACL 2018 workshop on Computational Modeli
 
 # CMU-MultimodalDataSDK
 
-CMU-MultimodalDataSDK provides tools that facilitates simple and fast loading of well-known multimodal machine learning datasets such as CMU-MOSEI and CMU-MOSI. (The POM and ICT-MMMO datasets are coming soon!)
+CMU-MultimodalDataSDK provides tools that manage the **retrieval, loading and preprocessing** of well-known multimodal machine learning datasets such as CMU-MOSEI and CMU-MOSI. (The POM and ICT-MMMO datasets are coming soon!)
 
 ## 1. CMU Multimodal Data SDK
 
@@ -51,36 +51,45 @@ Then it's all set.
 Now let's get started by an example for loading the CMU-MOSI dataset. We can choose from a variety of features for each dataset (for available features for each dataset, refer to section 3.8). For example, if we want to load the FACET features and word embeddings of CMU-MOSI, we do so by
 
 ```python
->>> import mmdata # import the multimodal data SDK
->>> mosi = mmdata.MOSI() # create a loader object for MOSI dataset
+>>> from mmdata import Dataloader # import a Dataloader class from multimodal data SDK
+
+>>> mosi = Dataloader('http://sorena.multicomp.cs.cmu.edu/downloads/MOSI') # feed in the URL for the dataset. For URLs for all datasets, refer to section 3.7.
+
 >>> mosi_facet = mosi.facet() # download the facet features for the first time and load it
+
 >>> mosi_emb = mosi.embeddings() # download & load word embeddings
 ```
 
-Simple as that. Now to explain the returned `mosi_facet` and `mosi_emb`. They are all provided as `Dataset` class objects (whose definition can be found in `mmdata/dataset.py`). These objects are designed so that different features can be merged into a larger `Dataset` easily, and most importantly, once you have a `Dataset` with multiple features, there's a class method for aligning the features' timestamps. We'll cover those details in the following sections.
+Simple as that. Note that you always need to feed in the URL to the `Dataloader` object, in order to specify the dataset you want to load. Don't worry, if the dataset has been downloaded, it won't be downloaded again.
+
+Now to explain the returned `mosi_facet` and `mosi_emb`. They are all provided as `Dataset` class objects (whose definition can be found in `mmdata/dataset.py`). These objects are designed so that different features can be merged into a larger `Dataset` easily, and most importantly, once you have a `Dataset` with multiple features, there's a class method for aligning the features' timestamps. We'll cover those details in the following sections.
 
 ### 3.3 Merging and Accessing Datasets
 
-Now that we have loaded the embeddings and facet features for CMU-MOSI, we may want to merge these two uni-feature `Dataset` into one `Dataset` to make them ready for the next step. And we also want to access the actual data inside. We'll go through the respectively.
+Now that we have loaded separately the embeddings and facet features for CMU-MOSI, we may want to merge these two single-feature `Dataset` into one `Dataset` to make them ready for the next step. And we also want to access the actual data inside. We'll go through the respectively.
 
  Here's an example of merging different features.
 
 ```python
->>> import mmdata
->>> from mmdata import Dataset # we need the Dataset class for merging
->>> mosi = mmdata.MOSI()
+>>> from mmdata import Dataloader, Dataset # we need the Dataset class for merging
+
+>>> mosi = Dataloader('http://sorena.multicomp.cs.cmu.edu/downloads/MOSI')
+
 >>> mosi_facet = mosi.facet()
+
 >>> mosi_emb = mosi.embeddings()
+
 >>> mosi_facet_n_emb = Dataset.merge(mosi_facet, mosi_emb) # merge the two Datasets
 ```
 
 The resulting `mosi_facet_n_words` is still a `Dataset` object, but now it contains 2 types of features.
 
-The data of any `Dataset` object can be accessed as if it is a nested dictionary. It has three levels, the first level of keys are the names of the features it contains, i.e 'embeddings', 'facet', 'covarep'.
+The data of any `Dataset` object can be accessed as if it is a nested dictionary. It has three levels. **The first level of keys are the names of the features it contains**, i.e 'embeddings', 'facet', 'covarep'. This may look a bit redundant for single-feature `Dataset`, but it is useful when you have multiple features in one `Dataset`.
 
 ```python
 >>> mosi_facet.keys() # the first hierarchy of the nested dict is the feature names
 ['facet']
+
 >>> mosi_facet_n_emb.keys()
 ['facet', 'embeddings']
 ```
@@ -89,7 +98,9 @@ The structure of a Dataset object is the same as a nested dictionary with 3 leve
 
 ```python
 >>> vids = mosi_facet_n_emb['facet'].keys() # extract the list of all video ids
+
 >>> vid = vids[0] # pick the first video
+
 >>> segment_data = feats['facet'][vid]['3'] # access the facet data for the 3rd segment
 ```
 
@@ -147,6 +158,13 @@ Currently available datasets and multimodal features are:
 | --------- | --------------- | ------------------ | --------------------------- |
 | CMU-MOSI  | facet, openface | covarep, opensmile | words, embeddings, phonemes |
 | CMU-MOSEI | facet           | covarep            | words, embeddings, phonemes |
+
+Below are the URLs for each dataset:
+
+| Dataset   | URL                                      |
+| --------- | ---------------------------------------- |
+| CMU-MOSI  | http://sorena.multicomp.cs.cmu.edu/downloads/MOSI |
+| CMU-MOSEI | http://sorena.multicomp.cs.cmu.edu/downloads/MOSEI |
 
 ## 4. Dictionary Structure
 
