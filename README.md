@@ -18,11 +18,11 @@ CMU Multimodal Data SDK simplifies loading complex multimodal data. Often cases 
 If you used this toolkit in your research, please cite the following publication:
 
 ```latex
-@inproceedings{tensoremnlp17,
-title={Tensor Fusion Network for Multimodal Sentiment Analysis},
-author={Zadeh, Amir and Chen, Minghai and Poria, Soujanya and Cambria, Erik and Morency, Louis-Philippe},
-booktitle={Empirical Methods in Natural Language Processing, EMNLP},
-year={2017}
+@inproceedings{zadeh2018multi,
+  title={Multi-attention recurrent network for human communication comprehension},
+  author={Zadeh, A and Liang, PP and Poria, S and Vij, P and Cambria, E and Morency, LP},
+  booktitle={AAAI},
+  year={2018}
 }
 ```
 
