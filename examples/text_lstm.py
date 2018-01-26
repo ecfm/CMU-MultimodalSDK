@@ -17,7 +17,7 @@ from mmdata import MOSI
 
 
 # Download the data if not present
-mosi = MOSI()
+mosi = Dataloader('http://sorena.multicomp.cs.cmu.edu/downloads/MOSI')
 embeddings = mosi.embeddings()
 sentiments = mosi.sentiments()
 train_ids = mosi.train()
