@@ -55,3 +55,33 @@ def download(dataset, feature, dest):
             sys.stdout.flush()
     sys.stdout.write('\n')
     return True
+
+def download_raw(dataset, dest):
+    call(['mkdir', '-p', dest])
+    url = dataset + '/' + dataset + '.tar'
+    file_path = os.path.join(dest, dataset + '.tar')
+    print file_path
+
+    try:
+        u = urllib2.urlopen(url)
+    except urllib2.HTTPError:
+        print "The requested data is not available for {} dataset.".format(dataset)
+        return False
+    with open(file_path, 'wb') as f:
+        meta = u.info()
+        file_size = int(meta.getheaders("Content-Length")[0])
+        print "Downloading: {}, size: {}".format(' '.join([dataset, feature]), file_size)
+
+        file_size_dl = 0
+        block_sz = 8192
+        while True:
+            buffer = u.read(block_sz)
+            if not buffer:
+                break
+            file_size_dl += len(buffer)
+            f.write(buffer)
+            sys.stdout.write('\r')
+            sys.stdout.write("[%-20s] [%3.2f%%]" % ('='*int((file_size_dl * 100. / file_size)/5), file_size_dl * 100. / file_size))
+            sys.stdout.flush()
+    sys.stdout.write('\n')
+    return True

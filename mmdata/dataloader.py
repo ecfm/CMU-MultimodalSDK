@@ -92,6 +92,12 @@ class Dataloader(object):
         test_ids = self.get_feature('test')
         return test_ids
 
+    def original(self, dest):
+        """Downloads the dataset files as a tar ball, to the specified destination"""
+        # raw_path = os.path.join(dest, self.dataset + '.tar')
+        downloaded = download_raw(self.dataset, dest)
+
+
 class MOSI(Dataloader):
     """Dataloader for CMU-MOSI dataset"""
     def __init__(self):
