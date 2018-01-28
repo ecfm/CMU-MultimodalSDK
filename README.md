@@ -216,6 +216,8 @@ Features = { modality_0: {
 
 ## 5. Alignment Strategies
 
+![Alignment Strategies](https://github.com/A2Zadeh/CMU-MultimodalDataSDK/blob/master/examples/Alignment_Strategies.png)
+
 Alignment of modalities form an important component in Multimodal Machine Learning. To completely leverage the power of the modalities combined together, there should be a uniform convention or reference point over which each modality is aligned to help capture them together. Here, we take any one of the modalities as our reference point with which other modalities are aligned.
 
 Given a reference modality, our objective is to match as accurately as possible the exact time frames of occurrence of the same event among all other modalities. 
