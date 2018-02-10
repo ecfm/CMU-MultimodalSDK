@@ -186,27 +186,27 @@ Below are the URLs for each dataset:
 
 If you are using any of these datasets, please cite the corresponding papers:
 
-```
-IEMOCAP: 
 
+IEMOCAP: 
+```
 C. Busso, M. Bulut, C.C. Lee, A. Kazemzadeh, E. Mower, S. Kim, J.N. Chang, S. Lee, and S.S. Narayanan, "IEMOCAP: Interactive emotional dyadic motion capture database," Journal of Language Resources and Evaluation, vol. 42, no. 4, pp. 335-359, December 2008
+```
 
 CMU-MOSI and CMU-MOSEI:
-
+```
 Amir Zadeh, Rowan Zellers, Eli Pincus, Louis-Philippe Morency. "Multimodal Sentiment Intensity Analysis in Videos: Facial Gestures and Verbal Messages", IEEE Intelligent Systems 31, no. 6 (2016): 82-88.
-
+```
 MOUD:
-
+```
 Veronica Perez-Rosas, Rada Mihalcea, and Louis-Philippe Morency Utterance-Level Multimodal Sentiment Analysis, in Proceedings of the Association for Computational Linguistics (ACL 2013), Sofia, Bulgaria, 2013.
-
+```
 MMMO:
-
+```
 Wollmer, M.; Weninger, F.; Knaup, T.; Schuller, B.; Sun, C.; Sagae, K.; and Morency, L.-P. 2013. Youtube movie reviews: Sentiment analysis in an audio-visual context. IEEE Intelligent Systems 28(3):46–53.
-
+```
 POM:
-
+```
 Park, S.; Shim, H. S.; Chatterjee, M.; Sagae, K.; and Morency, L.-P. 2014. Computational analysis of persuasiveness in social multimedia: A novel dataset and multimodal prediction approach. In Proceedings of the 16th International Conference on Multimodal Interaction, ICMI ’14, 50–57. New York, NY, USA: ACM
-
 ```
 
 ## 4. Dictionary Structure
