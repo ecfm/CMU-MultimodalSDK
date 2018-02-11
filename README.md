@@ -248,24 +248,26 @@ Features = { modality_0: {
 
 ## 5. Alignment Strategies
 
-![Alignment Strategies](https://github.com/A2Zadeh/CMU-MultimodalDataSDK/blob/master/examples/Alignment_Strategies.png)
-
 Alignment of modalities form an important component in Multimodal Machine Learning. To completely leverage the power of the modalities combined together, there should be a uniform convention or reference point over which each modality is aligned to help capture them together. Here, we take any one of the modalities as our reference point with which other modalities are aligned.
 
 Given a reference modality, our objective is to match as accurately as possible the exact time frames of occurrence of the same event among all other modalities. 
 
 The beginning and end of the reference modality is denoted by the variables start_interval and end_interval respectively. The beginning and end of the other modality that is to be aligned with the reference is denoted by feat_start and feat_end respectively 
 
-There are three possible alignment strategies in this regard:
+The possible alignment strategies in this regard are:
 
-**1) Weighted Averaging**
+** Weighted Averaging**
 
-In the weighted averaging method, the extent of overlap of segments of each modality with the reference modality segment is considered as the weight of each modality. An average is taken with these weights to align them to the reference.
+The two methods mentioned below use the concept of weighted averaging for alignment. The extent of overlap of segments of each modality with the reference modality segment is considered as the weight of each modality. An average is taken with these weights to align them to the reference. The methods are:
 
-**2) Subsampling**
+**1) Sub-sampling**
+
+![Sub-Sampling](https://github.com/A2Zadeh/CMU-MultimodalDataSDK/blob/master/examples/Sub_Sampling.png)
 
 In the subsampling method, given a large segment of the reference modality, we repeatedly fit as many multiple identical blocks of a modality segment to match the length of the reference. 
 
-**3) Supersampling** 
+**2) Super-sampling** 
+
+![Super-Sampling](https://github.com/A2Zadeh/CMU-MultimodalDataSDK/blob/master/examples/Super_Sampling.png)
 
 In the supersampling method, a small piece of the reference modality is replicated to match the length of the larger modality segment.
