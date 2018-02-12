@@ -3,14 +3,14 @@ CMU MultimodalDataSDK is introduced in ACL 2018 workshop on Computational Modeli
 
 # CMU-MultimodalDataSDK
 
-CMU-MultimodalDataSDK provides tools that manage the **retrieval, loading and preprocessing** of well-known multimodal machine learning datasets such as CMU-MOSEI and CMU-MOSI. (The POM and ICT-MMMO datasets are coming soon!)
+CMU-MultimodalDataSDK provides tools that manage the **downloading, loading and preprocessing** of well-known multimodal machine learning datasets such as CMU-MOSEI and CMU-MOSI. (The POM and ICT-MMMO datasets are coming soon!)
 
 ## 1. CMU Multimodal Data SDK
 
-CMU Multimodal Data SDK simplifies loading complex multimodal data. Often cases in multimodal datasets, data comes from multiple sources and is processed in different ways which makes loading this form of data very challenging. Often the researchers find themselves dedicating significant time and energy to loading the data before building models. CMU Multimodal Data SDK allows both users and developer to:
+CMU Multimodal Data SDK simplifies loading complex multimodal data. In multimodal datasets, data comes from multiple sources and is processed in different ways which makes loading this form of data very challenging. Often the researchers find themselves dedicating significant time and energy to loading the data before building models. CMU Multimodal Data SDK allows both users and developers to:
 
-1. [user] load multimodal datasets very easily and align their modalities.
-2. [user] donwload well-known multimodal datasets easily.
+1. [user] donwload well-known multimodal datasets easily.
+2. [user] load multimodal datasets very easily and align their modalities.
 3. [developer] extend the SDK to your own data and publicizing your dataset. 
 
 ## 2. Citations
@@ -25,6 +25,8 @@ If you used this toolkit in your research, please cite the following publication
   year={2018}
 }
 ```
+
+Furthermore please cite the datasets used in your experiments.
 
 ## 3. Usage
 
@@ -44,18 +46,18 @@ Then add the cloned folder to your `$PYTHONPATH` environment variable. For examp
 export PYTHONPATH="/path/to/cloned/directory/CMU-MultimodalDataSDK:$PYTHONPATH"
 ```
 
-Then it's all set.
+Then this step is all set.
 
 ### 3.2 Fetching Datasets ###
 
-Now let's get started by an example for loading the CMU-MOSEI dataset. We can choose from a variety of features for each dataset (for available features for each dataset, refer to section 3.8). For example, if we want to load the FACET features and word embeddings of CMU-MOSEI, we do so by
+Let's get started by an example for loading the CMU-MOSEI dataset. We can choose from a variety of features for each dataset (for available features for each dataset, refer to section 3.8). As an example, if we want to load FACET visual features and word embeddings of CMU-MOSEI, we do so by
 
 ```python
 >>> from mmdata import Dataloader # import a Dataloader class from multimodal data SDK
 
 >>> mosei = Dataloader('http://sorena.multicomp.cs.cmu.edu/downloads/MOSEI') # feed in the URL for the dataset. For URLs for all datasets, refer to section 3.7.
 
->>> mosei_facet = mosei.facet() # download & load facet feature
+>>> mosei_facet = mosei.facet() # download & load facet visual feature
 
 >>> mosei_emb = mosei.embeddings() # download & load word embeddings
 ```
@@ -64,11 +66,11 @@ Simple as that.
 
 Note that you always need to feed in the URL to the `Dataloader` object, in order to specify the dataset you want to load. If the dataset's files has been downloaded, it'll be loaded locally from your machine and won't be downloaded again.
 
-Now to explain the returned `mosei_facet` and `mosei_emb`. They are all provided as `Dataset` class objects (whose definition can be found in `mmdata/dataset.py`). These objects are designed so that different features can be merged into a larger `Dataset` easily, and most importantly, once you have a `Dataset` with multiple features, there's a class method for aligning the features' timestamps. We'll cover those details in the following sections.
+Now to explain the returned `mosei_facet` and `mosei_emb` variables. They are all provided as `Dataset` class objects (definition can be found in `mmdata/dataset.py`). These objects are designed so that different features can be merged into a larger `Dataset` easily, and most importantly, once you have a `Dataset` with multiple features, there's a class method for aligning the features' based on timestamps. We'll cover those details in the following sections.
 
 ### 3.3 Merging and Accessing Datasets
 
-We have loaded the embeddings and facet features for CMU-MOSEI, next we want to merge these two single-feature `Dataset` into one `Dataset` to make them ready for the next step. And we also want to access the actual data inside. We'll go through the respectively.
+So far we loaded the embeddings and facet features for CMU-MOSEI, next we want to merge these two unimodal `Dataset` instances into one multimodal `Dataset` instance to make them ready for the next step. And we also want to access the actual data inside. We'll go through these steps respectively.
 
  Here's an example of merging different features.
 
@@ -86,7 +88,7 @@ We have loaded the embeddings and facet features for CMU-MOSEI, next we want to 
 
 The resulting `mosei_facet_n_words` is still a `Dataset` object, but now it contains 2 types of features.
 
-The data of any `Dataset` object can be accessed as if it is a nested dictionary. It has three levels. **The first level of keys are the names of the features it contains**, i.e 'embeddings', 'facet', 'covarep'. This may look a bit redundant for single-feature `Dataset`, but it is useful when you have multiple features in one `Dataset`.
+The data of any `Dataset` object can be accessed as if it is a nested python dictionary. It has three levels. **The first level of keys are the names of the features it contains**, i.e 'embeddings', 'facet', 'covarep'. This may look a bit redundant for single-feature `Dataset`, but it is useful when you have multiple features in one `Dataset`.
 
 ```python
 >>> mosei_facet.keys() # the first hierarchy of the nested dict is the feature names
@@ -96,7 +98,7 @@ The data of any `Dataset` object can be accessed as if it is a nested dictionary
 ['facet', 'embeddings']
 ```
 
-From there, you can access the data of a particular type of feature for a particular segment in a particular video by the following indexing: `feats[modality_name][video_id][segment_id]`. Video and segment IDs are strings that characterizes the video and segments in the dataset. While segment IDs are strings of integers (e.g. '1', '2', '3', '16') indicating which segment it is within the video, video IDs usually doesn't have a pattern. If you want to take a look at the video IDs, you can access them by looking at the keys of the second hierarchy of the nested dictionary.
+From there, you can access the data of a particular type of feature for a particular segment in a particular video by the following indexing: `feats[modality_name][video_id][segment_id]`. Video and segment IDs are strings that characterizes the video and segments in the dataset. While segment IDs are **strings** of integers (e.g. '1', '2', '3', '16') indicating which segment it is within the video, video IDs usually doesn't have a pattern. If you want to take a look at the video IDs, you can access them by looking at the keys of the second hierarchy of the nested dictionary.
 
 ```python
 >>> vids = mosi_facet_n_emb['facet'].keys() # extract the list of all video ids
@@ -118,7 +120,7 @@ segment_data = [
 ]
 ```
 
-Each tuple contains a time slice indicated by start and end time and the corresponding feature vector for that time slice. And each segment has many such slices.
+Each tuple contains a time slice indicated by start and end time and the corresponding feature vector for that time slice. For example for language modality such information could be (start of word utterance, end of word utternace, word embedding).
 
 ### 3.4 Feature Alignment
 
