@@ -190,6 +190,7 @@ Below are the URLs for the Raw Files of the dataset:
 
 | Dataset   | URL|
 | --------- | ----------------------------------------              |
+| CMU-MOSEI  | http://sorena.multicomp.cs.cmu.edu/downloads_raw/MOSEI     |
 | CMU-MOSI  | http://sorena.multicomp.cs.cmu.edu/downloads_raw/MOSI     |
 | IEMOCAP   | http://sorena.multicomp.cs.cmu.edu/downloads_raw/IEMOCAP  |
 | MOUD      | http://sorena.multicomp.cs.cmu.edu/downloads_raw/MOUD     |
