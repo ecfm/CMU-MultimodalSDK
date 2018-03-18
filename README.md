@@ -1,5 +1,6 @@
 # News
 Test set of CMU-MOSEI is now released!
+
 CMU MultimodalDataSDK is introduced in ACL 2018 workshop on Computational Modeling of Human Multimodal Language: http://multicomp.cs.cmu.edu/acl2018multimodalchallenge/
 
 # CMU-MultimodalDataSDK
