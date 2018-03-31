@@ -1,3 +1,4 @@
+from __future__ import print_function, division
 import os
 from dataset import Dataset
 from cPickle import load
@@ -26,7 +27,7 @@ class Dataloader(object):
             try:
                 feature_values = load(fp)
             except:
-                print "The previously downloaded dataset is compromised, downloading a new copy..."
+                print("The previously downloaded dataset is compromised, downloading a new copy...")
                 dowloaded = download(self.dataset, feature, self.location)
                 if not downloaded:
                     return None
@@ -95,18 +96,19 @@ class Dataloader(object):
     def original(self, dest):
         """Downloads the dataset files as a tar ball, to the specified destination"""
         # raw_path = os.path.join(dest, self.dataset + '.tar')
-        downloaded = download_raw(self.dataset, dest)
+        # downloaded = download_raw(self.dataset, dest)
+        raise NotImplementedError
 
 
 class MOSI(Dataloader):
     """Dataloader for CMU-MOSI dataset"""
     def __init__(self):
         super(MOSI, self).__init__('http://sorena.multicomp.cs.cmu.edu/downloads/MOSI')
-        print "This API will be deprecated in the future versions. Please check the Github page for the current API"
+        print("This API will be deprecated in the future versions. Please check the Github page for the current API")
 
 
 class MOSEI(Dataloader):
     """Dataloader for CMU-MOSEI dataset"""
     def __init__(self):
         super(MOSEI, self).__init__('http://sorena.multicomp.cs.cmu.edu/downloads/MOSEI')
-        print "This API will be deprecated in the future versions. Please check the Github page for the current API"
+        print("This API will be deprecated in the future versions. Please check the Github page for the current API")
