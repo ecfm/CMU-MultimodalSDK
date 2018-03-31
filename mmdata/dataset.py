@@ -7,7 +7,7 @@ import pickle
 import numpy as np
 from scipy.io import loadmat
 import pandas as pd
-import utils
+from .utils import p2fa_phonemes
 import warnings
 from collections import OrderedDict
 from copy import deepcopy
@@ -39,7 +39,7 @@ class Dataset(object):
         self.timestamps = 'absolute' # this is fixed, we no longer support relative timestamps
         self.stored = stored
         self.dataset_file = dataset_file
-        self.phoneme_dict = utils.p2fa_phonemes
+        self.phoneme_dict = p2fa_phonemes
         self.loaded = False
 
     def __getitem__(self, key):

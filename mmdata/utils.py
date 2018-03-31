@@ -2,11 +2,18 @@
 """
 The file contains the class and methods for loading and aligning datasets
 """
+from __future__ import print_function, division
 import numpy as np
-import urllib2
 import sys
 import os
 from subprocess import call
+
+if sys.version_info >= (3, 5):
+    import urllib.request as urllib
+    from urllib.error import HTTPError
+else:
+    import urllib2 as urllib
+    from urllib2 import HTTPError
 
 __author__ = "Prateek Vij"
 __copyright__ = "Copyright 2017, Carnegie Mellon University"
@@ -30,17 +37,18 @@ def download(dataset, feature, dest):
     call(['mkdir', '-p', dest])
     url = dataset + '/' + feature + '.pkl'
     file_path = os.path.join(dest, feature + '.pkl')
-    print file_path
+    print(file_path)
 
     try:
-        u = urllib2.urlopen(url)
-    except urllib2.HTTPError:
-        print "The requested data is not available for {} dataset.".format(dataset)
+        u = urllib.urlopen(url)
+    except HTTPError:
+        print("The requested data is not available for {} dataset.".format(dataset))
         return False
     with open(file_path, 'wb') as f:
-        meta = u.info()
-        file_size = int(meta.getheaders("Content-Length")[0])
-        print "Downloading: {}, size: {}".format(' '.join([dataset, feature]), file_size)
+        # meta = u.info()
+        # file_size = int(meta.getheaders("Content-Length")[0])
+        file_size = int(u.headers["Content-Length"])
+        print("Downloading: {}, size: {}".format(' '.join([dataset, feature]), file_size))
 
         file_size_dl = 0
         block_sz = 8192
@@ -56,32 +64,32 @@ def download(dataset, feature, dest):
     sys.stdout.write('\n')
     return True
 
-def download_raw(dataset, dest):
-    call(['mkdir', '-p', dest])
-    url = dataset + '/' + dataset + '.tar'
-    file_path = os.path.join(dest, dataset + '.tar')
-    print file_path
+# def download_raw(dataset, dest):
+#     call(['mkdir', '-p', dest])
+#     url = dataset + '/' + dataset + '.tar'
+#     file_path = os.path.join(dest, dataset + '.tar')
+#     print(file_path)
 
-    try:
-        u = urllib2.urlopen(url)
-    except urllib2.HTTPError:
-        print "The requested data is not available for {} dataset.".format(dataset)
-        return False
-    with open(file_path, 'wb') as f:
-        meta = u.info()
-        file_size = int(meta.getheaders("Content-Length")[0])
-        print "Downloading: {}, size: {}".format(' '.join([dataset, feature]), file_size)
+#     try:
+#         u = urllib.urlopen(url)
+#     except urllib.HTTPError:
+#         print("The requested data is not available for {} dataset.".format(dataset))
+#         return False
+#     with open(file_path, 'wb') as f:
+#         meta = u.info()
+#         file_size = int(meta.getheaders("Content-Length")[0])
+#         print("Downloading: {}, size: {}".format(' '.join([dataset, feature]), file_size))
 
-        file_size_dl = 0
-        block_sz = 8192
-        while True:
-            buffer = u.read(block_sz)
-            if not buffer:
-                break
-            file_size_dl += len(buffer)
-            f.write(buffer)
-            sys.stdout.write('\r')
-            sys.stdout.write("[%-20s] [%3.2f%%]" % ('='*int((file_size_dl * 100. / file_size)/5), file_size_dl * 100. / file_size))
-            sys.stdout.flush()
-    sys.stdout.write('\n')
-    return True
+#         file_size_dl = 0
+#         block_sz = 8192
+#         while True:
+#             buffer = u.read(block_sz)
+#             if not buffer:
+#                 break
+#             file_size_dl += len(buffer)
+#             f.write(buffer)
+#             sys.stdout.write('\r')
+#             sys.stdout.write("[%-20s] [%3.2f%%]" % ('='*int((file_size_dl * 100. / file_size)/5), file_size_dl * 100. / file_size))
+#             sys.stdout.flush()
+#     sys.stdout.write('\n')
+#     return True
