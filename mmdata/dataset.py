@@ -2,6 +2,7 @@
 """
 The file contains the class and methods for loading and aligning datasets
 """
+from __future__ import print_function, division
 import pickle
 import numpy as np
 from scipy.io import loadmat
@@ -115,13 +116,13 @@ class Dataset(object):
             feat_dict = {}
             data = self.dataset_info
             modalities = self.modalities
-            timestamps = self.timestamps
+            # timestamps = self.timestamps
             for key, value in modalities.iteritems():
                 api = value['type']
                 level = value['level']
                 loader_method = Dataset.__dict__["load_" + api]
                 modality_feats = {}
-                print "Loading features for", api
+                print("Loading features for", api)
                 for video_id, video_data in data.iteritems():
                     video_feats = {}
                     for segment_id, segment_data in video_data.iteritems():
@@ -170,7 +171,7 @@ class Dataset(object):
             feat_val = np.asarray(feats, dtype=np.float32)
             features.append((start_time, end_time, feat_val))
         else:
-            print "Opensmile support features for the entire segment"
+            print("Opensmile support features for the entire segment")
             return None
         return features
 
@@ -346,7 +347,7 @@ class Dataset(object):
                     feat_end = float(line.split(",")[1])
                     feat_val = [float(val) for val in line.split(",")[2:]]
                     feat_val = np.asarray(feat_val)
-                    #print (feat_start, feat_end)
+                    #print(feat_start, feat_end)
                     #assert False
                     features.append((max(feat_start, 0), max(feat_end, 0), feat_val))
         else:
@@ -578,9 +579,9 @@ class Dataset(object):
                         aligned_feat = np.zeros(len(feats[0][2]))
                     except:
                         if (video_id, segment_id) not in warning_hist:
-                            print "\nModality {} for video {} segment {} is (partially) missing and is thus being replaced by zeros!\n".format(modality.split("_")[-1], video_id, segment_id)
+                            print("\nModality {} for video {} segment {} is (partially) missing and is thus being replaced by zeros!\n".format(modality.split("_")[-1], video_id, segment_id))
                             warning_hist.add((video_id, segment_id))
-                        # print modality, video_id, segment_id, feats
+                        # print(modality, video_id, segment_id, feats)
                         for sid, seg_data in modality_feat_dict[video_id].items():
                             if seg_data != []:
                                 feats = seg_data
