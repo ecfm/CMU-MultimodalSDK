@@ -117,15 +117,15 @@ class Dataset(object):
             data = self.dataset_info
             modalities = self.modalities
             # timestamps = self.timestamps
-            for key, value in modalities.iteritems():
+            for key, value in modalities.items():
                 api = value['type']
                 level = value['level']
                 loader_method = Dataset.__dict__["load_" + api]
                 modality_feats = {}
                 print("Loading features for", api)
-                for video_id, video_data in data.iteritems():
+                for video_id, video_data in data.items():
                     video_feats = {}
-                    for segment_id, segment_data in video_data.iteritems():
+                    for segment_id, segment_data in video_data.items():
                         filepath = str(segment_data[key])
                         start = segment_data["start"]
                         end = segment_data["end"]
@@ -551,9 +551,9 @@ class Dataset(object):
         alignments = {}
         aligned_feat_dict = self.feature_dict[modality]
 
-        for video_id, segments in aligned_feat_dict.iteritems():
+        for video_id, segments in aligned_feat_dict.items():
             segment_alignments = {}
-            for segment_id, features in segments.iteritems():
+            for segment_id, features in segments.items():
                 segment_alignments[segment_id] = []
                 for value in features:
                     timing = (value[0], value[1])
@@ -566,10 +566,10 @@ class Dataset(object):
         modality_feat_dict = self.feature_dict[modality]
         warning_hist = set() # Keep track of all the warnings
 
-        for video_id, segments in alignments.iteritems():
+        for video_id, segments in alignments.items():
             aligned_video_feats = {}
 
-            for segment_id, feat_intervals in segments.iteritems():
+            for segment_id, feat_intervals in segments.items():
                 aligned_segment_feat = []
 
                 for start_interval, end_interval in feat_intervals:
