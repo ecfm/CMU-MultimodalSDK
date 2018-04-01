@@ -41,10 +41,20 @@ def convert_features(feature):
         feature.feature_dict[modality.decode('utf-8')] = feature.feature_dict.pop(modality)
     return feature
 
-def convert_labels(label_file):
-    return label_file
+def convert_labels(labels):
+    '''convert the labels dict'''
+    for vid in list(labels.keys()):
+        for sid in list(labels[vid].keys()):
+            labels[vid][sid.decode('utf-8')] = labels[vid].pop(sid).decode('utf-8')
+        labels[vid.decode('utf-8')] = labels.pop(vid)
+    return labels
 
 def convert_partition(id_file):
+    '''convert the partitions set'''
+    _id_file = set()
+    for vid in id_file:
+        _id_file.add(vid.decode('utf-8'))
+    id_file = _id_file
     return id_file
 
 
