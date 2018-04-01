@@ -45,7 +45,7 @@ def convert_labels(labels):
     '''convert the labels dict'''
     for vid in list(labels.keys()):
         for sid in list(labels[vid].keys()):
-            labels[vid][sid.decode('utf-8')] = labels[vid].pop(sid).decode('utf-8')
+            labels[vid][sid.decode('utf-8')] = labels[vid].pop(sid)
         labels[vid.decode('utf-8')] = labels.pop(vid)
     return labels
 
