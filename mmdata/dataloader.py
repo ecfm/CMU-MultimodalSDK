@@ -113,8 +113,8 @@ class Dataloader(object):
     def words(self):
         """Returns a single-field dataset object for one-hot vectors of words"""
         words_values = self.get_feature('words')
-        if sys.version_info >= (3, 5):
-            words_values = convert_features(words_values)
+        # if sys.version_info >= (3, 5):
+            # words_values = convert_features(words_values) ----> words.pkl are processed in a way we don't have to convert
         return words_values
 
     def phonemes(self):
