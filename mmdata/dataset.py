@@ -346,7 +346,8 @@ class Dataset(object):
                     feat_start = float(line.split(",")[0])
                     feat_end = float(line.split(",")[1])
                     feat_val = [float(val) for val in line.split(",")[2:]]
-                    feat_val = np.asarray(feat_val)
+                    assert len(feat_val) == 1
+                    feat_val = np.asarray(feat_val)[0]
                     #print(feat_start, feat_end)
                     #assert False
                     features.append((max(feat_start, 0), max(feat_end, 0), feat_val))
