@@ -345,7 +345,10 @@ class Dataset(object):
                         break
                     feat_start = float(line.split(",")[0])
                     feat_end = float(line.split(",")[1])
-                    feat_val = int(float(line.split(",")[-1]))
+                    try:
+                        feat_val = int(line.split(",")[2])
+                    except:
+                        print(filepath, start, end)
                     # feat_val = [float(val) for val in line.split(",")[2:]]
                     # assert len(feat_val) == 1
                     # feat_val = np.asarray(feat_val)[0]
