@@ -578,7 +578,10 @@ class Dataset(object):
                     time_interval = end_interval - start_interval
                     feats = modality_feat_dict[video_id][segment_id]
                     try:
-                        aligned_feat = np.zeros(len(feats[0][2]))
+                        if modality == "words":
+                            aligned_feat = feats[0][2] - feats[0][2]
+                        else:
+                            aligned_feat = np.zeros(len(feats[0][2]))
                     except:
                         if (video_id, segment_id) not in warning_hist:
                             print("\nModality {} for video {} segment {} is (partially) missing and is thus being replaced by zeros!\n".format(modality.split("_")[-1], video_id, segment_id))
@@ -589,9 +592,15 @@ class Dataset(object):
                                 feats = seg_data
                                 break
                     try: 
-                        aligned_feat = np.zeros(len(feats[0][2]))
+                        if modality == "words":
+                            aligned_feat = feats[0][2] - feats[0][2]
+                        else:
+                            aligned_feat = np.zeros(len(feats[0][2]))
                     except:
-                        aligned_feat = np.zeros(0)
+                        if modality == "words":
+                            aligned_feat = 0
+                        else:
+                            aligned_feat = np.zeros(0)
 
                     for feat_tuple in feats:
                         feat_start = feat_tuple[0]
