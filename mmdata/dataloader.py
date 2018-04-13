@@ -115,6 +115,8 @@ class Dataloader(object):
         words_values = self.get_feature('words')
         try:
             words_values = convert_features(words_values) # ----> words.pkl are processed in a way we don't have to convert
+        except:
+            pass # later need to specify the Error type here
         return words_values
 
     def phonemes(self):
