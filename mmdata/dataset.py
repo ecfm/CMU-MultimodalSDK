@@ -634,11 +634,8 @@ class Dataset(object):
         assert isinstance(dataset1, Dataset)
         assert isinstance(dataset2, Dataset)
         # merge the feature_dict and modalities attributes
-        try:
-            merged_modalities = Dataset.merge_dict(dataset1.modalities, dataset2.modalities)
-            mergedDataset.modalities = merged_modalities
-        except:
-            pass
+        merged_modalities = Dataset.merge_dict(dataset1.modalities, dataset2.modalities)
+        mergedDataset.modalities = merged_modalities
         merged_feat_dict = Dataset.merge_dict(dataset1.feature_dict, dataset2.feature_dict)
         mergedDataset = Dataset()
         mergedDataset.feature_dict = merged_feat_dict
