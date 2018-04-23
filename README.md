@@ -3,7 +3,7 @@ Test set of CMU-MOSEI is now released!
 
 CMU MultimodalDataSDK is introduced in ACL 2018 workshop on Computational Modeling of Human Multimodal Language: http://multicomp.cs.cmu.edu/acl2018multimodalchallenge/
 
-# CMU-MultimodalDataSDK
+# CMU-MultimodalDataSDK Version 0.1.0
 
 CMU-MultimodalDataSDK provides tools that manage the **downloading, loading and preprocessing** of well-known multimodal machine learning datasets such as CMU-MOSEI and CMU-MOSI. (The POM and ICT-MMMO datasets are coming soon!)
 
