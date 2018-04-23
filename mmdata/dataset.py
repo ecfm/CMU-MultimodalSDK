@@ -193,7 +193,7 @@ class Dataset(object):
         f_content = loadmat(filepath)
         try:
             feats = f_content['features']
-        except FileNotFoundError or TypeError: # depending on loadmat("XXX") or loadmat("XXX.mat"), error will be different
+        except FileNotFoundError or TypeError or ValueError: # depending on loadmat("XXX") or loadmat("XXX.mat"), error will be different
             return [] # if no feature file present, return an empty list
         start_time, end_time = start, end
         if timestamps == "relative":
