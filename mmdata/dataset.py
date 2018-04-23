@@ -193,6 +193,7 @@ class Dataset(object):
         try:
             f_content = loadmat(filepath)
         except (FileNotFoundError, TypeError, ValueError) as e: # depending on loadmat("XXX") or loadmat("XXX.mat"), error will be different
+            print(".mat file cannot load at {}!".format(filepath))
             return [] # if no feature file present, return an empty list
         feats = f_content['features']
         start_time, end_time = start, end
