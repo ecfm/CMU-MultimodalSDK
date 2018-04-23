@@ -11,6 +11,7 @@ from .utils import p2fa_phonemes
 import warnings
 from collections import OrderedDict
 from copy import deepcopy
+import sys
 
 __author__ = "Prateek Vij"
 __copyright__ = "Copyright 2017, Carnegie Mellon University"
@@ -19,6 +20,8 @@ __license__ = "GPL"
 __version__ = "1.0.1"
 __status__ = "Production"
 
+if sys.version_info <= (2, 7):
+    FileNotFoundError = IOError # python 2 doesn't have FileNotFoundError
 
 class Dataset(object):
     """Primary class for loading and aligning dataset"""
