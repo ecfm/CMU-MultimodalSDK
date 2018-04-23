@@ -113,8 +113,10 @@ class Dataloader(object):
     def words(self):
         """Returns a single-field dataset object for one-hot vectors of words"""
         words_values = self.get_feature('words')
-        if sys.version_info >= (3, 5):
+        try:
             words_values = convert_features(words_values) # ----> words.pkl are processed in a way we don't have to convert
+        except AttributeError:
+            pass
         return words_values
 
     def phonemes(self):
@@ -184,14 +186,16 @@ class MOSI(Dataloader):
     """Dataloader for CMU-MOSI dataset"""
     def __init__(self):
         super(MOSI, self).__init__('http://sorena.multicomp.cs.cmu.edu/downloads/MOSI')
-        print("This API will be deprecated in the future versions. Please check the Github page for the current API")
+        sys.stderr.write("This API will be deprecated in the future versions. Please check the Github page for the current API\n")
+        sys.stderr.flush()
 
 
 class MOSEI(Dataloader):
     """Dataloader for CMU-MOSEI dataset"""
     def __init__(self):
         super(MOSEI, self).__init__('http://sorena.multicomp.cs.cmu.edu/downloads/MOSEI')
-        print("This API will be deprecated in the future versions. Please check the Github page for the current API")
+        sys.stderr.write("This API will be deprecated in the future versions. Please check the Github page for the current API\n")
+        sys.stderr.flush()
 
     def words(self):
         """Returns a single-field dataset object for one-hot vectors of words"""
