@@ -192,7 +192,7 @@ class Dataset(object):
         time_period = 0.01
         try:
             f_content = loadmat(filepath)
-        except FileNotFoundError or TypeError or ValueError: # depending on loadmat("XXX") or loadmat("XXX.mat"), error will be different
+        except (FileNotFoundError, TypeError, ValueError) as e: # depending on loadmat("XXX") or loadmat("XXX.mat"), error will be different
             return [] # if no feature file present, return an empty list
         feats = f_content['features']
         start_time, end_time = start, end
