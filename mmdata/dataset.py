@@ -20,7 +20,7 @@ __license__ = "GPL"
 __version__ = "1.0.1"
 __status__ = "Production"
 
-if sys.version_info <= (2, 7):
+if sys.version_info <= (3,):
     FileNotFoundError = IOError # python 2 doesn't have FileNotFoundError
 
 class Dataset(object):
