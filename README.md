@@ -1,7 +1,7 @@
 # News
 Test set labels of CMU-MOSEI are now publicly released!
 
-CMU-MultimodalDataSDK will have version 1.0.0 released by June 15 2018. New features, easier interface and faster data loading!
+CMU-MultimodalDataSDK version 1.0.0 will be released by June 15 2018. New features, easier interface and faster data loading!
 
 # CMU-MultimodalDataSDK Version 0.1.0
 
