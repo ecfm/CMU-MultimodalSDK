@@ -1,4 +1,7 @@
 # News
+
+Please note that due to maintenance Sorena server will be down till May 28th. The server will be up during this period only on 21st and 25th for downloading datasets. 
+
 Test set labels of CMU-MOSEI are now publicly released!
 
 CMU-MultimodalDataSDK version 1.0.0 will be released by June 15 2018. New features, easier interface and faster data loading!
