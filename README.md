@@ -207,7 +207,7 @@ If you are using any of these datasets, please cite the corresponding papers:
 
 | Dataset   | Paper BibTeX                                              |
 | --------- | ----------------------------------------              |
-| CMU-MOSEI | Zadeh, Amir, et al. "Multimodal sentiment intensity analysis in videos: Facial gestures and verbal messages." IEEE Intelligent Systems 31.6 (2016): 82-88.|
+| CMU-MOSEI | Zadeh, Amir, et al. "Multimodal Language Analysis in the Wild: CMU-MOSEI Dataset and Interpretable Dynamic Fusion Graph" Association for Computational Linguistics (ACL) 2018|
 | CMU-MOSI  | Zadeh, Amir, et al. "Multimodal sentiment intensity analysis in videos: Facial gestures and verbal messages." IEEE Intelligent Systems 31.6 (2016): 82-88.|
 | IEMOCAP   | Busso, Carlos, et al. "IEMOCAP: Interactive emotional dyadic motion capture database." Language resources and evaluation 42.4 (2008): 335.|
 | MOUD      | Pérez-Rosas, Verónica, Rada Mihalcea, and Louis-Philippe Morency. "Utterance-level multimodal sentiment analysis." Proceedings of the 51st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). Vol. 1. 2013.|
