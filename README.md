@@ -1,10 +1,8 @@
 # News
 
-Please note that due to maintenance Sorena server will be down till May 28th. The server will be up during this period only on 21st and 25th for downloading datasets. 
+Release news: CMU-MultimodalDataSDK version 1.0.0 will be released by June 25 2018 as CMU Multimodal SDK version 0.1.0. Current updates: data loading time has been improved by a factor of 20000x, effectively reducing the CMU-MOSEI load time from more than half an hour to less than a fraction of a second! The dataset size has also been reduced by a factor of 4! 
 
-Test set labels of CMU-MOSEI are now publicly released!
-
-CMU-MultimodalDataSDK version 1.0.0 will be released by June 15 2018. New features, easier interface and faster data loading!
+Test set labels of CMU-MOSEI are now publicly released! 
 
 # CMU-MultimodalDataSDK Version 0.1.0
 
