@@ -2,7 +2,7 @@
 
 CMU-Multimodal SDK V 1.0.0 is released. Please be advised of major changes to the data structures due to improvements to data loading and downloading. 
 
-# CMU-MultimodalDataSDK Version 0.1.0
+# CMU-Multimodal SDK Version 1.0.0 (mmsdk)
 
 CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets and rapidly build neural multimodal deep models. Hence the SDK comprises of two modules: 1) mmdatasdk: module for downloading and procesing multimodal datasets using computational sequences. 2) mmmodelsdk: tools to utilize complex neural models as well as layers for building new models. 
 
