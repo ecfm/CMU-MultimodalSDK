@@ -71,6 +71,16 @@ You can also initialize an empty computational_sequence using the following:
 
 This comes in handy if you are building a computational sequence from scratch (more advanced stuff, discussed later). You cannot register a computational sequence with our trust server unless the computational sequence passes both data and metadata integrity checks (to make sure both are in the correct format). 
 
+In most cases you won't need to deal with computational_sequence but rather with mmdataset. 
+
+```python
+>>> from mmdatasdk import mmdataset
+>>> mydataset=mmdataset(mmdataset.cmu_mosei.highlevel)
+```
+
+This script will download high-level CMU-MOSEI features according to highlevel receipe. Each recipe is a key-value dictionary with key as the name you would like to refer to the computational sequence as (different than root name) and value is the link to download the computational seqeuence from. 
+
+The computational sequences inside a mmdataset can be aligned with each other according to a heirarchy. A heirarchy is an instance of computational sequence that does not have features inside its data, but just intervals. 
 
 
 ## 2. Citations
