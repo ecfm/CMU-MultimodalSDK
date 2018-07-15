@@ -1,22 +1,19 @@
 # News
 
-Release news update: The release of CMU-MultimodalDataSDK version 1.0.0 is delayed till July 15th - start of ACL conference (previously June 15th). This is due to heavy workload related to mostly unsupervised part of CMU-MOSEI dataset. We do apologize and thank you for your patience as we make sure all the datasets are fully tested and ready. We have had substantial progress but still the workload is much higher than we originally anticipated. 
-
-The new release will be named CMU Multimodal SDK version 0.1.0. Current updates: data loading time has been improved by a factor of 20000x, effectively reducing the CMU-MOSEI load time from more than half an hour to less than a fraction of a second! The dataset size has also been reduced by a factor of 4! Sorena server will be down for most of now till July 15th. 
-
-Test set labels of CMU-MOSEI are now publicly released! 
+CMU-Multimodal SDK V 1.0.0 is released. Please be advised of major changes to the data structures due to improvements to data loading and downloading. 
 
 # CMU-MultimodalDataSDK Version 0.1.0
 
-CMU-MultimodalDataSDK provides tools that manage the **downloading, loading and preprocessing** of well-known multimodal machine learning datasets such as CMU-MOSEI and CMU-MOSI. (The POM and ICT-MMMO datasets are coming soon!)
+CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets and rapidly build neural multimodal deep models. Hence the SDK comprises of two modules: 1) mmdatasdk: module for downloading and procesing multimodal datasets using computational sequences. 2) mmmodelsdk: tools to utilize complex neural models as well as layers for building new models. 
 
-## 1. CMU Multimodal Data SDK
+## 1. CMU Multimodal Data SDK (mmdatasdk)
 
-CMU Multimodal Data SDK simplifies loading complex multimodal data. In multimodal datasets, data comes from multiple sources and is processed in different ways which makes loading this form of data very challenging. Often the researchers find themselves dedicating significant time and energy to loading the data before building models. CMU Multimodal Data SDK allows both users and developers to:
+CMU-Multimodal Data SDK simplifies downloading nad loading multimodal datasets. The module mmdatasdk treats each multimodal dataset as a combination of **computational sequences**. Each computational sequence contains information from one modality in a heirarchical format, defined in the continuation of this section. Computational sequences are self-contained and independent; they can be used to train models in isolation. They can be downloaded, shared and registered with our trust servers. This allows the community to share data and recreate results in a more elegant way using computational sequence intrgrity checks. Furthermore, this integrity check allows users to download the correct computational sequences. 
 
-1. [user] donwload well-known multimodal datasets easily.
-2. [user] load multimodal datasets very easily and align their modalities.
-3. [developer] extend the SDK to your own data and publicizing your dataset. 
+Each computational sequence is a heirarchical data strcuture which contains two key elements 1) "data" is a heirarchy of features in the computational sequence categorized based on unique multimodal source identifier (for example video id). Each multimodal source has two matrices associated with it: features and intervals. Features denote the computational descriptors and intervals denote their associated timestamp. 2) "metadata": contains information about the computational sequence including integrity and version information. The computational sequences are stored as hdf5 onjects on hard disk with ".csd" extension (computational sequential data). 
+
+A dataset is defined as a dictionary of multiple computational sequences. Entire datasets can be shared using recipes as opposed to old-fashioned dropbox links or ftp servers. Computational sequences are downloaded one by one and their individual integrity is checked to make sure they are the ones users wanted to share. Users can register their extracted features with our trust server to use this feature. They can also request storage of their features on our servers 
+
 
 ## 2. Citations
 
