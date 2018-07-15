@@ -83,7 +83,7 @@ This script will download high-level CMU-MOSEI features according to highlevel r
 The computational sequences inside a mmdataset can be aligned with each other according to a heirarchy. A heirarchy is an instance of computational sequence that does not have features inside its data, but just intervals. 
 
 
-## 2. Citations
+## Citations
 To acquire citations for all computational sequence resources you have used simply call the bib_citations method either from an mmdataset or computational_sequence object:	
 
 ```python
