@@ -31,13 +31,13 @@ def writeCSD(data,metadata,rootName,destination):
 
 	#writing the data
 	dataHandle=rootHandle.create_group("data")
-	pbar = tqdm(total=len(data.keys()),unit=" Videos")
+	pbar = tqdm(total=len(data.keys()),unit=" Computational Sequence Entries")
 	for vid in data:
 		vidHandle=dataHandle.create_group(vid)
 		vidHandle.create_dataset("features",data=data[vid]["features"])
 		vidHandle.create_dataset("intervals",data=data[vid]["intervals"])
 		pbar.update(1)
-
+	pbar.close()
 	log.success("<%s> computational sequence data successfully wrote to %s"%(rootName,destination))
 	log.status("Writing the <%s> computational sequence metadata to %s"%(rootName,destination))
 	#writing the metadata

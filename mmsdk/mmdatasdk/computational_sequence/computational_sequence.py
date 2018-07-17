@@ -3,6 +3,7 @@ import hashlib
 import validators
 import json
 import sys
+import os 
 import time
 import uuid
 from mmsdk.mmdatasdk import log 
@@ -33,15 +34,17 @@ class computational_sequence():
 		#initializing based on pre-existing computational sequence - only if h5handle is None 
 		if self.h5handle is not None:
 			if type(metadata) is dict and "root name" in metadata.keys():
-				rootName=metadata["root name"]
+				self.rootName=metadata["root name"]
 			else:
-				rootName=resource
-			self.setData(data,rootName)
-			self.setMetadata(metadata,rootName)
+				self.rootName=resource
+			self.setData(data,self.rootName)
+			self.setMetadata(metadata,self.rootName)
 		else:
 			self.data=data
 			self.metadata=metadata
 
+
+	#TODO: try and excepts to be added to this code
 	def _initialize(self,resource,destination):
 		#computational sequence is already initialized
 		if hasattr(self,'h5handle'): raise log.error("<%s> computational sequence already initialized ..."%self.metadata["root name"],error=True)
@@ -52,21 +55,25 @@ class computational_sequence():
 			self.mainFile=None
 			#self.resource will be None since there is nowhere this was read from - resource being passed to initBlank is the name of root
 			self.resource=None
-			rootName=resource
-			return initBlank(rootName)
+			self.rootName=resource
+			return initBlank(self.rootName)
 		#reading from url - mainFile is where the data should go and resource is the url
 		else:
-			try:
-				if validators.url(resource):
-					readURL(resource,destination)
-					self.mainFile=destination		
-					self.resource=resource
-				else:
-					self.mainFile=resource
-				return readCSD(self.mainFile)
-		
-			except:
-				log.error("Resource %s is not a valid .csd object"%resource)
+	#	try:
+			if validators.url(resource):
+				#user would like to store to the current directory
+				if destination is None or destination == '':
+					destination=os.path.join('./',resource.split('/')[-1])
+				#user has chosen a different directory
+				elif '.csd' not in destination:
+					destination=os.path.join(destination,resource.split('/')[-1])
+				readURL(resource,destination)
+				self.mainFile=destination
+				self.resource=resource
+			else:
+				self.mainFile=resource
+			return readCSD(self.mainFile)
+	
 
 	#checking if the data and metadata are in correct format
 	#stops the program if the integrity is not ok
@@ -115,5 +122,10 @@ class computational_sequence():
 		writeCSD(self.data,self.metadata,self.metadata["root name"],destination)
 		self.mainFile=destination
 
-	
+	def bib_citations(self,outfile=None):
+		outfile=sys.stdout if outfile is None else outfile
+		if self.metadata is None or self.metadata=={}:
+			log.error("Metadata is not set for <%s> computational sequence"%self.rootName)
+		outfile.write('Computational Sequence <%s> bib: '%self.rootName+self.metadata['featureset bib citation']+'\n\n')
+		outfile.write('Dataset <%s> bib: '%self.metadata["dataset name"]+self.metadata['dataset bib citation']+'\n\n')
 
