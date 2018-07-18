@@ -79,7 +79,7 @@ In most cases you won't need to deal with computational_sequence but rather with
 >>> cmumosi_highlevel=mmdataset(mmdataset.cmu_mosi.highlevel)
 ```
 
-This script will download high-level CMU-MOSEI features according to highlevel receipe. Each recipe is a key-value dictionary with key as the name you would like to refer to the computational sequence as (different than root name) and value is the link to download the computational seqeuence from. 
+This script will download high-level CMU-MOSEI features according to highlevel receipe. Each recipe is a key-value dictionary with key as the name you would like to refer to the computational sequence as (different than root name) and value is the link to download the computational seqeuence from. You can find the standard datasets in the /dataset/standard_datasets/ folder. 
 
 The computational sequences inside a mmdataset can be aligned with each other according to a heirarchy. A heirarchy is an instance of computational sequence that does not have features inside its data, but just intervals. 
 
