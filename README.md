@@ -75,7 +75,8 @@ In most cases you won't need to deal with computational_sequence but rather with
 
 ```python
 >>> from mmdatasdk import mmdataset
->>> mydataset=mmdataset(mmdataset.cmu_mosei.highlevel)
+>>> cmumosei_highlevel=mmdataset(mmdataset.cmu_mosei.highlevel)
+>>> cmumosi_highlevel=mmdataset(mmdataset.cmu_mosi.highlevel)
 ```
 
 This script will download high-level CMU-MOSEI features according to highlevel receipe. Each recipe is a key-value dictionary with key as the name you would like to refer to the computational sequence as (different than root name) and value is the link to download the computational seqeuence from. 
@@ -87,8 +88,8 @@ The computational sequences inside a mmdataset can be aligned with each other ac
 To acquire citations for all computational sequence resources you have used simply call the bib_citations method either from an mmdataset or computational_sequence object:	
 
 ```python
->>> mydataset.bib_citations()
->>> mycompseq.bib_citations()
+>>> mydataset.bib_citations(open('mydataset.bib','w'))
+>>> mycompseq.bib_citations(open('mycompseq.bib','w'))
 ```
 	
 This will output all the citations for what you have used. 
