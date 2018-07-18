@@ -75,7 +75,7 @@ In most cases you won't need to deal with computational_sequence but rather with
 
 ```python
 >>> from mmdatasdk import mmdataset
->>> mydataset=mmdataset(mmdatasdk.cmu_mosei.highlevel)
+>>> mydataset=mmdataset(mmdataset.cmu_mosei.highlevel)
 ```
 
 This script will download high-level CMU-MOSEI features according to highlevel receipe. Each recipe is a key-value dictionary with key as the name you would like to refer to the computational sequence as (different than root name) and value is the link to download the computational seqeuence from. 
