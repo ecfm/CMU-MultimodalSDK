@@ -34,7 +34,7 @@ export PYTHONPATH="/path/to/cloned/directory/CMU-MultimodalSDK:$PYTHONPATH"
 Make sure the following python packages are installed: h5py, validators, tqdm. The setup.py will install them for you. You can also manually install them using pip by:
 
 ```bash
-pip install h5py
+pip install h5py validators tqdm
 ```
 
 ## 3. Usage
