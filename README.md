@@ -71,12 +71,12 @@ You can also initialize an empty computational_sequence using the following:
 
 This comes in handy if you are building a computational sequence from scratch (more advanced stuff, discussed later). You cannot register a computational sequence with our trust server unless the computational sequence passes both data and metadata integrity checks (to make sure both are in the correct format). 
 
-In most cases you won't need to deal with computational_sequence but rather with mmdataset. 
+In most cases you won't need to deal with computational_sequence but rather with mmdataset. The scripts below are examples of downloading datasets to the mycmu_*_dir. 
 
 ```python
 >>> from mmdatasdk import mmdataset
->>> cmumosei_highlevel=mmdataset(mmdatasdk.cmu_mosei.highlevel)
->>> cmumosi_highlevel=mmdataset(mmdatasdk.cmu_mosi.highlevel)
+>>> cmumosei_highlevel=mmdataset(mmdatasdk.cmu_mosei.highlevel,'mycmu_mosei_dir')
+>>> cmumosi_highlevel=mmdataset(mmdatasdk.cmu_mosi.highlevel,'mycmu_mosi_dir')
 ```
 
 This script will download high-level CMU-MOSEI features according to highlevel receipe. Each recipe is a key-value dictionary with key as the name you would like to refer to the computational sequence as (different than root name) and value is the link to download the computational seqeuence from. You can find the standard datasets in the /dataset/standard_datasets/ folder. 
