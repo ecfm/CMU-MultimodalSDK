@@ -92,4 +92,4 @@ To acquire citations for all computational sequence resources you have used simp
 >>> mycompseq.bib_citations(open('mycompseq.bib','w'))
 ```
 	
-This will output all the citations for what you have used. 
+This will output all the citations for what you have used. You may need to remove duplicates. 
