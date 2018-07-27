@@ -34,7 +34,7 @@ export PYTHONPATH="/path/to/cloned/directory/CMU-MultimodalSDK:$PYTHONPATH"
 Make sure the following python packages are installed: h5py, validators, tqdm. The setup.py will install them for you. You can also manually install them using pip by:
 
 ```bash
-pip install h5py validators tqdm
+pip install h5py validators tqdm numpy 
 ```
 
 ## 3. Usage
@@ -92,4 +92,4 @@ To acquire citations for all computational sequence resources you have used simp
 >>> mycompseq.bib_citations(open('mycompseq.bib','w'))
 ```
 	
-This will output all the citations for what you have used. 
+This will output all the citations for what you have used. You may need to remove duplicates. 
