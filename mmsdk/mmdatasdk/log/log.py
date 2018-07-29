@@ -14,7 +14,7 @@ def status(msgstring):
 	print (bcolors.OKBLUE +bcolors.BOLD+"<Status>: "+bcolors.ENDC + msgstring)
 
 def error(msgstring,error=False,errorType=RuntimeError):
-	action,msgstart=(lambda(x):(_ for _ in ()).throw(errorType(x)),"<Error>: ") if error else (lambda(x):sys.stdout.write(str(x)+'\n'),bcolors.WARNING+bcolors.BOLD+"<Warning>: "+bcolors.ENDC)
+	action,msgstart=(lambda x:(_ for _ in ()).throw(errorType(x)),"<Error>: ") if error else (lambda x:sys.stdout.write(str(x)+'\n'),bcolors.WARNING+bcolors.BOLD+"<Warning>: "+bcolors.ENDC)
 	action("%s%s"%(msgstart,msgstring))
 
 def success(msgstring):
