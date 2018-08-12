@@ -94,12 +94,15 @@ class computational_sequence():
 		missings=[x for (x,y) in zip(featuresetMetadataTemplate,[metadata in self.metadata.keys() for metadata in featuresetMetadataTemplate]) if y is False]
 		#python2 vs python 3
 		#TODO: Add read from file
+		root_name_ext=''
+		if hasattr(self,"rootName"):
+			root_name_ext=" for <%s> computational sequence"%self.rootName
 		for missing in missings:
 			if sys.version_info.major is 2:
-				self.metadata[missing]=raw_input("Please input %s: "%missing)
+				self.metadata[missing]=raw_input("Please input %s%s: "%(missing,root_name_ext))
 			
 			if sys.version_info.major is 3:
-				self.metadata[missing]=input("Please input %s: "%missing)
+				self.metadata[missing]=input("Please input %s%s: "%(missing,root_name_ext))
 
 	def setData(self,data,rootName):
 		validateDataIntegrity(data,rootName,which=True)

@@ -10,6 +10,9 @@ from mmsdk.mmdatasdk import log
 
 
 def readURL(url,destination):
+	#TODO: replace the split of destination with cross-os compatible operation
+	if os.path.isdir(destination.rsplit('/',1)[-2]) is False:
+		os.mkdir(destination.rsplit('/',1)[-2])
 	if destination is None:
 		log.error("Destination is not specified when downloading data",error=True)
 	if(os.path.isfile(destination)):
@@ -23,7 +26,7 @@ def readURL(url,destination):
 	wrote = 0 
 	with open(destination, 'wb') as f:
 		log.status("Downloading from %s to %s..."%(url,destination))
-		for data in tqdm(r.iter_content(block_size), total=math.ceil(total_size//block_size) , unit='KB', unit_scale=True):
+		for data in tqdm(r.iter_content(block_size), total=math.ceil(total_size//block_size) , unit='KB', unit_scale=True,leave=False):
 			wrote = wrote  + len(data)
 			f.write(data)
 	f.close()
