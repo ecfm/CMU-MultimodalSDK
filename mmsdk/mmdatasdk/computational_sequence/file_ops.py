@@ -14,7 +14,7 @@ def readCSD(resource,destination=None):
 	except: 
 		raise log.error("%s resource is not a valid hdf5 computational sequence  ..."%resource,error=True)
 	log.success ("Computational sequence read from file %s ..."%resource)
-	return h5handle,dict(h5handle[h5handle.keys()[0]]["data"]),metadataToDict(h5handle[h5handle.keys()[0]]["metadata"])
+	return h5handle,dict(h5handle[list(h5handle.keys())[0]]["data"]),metadataToDict(h5handle[list(h5handle.keys())[0]]["metadata"])
 	
 
 #writing MTD files to disk

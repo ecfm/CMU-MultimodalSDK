@@ -16,7 +16,7 @@ class mmdataset:
 		if type(recipe) is not dict:
 			log.error("Dataset recipe must be a dictionary type object ...")
 		
-		for entry, address in recipe.iteritems():
+		for entry, address in recipe.items():
 			self.computational_sequences[entry]=computational_sequence(address,destination)
 	
 	def add_computational_sequences(self,recipe,destination):
@@ -30,7 +30,7 @@ class mmdataset:
 		outfile=sys.stdout if outfile is None else outfile
 		sdkbib='@article{zadeh2018multi, title={Multi-attention recurrent network for human communication comprehension}, author={Zadeh, Amir and Liang, Paul Pu and Poria, Soujanya and Vij, Prateek and Cambria, Erik and Morency, Louis-Philippe}, journal={arXiv preprint arXiv:1802.00923}, year={2018}}'
 		outfile.write('mmsdk bib: '+sdkbib+'\n\n')
-		for entry,compseq in self.computational_sequences.iteritems():
+		for entry,compseq in self.computational_sequences.items():
 			compseq.bib_citations(outfile)
 
 	def align(self,reference,collapse_functions=None,replace=True):
