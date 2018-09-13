@@ -4,3 +4,6 @@ raw["phones"]='http://immortal.multicomp.cs.cmu.edu/CMU-MOSEI/language/CMU_MOSEI
 highlevel={}
 highlevel["glove_vectors"]='http://immortal.multicomp.cs.cmu.edu/CMU-MOSEI/language/CMU_MOSEI_TimestampedWordVectors.csd'
 highlevel["FACET 4.2"]='http://immortal.multicomp.cs.cmu.edu/CMU-MOSEI/visual/CMU_MOSEI_VisualFacet42.csd'
+highlevel["COVAREP"]='http://immortal.multicomp.cs.cmu.edu/CMU-MOSEI/acoustic/CMU_MOSEI_COVAREP.csd'
+labels={}
+labels["Sentence Level Sentiment and Emotion Labels"]="http://immortal.multicomp.cs.cmu.edu/CMU-MOSEI/labels/CMU_MOSEI_Sentence_Level_Sentiment_and_Emotions.csd"
