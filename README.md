@@ -1,8 +1,8 @@
 # News
 
-CMU-Multimodal SDK V 1.0.0 is released. Please be advised of major changes to the data structures due to improvements to data loading and downloading. 
+**Update** CMU-Multimodal SDK V 1.0.1 is released. Please be advised of major changes to the data structures due to improvements to data loading and downloading. 
 
-# CMU-Multimodal SDK Version 1.0.0 (mmsdk)
+# CMU-Multimodal SDK Version 1.0.1 (mmsdk)
 
 CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets and rapidly build neural multimodal deep models. Hence the SDK comprises of two modules: 1) mmdatasdk: module for downloading and procesing multimodal datasets using computational sequences. 2) mmmodelsdk: tools to utilize complex neural models as well as layers for building new models. 
 
@@ -13,8 +13,6 @@ CMU-Multimodal Data SDK simplifies downloading nad loading multimodal datasets. 
 Each computational sequence is a heirarchical data strcuture which contains two key elements 1) "data" is a heirarchy of features in the computational sequence categorized based on unique multimodal source identifier (for example video id). Each multimodal source has two matrices associated with it: features and intervals. Features denote the computational descriptors and intervals denote their associated timestamp. Both features and intervals are numpy 2d arrays. 2) "metadata": contains information about the computational sequence including integrity and version information. The computational sequences are stored as hdf5 onjects on hard disk with ".csd" extension (computational sequential data). Both the data and metadata are stored under "root name" (root of the heirarchy)
 
 A dataset is defined as a dictionary of multiple computational sequences. Entire datasets can be shared using recipes as opposed to old-fashioned dropbox links or ftp servers. Computational sequences are downloaded one by one and their individual integrity is checked to make sure they are the ones users wanted to share. Users can register their extracted features with our trust server to use this feature. They can also request storage of their features on our servers 
-
-
 
 
 ## 2. Installation
@@ -39,50 +37,58 @@ pip install h5py validators tqdm numpy
 
 ## 3. Usage
 
-The first step in most machine learning tasks is to acquire the data. 
+The first step in most machine learning tasks is to acquire the data. We will work with CMU-MOSI for this readme. 
 
 ```python
 >>> from mmsdk import mmdatasdk
 ```
 
-Now that mmdatasdk is loaded you can proceed to fetch a dataset. Let's assume the server that hosts the dataset is host.edu and trust server is trust.edu (list of server links for each dataset provided later in the readme). 
-If you are using a standard featureset from provided datasets you can simply download them. 
+Now that mmdatasdk is loaded you can proceed to fetch a dataset. The datasets are a set of computational sequences, where each computational sequence hosts the information from a modality or a view of a modality. For example a computational sequence could be the word vectors and another computational sequence could be phoneme 1-hot vectors. 
+
+If you are using a standard dataset, you can find the list of them in the mmdatasdk/dataset/standard_datasets. We use CMU-MOSI for now. We will work with highlevel features (glove embeddings, facet facial expressions, covarep acoustic features, etc)
 
 ```python
->>> from mmdatasdk import computational_sequence
->>> mycompseq=computational_sequence('host.edu/arbitrarycompseq.csd','mypath/name.csd')
+>>> from mmsdk import mmdatasdk
+>>> cmumosi_highlevel=mmdatasdk.mmdataset(mmdatasdk.cmu_mosi.highlevel,'cmumosi/')
 ```
 
-This will download an arbitrary computational sequence (arbitrarycompseq.csd) and stores it as name.csd in mypath. If downloading a dataset from a link, mmdatasdk always checks integrity with trust server. Another usage of computational_sequence is if you have a pre-exising file in storage:
+This will download the data using the links provided in *mmdatasdk.cmu_mosi.highlevel* dictionary (mappings between computational sequence keys and their respective download link) and put them in the *cmumosi/* folder. 
+
+The data that gets downloaded comes in different frequencies, however, they computational sequence keys will always be the same. For example if video v0 exists in glove embeddings, then v0 should exist in other computational sequences as well. The data with different frequency is applicable for machine learning tasks, however, sometimes the data needs to be aligned. The next stage is to align the data according to a modality. For example we would like to align all computational sequences according to the labels of a dataset. First, we fetch the opinion segment labels computational sequence for CMU-MOSI. 
 
 ```python
->>> from mmdatasdk import computational_sequence
->>> mycompseq=computational_sequence('mypath/name.csd')
+>>> cmumosi_highlevel.add_computational_sequence(mmdatasdk.cmu_mosi.labels,'cmumosi/')
 ```
 
-This will simply load the file name.csd from mypath. This will also force a trust check with the trust server. 
-
-You can also initialize an empty computational_sequence using the following: 
+Next we align everything to the opinion segment labels. 
 
 ```python
->>> from mmdatasdk import computational_sequence
->>> mycompseq=computational_sequence('myrootname')
+>>> cmumosi_highlevel.align('Opinion Segment Labels')
 ```
 
-This comes in handy if you are building a computational sequence from scratch (more advanced stuff, discussed later). You cannot register a computational sequence with our trust server unless the computational sequence passes both data and metadata integrity checks (to make sure both are in the correct format). 
+*Opinion Segment Labels* is the key for the labels we just fetched. Since every video has multiple segments according to annotations and timing in opinion segment labels, each video will also be accompanied by a [x] where x denotes which opinion segment the computational sequence information belongs to; for example v0[2] denotes third segment of v0 (starting from [0]). 
 
-In most cases you won't need to deal with computational_sequence but rather with mmdataset. The scripts below are examples of downloading datasets to the mycmu_*_dir. 
+
+**Word Level Alignement:**
+
+In recent papers, it has been a common practice to perform word-level alignment. To do this with the mmdatasdk, we can do the following:
 
 ```python
->>> from mmdatasdk import mmdataset
->>> cmumosei_highlevel=mmdataset(mmdatasdk.cmu_mosei.highlevel,'mycmu_mosei_dir')
->>> cmumosi_highlevel=mmdataset(mmdatasdk.cmu_mosi.highlevel,'mycmu_mosi_dir')
+>>> from mmsdk import mmdatasdk
+>>> cmumosi_highlevel=mmdatasdk.mmdataset(mmdatasdk.cmu_mosi.highlevel,'cmumosi/')
+>>> cmumosi_highlevel.align('glove_vectors',collapse_functions=[myavg])
+>>> cmumosi_highlevel.add_computational_sequence(mmdatasdk.cmu_mosi.labels,'cmumosi/')
+>>> cmumosi_highlevel.align('Opinion Segment Labels')
 ```
 
-This script will download high-level CMU-MOSEI features according to highlevel receipe. Each recipe is a key-value dictionary with key as the name you would like to refer to the computational sequence as (different than root name) and value is the link to download the computational seqeuence from. You can find the standard datasets in the /dataset/standard_datasets/ folder. 
+we first aligned everything to the *glove_vectors* modality and then we align to the *Opinion Segment Labels*. Please note that with the alignment to the *glove_vectors*, we ask the align function to also collapse the other modalities. This basically means summarize the other modalities based on a set of functions. The functions all receive two argument *intervals* and *features*. Intervals is a *m times 2* and features is a *m times n* matrix. The output of the functions should be *1 times n*. For example the following function ignores intervals and just takes the average of the input features:
 
-The computational sequences inside a mmdataset can be aligned with each other according to a heirarchy. A heirarchy is an instance of computational sequence that does not have features inside its data, but just intervals. 
+```python
+def myavg(intervals,features):
+        return numpy.average(features,axis=0)
+```
 
+Multiple functions can be passed to *collapse_functions*, each of them will be applied one by one and will be concatenated as the final output. 
 
 ## Citations
 To acquire citations for all computational sequence resources you have used simply call the bib_citations method either from an mmdataset or computational_sequence object:	
