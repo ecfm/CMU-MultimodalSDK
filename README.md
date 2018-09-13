@@ -1,6 +1,6 @@
 # News
 
-**Update** CMU-Multimodal SDK V 1.0.1 is released. Please be advised of major changes to the data structures due to improvements to data loading and downloading. 
+**Update** CMU-MOSEI labels and COVAREP has been announced in CMU-Multimodal SDK V 1.0.2. 
 
 # CMU-Multimodal SDK Version 1.0.1 (mmsdk)
 
