@@ -5,7 +5,7 @@ import time
 from tqdm import tqdm
 import os
 
-epsilon=10e-5
+epsilon=10e-4
 
 class mmdataset:
 
