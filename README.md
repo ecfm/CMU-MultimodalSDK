@@ -1,6 +1,7 @@
 # News
 
-**Update POM Dataset Added** version 1.0.3 announced. As the next step, we will add more tutorials and add functionalities for passive alignment. We will also release the raw data (currently too big so we are looking for solution on where to put them). 
+**Update POM Dataset Added.** version 1.0.3 announced. As the next step, we will add more tutorials and add functionalities for passive alignment. We will also release the raw data (currently too big so we are looking for solution on where to put them). 
+
 CMU-MOSEI labels and COVAREP has been announced in CMU-Multimodal SDK V 1.0.2. 
 
 # CMU-Multimodal SDK Version 1.0.2 (mmsdk)
