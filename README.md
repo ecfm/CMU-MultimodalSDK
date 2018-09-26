@@ -86,6 +86,7 @@ In recent papers, it has been a common practice to perform word-level alignment.
 we first aligned everything to the *glove_vectors* modality and then we align to the *Opinion Segment Labels*. Please note that with the alignment to the *glove_vectors*, we ask the align function to also collapse the other modalities. This basically means summarize the other modalities based on a set of functions. The functions all receive two argument *intervals* and *features*. Intervals is a *m times 2* and features is a *m times n* matrix. The output of the functions should be *1 times n*. For example the following function ignores intervals and just takes the average of the input features:
 
 ```python
+import numpy
 def myavg(intervals,features):
         return numpy.average(features,axis=0)
 ```
