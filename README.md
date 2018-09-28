@@ -4,6 +4,8 @@
 
 CMU-MOSEI labels and COVAREP has been announced in CMU-Multimodal SDK V 1.0.2. 
 
+**To see what our next steps are for the SDK please look at next_steps.md**
+
 # CMU-Multimodal SDK Version 1.0.2 (mmsdk)
 
 CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets and rapidly build neural multimodal deep models. Hence the SDK comprises of two modules: 1) mmdatasdk: module for downloading and procesing multimodal datasets using computational sequences. 2) mmmodelsdk: tools to utilize complex neural models as well as layers for building new models. 
