@@ -12,3 +12,5 @@ Long-term
 
 1. releasing the first version of modelsdk
 2. releasing the ICT-MMMO
+3. adding support for Multilingual MOSEI
+
