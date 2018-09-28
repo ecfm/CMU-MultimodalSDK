@@ -5,7 +5,7 @@ Small updates
 0. fixing the MOSEI labels file
 1. releasing raw data for MOSEI
 2. release mosi covarep
-3. update pom standard folds
+3. update pom standard folds, new covarep for POM
 4. implementation of passive align, comparison between computational sequences, and intersect/union.
 
 
