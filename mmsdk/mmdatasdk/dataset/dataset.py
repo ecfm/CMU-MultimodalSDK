@@ -84,8 +84,8 @@ class mmdataset:
 				for otherseq_key in list(self.computational_sequences.keys()):
 					
 					#TODO: Fixing this to make sure we are not alignting if compseq does not have the key
-					if entry_key not in self.computational_sequences[otherseq_key][entry_key]:
-						pass
+					#if entry_key not in self.computational_sequences[otherseq_key].data[entry_key]:
+					#	pass
 					intersects,intersects_features=self.__intersect_and_copy(entry_key,ref_time,self.computational_sequences[otherseq_key],epsilon)
 					#there were no intersections between reference and subject computational sequences for the entry
 					if intersects.shape[0] == 0:
