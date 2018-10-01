@@ -44,6 +44,10 @@ class computational_sequence():
 			self.metadata=metadata
 
 
+	def _remove_id(self,entry_id):
+		if entry_id in list(self.data.keys()):
+			del self.data[entry_id]
+
 	#TODO: try and excepts to be added to this code
 	def _initialize(self,resource,destination):
 		#computational sequence is already initialized

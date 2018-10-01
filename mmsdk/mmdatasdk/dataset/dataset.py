@@ -22,7 +22,7 @@ class mmdataset:
 	def add_computational_sequences(self,recipe,destination):
 		for entry, address in recipe.iteritems():
 			if entry in self.computational_sequences:
-				log.error("Dataset already contains <%s> computational sequence"%entry)
+				log.error("Dataset already contains <%s> computational sequence ..."%entry)
 			self.computational_sequences[entry]=computational_sequence(address,destination)
 
 	def bib_citations(self,outfile=None):
@@ -32,6 +32,31 @@ class mmdataset:
 		outfile.write('mmsdk bib: '+sdkbib+'\n\n')
 		for entry,compseq in self.computational_sequences.items():
 			compseq.bib_citations(outfile)
+
+	def intersect(self,active=True):
+		log.status("Unify was called ...")
+		all_vidids={}
+		violators=[]
+		for seq_key in list(self.computational_sequences.keys()):
+			for vidid in list(self.computational_sequences[seq_key].data.keys()):
+				vidid=vidid.split('[')[0]
+				all_vidids[vidid]=True
+
+		for vidid in list(all_vidids.keys()):
+			for seq_key in list(self.computational_sequences.keys()):
+				if not any([vidid_in_seq for vidid_in_seq in self.computational_sequences[seq_key].data.keys() if vidid_in_seq[:len(vidid)]==vidid]):
+					violators.append(vidid)
+		if len(violators) >0 :
+			for violator in violators:
+				log.error("%s entry is not shared among all sequences, removing it ..."%violator,error=False)
+				if active==True:
+					self._remove_id(violator)
+		if active==False:
+			log.error("%d violators remain, alignment will fail if called ..."%len(violators),error=False)
+
+	def _remove_id(self,entry_id):
+		for _,compseq in self.computational_sequences.items():
+			compseq._remove_id(entry_id)
 
 	def align(self,reference,collapse_functions=None,replace=True):
 		aligned_output={}
@@ -57,7 +82,10 @@ class mmdataset:
 
 				#aligning all sequences (including ref sequence) to ref sequence
 				for otherseq_key in list(self.computational_sequences.keys()):
-
+					
+					#TODO: Fixing this to make sure we are not alignting if compseq does not have the key
+					if entry_key not in self.computational_sequences[otherseq_key][entry_key]:
+						pass
 					intersects,intersects_features=self.__intersect_and_copy(entry_key,ref_time,self.computational_sequences[otherseq_key],epsilon)
 					#there were no intersections between reference and subject computational sequences for the entry
 					if intersects.shape[0] == 0:
