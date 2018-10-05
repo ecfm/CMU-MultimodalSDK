@@ -53,8 +53,6 @@ class mmdataset:
 					self._remove_id(violator)
 		if active==False:
 			log.error("%d violators remain, alignment will fail if called ..."%len(violators),error=False)
-		else:
-			log.error("%d violators remain, alignment will fail if called ..."%len(violators))
 		
 		log.success("Intersect finished, dataset is ready to align ...")
 
@@ -160,8 +158,8 @@ class mmdataset:
 	        ref_copy=ref.copy()
 	        ref_copy[1]=-ref_copy[1]
 	        ref_copy=ref_copy[::-1]
-       		sub_copy=sub.copy()
-       		sub_copy[:,0]=-sub_copy[:,0]
+		sub_copy=sub.copy()
+		sub_copy[:,0]=-sub_copy[:,0]
 		#finding where intersect happens
 	        where_intersect=(numpy.all((sub_copy-ref_copy)>(-epsilon),axis=1)==True)
 	        intersectors=sub[where_intersect,:]
