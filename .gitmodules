@@ -1,3 +1,0 @@
-[submodule "models/TensorFusionNetworks"]
-	path = models/TensorFusionNetworks
-	url = https://github.com/Justin1904/TensorFusionNetworks.git

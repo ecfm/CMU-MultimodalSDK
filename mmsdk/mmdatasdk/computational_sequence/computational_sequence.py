@@ -43,6 +43,10 @@ class computational_sequence():
 			self.data=data
 			self.metadata=metadata
 
+	def _compare_entries(self,entry1,entry2):
+		return entry1.split('[')[0]==entry2.split('[')[0]
+
+
 
 	def _remove_id(self,entry_id):
 		if entry_id in list(self.data.keys()):
@@ -128,6 +132,10 @@ class computational_sequence():
 		log.status("Your unique identifier for <%s> computational sequence is %s"%(self.metadata["root name"],self.metadata['uuid']))
 		writeCSD(self.data,self.metadata,self.metadata["root name"],destination)
 		self.mainFile=destination
+
+	def _get_entries_stripped(self):
+		return list(set([entry.split('[')[0] for entry in list(self.data.keys())]))
+		
 
 	def bib_citations(self,outfile=None):
 		outfile=sys.stdout if outfile is None else outfile

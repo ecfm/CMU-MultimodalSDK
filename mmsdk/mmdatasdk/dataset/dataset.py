@@ -34,7 +34,7 @@ class mmdataset:
 			compseq.bib_citations(outfile)
 
 	def intersect(self,active=True):
-		log.status("Unify was called ...")
+		log.status("Intersect was called ...")
 		all_vidids={}
 		violators=[]
 		for seq_key in list(self.computational_sequences.keys()):
@@ -53,13 +53,22 @@ class mmdataset:
 					self._remove_id(violator)
 		if active==False:
 			log.error("%d violators remain, alignment will fail if called ..."%len(violators),error=False)
+		else:
+			log.error("%d violators remain, alignment will fail if called ..."%len(violators))
+		
+		log.success("Intersect finished, dataset is ready to align ...")
+
 
 	def _remove_id(self,entry_id):
 		for _,compseq in self.computational_sequences.items():
 			compseq._remove_id(entry_id)
 
+	
+
 	def align(self,reference,collapse_functions=None,replace=True):
 		aligned_output={}
+
+		
 		for sequence_name in self.computational_sequences.keys():
 			aligned_output[sequence_name]={}
 		if reference not in self.computational_sequences.keys():
@@ -67,6 +76,8 @@ class mmdataset:
 		refseq=self.computational_sequences[reference].data
 		#this for loop is for entry_key - for example video id or the identifier of the data entries
 		log.status("Alignment based on <%s> computational sequence started ..."%reference)
+		self.intersect()
+
 		pbar = tqdm(total=len(refseq.keys()),unit=" Computational Sequence Entries",leave=False)
 		pbar.set_description("Overall Progress")
 		for entry_key in list(refseq.keys()):
@@ -83,9 +94,8 @@ class mmdataset:
 				#aligning all sequences (including ref sequence) to ref sequence
 				for otherseq_key in list(self.computational_sequences.keys()):
 					
-					#TODO: Fixing this to make sure we are not alignting if compseq does not have the key
-					#if entry_key not in self.computational_sequences[otherseq_key].data[entry_key]:
-					#	pass
+					if entry_key.split('[')[0] not in self.computational_sequences[otherseq_key]._get_entries_stripped():
+						log.error("The dataset does not have unified entry ids across computational sequences. Please call intersect first ...")
 					intersects,intersects_features=self.__intersect_and_copy(entry_key,ref_time,self.computational_sequences[otherseq_key],epsilon)
 					#there were no intersections between reference and subject computational sequences for the entry
 					if intersects.shape[0] == 0:
