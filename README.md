@@ -15,7 +15,7 @@ CMU-MOSEI labels and COVAREP has been announced in CMU-Multimodal SDK V 1.0.2.
 **To see what our next steps are for the SDK please look at next_steps.md**
 
 
-## 1. CMU Multimodal Data SDK (mmdatasdk)
+## CMU Multimodal Data SDK (mmdatasdk)
 
 CMU-Multimodal Data SDK simplifies downloading nad loading multimodal datasets. The module mmdatasdk treats each multimodal dataset as a combination of **computational sequences**. Each computational sequence contains information from one modality in a heirarchical format, defined in the continuation of this section. Computational sequences are self-contained and independent; they can be used to train models in isolation. They can be downloaded, shared and registered with our trust servers. This allows the community to share data and recreate results in a more elegant way using computational sequence intrgrity checks. Furthermore, this integrity check allows users to download the correct computational sequences. 
 
@@ -24,7 +24,7 @@ Each computational sequence is a heirarchical data strcuture which contains two 
 A dataset is defined as a dictionary of multiple computational sequences. Entire datasets can be shared using recipes as opposed to old-fashioned dropbox links or ftp servers. Computational sequences are downloaded one by one and their individual integrity is checked to make sure they are the ones users wanted to share. Users can register their extracted features with our trust server to use this feature. They can also request storage of their features on our servers 
 
 
-## 2. Installation
+## Installation
 
 The first step is to download the SDK:
 
@@ -44,7 +44,7 @@ Make sure the following python packages are installed: h5py, validators, tqdm. T
 pip install h5py validators tqdm numpy 
 ```
 
-## 3. Usage
+## Usage
 
 The first step in most machine learning tasks is to acquire the data. We will work with CMU-MOSI for this readme. 
 
