@@ -2,7 +2,7 @@
 
 Small updates
 
-1. fixing the MOSEI labels file
+1. getting tensors
 2. release mosi covarep
 3. new covarep for POM
 4. implementation of passive align, comparison between computational sequences, and intersect/union.
