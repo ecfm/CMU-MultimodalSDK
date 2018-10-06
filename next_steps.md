@@ -2,6 +2,7 @@
 
 Small updates
 
+0. dimension names
 1. getting tensors
 2. release mosi covarep
 3. new covarep for POM
