@@ -13,11 +13,25 @@ class mmdataset:
 		
 		self.computational_sequences={}	
 
-		if type(recipe) is not dict:
-			log.error("Dataset recipe must be a dictionary type object ...")
+		if type(recipe) is str:
+			if os.path.isdir(recipe) is False:
+				log.error("Dataset folder does not exist ...",error=True)
+
+			from os import listdir
+			from os.path import isfile, join
+			computational_sequence_list = [f for f in listdir(recipe) if isfile(join(recipe, f)) and f[-4:]=='.csd']
+			for computational_sequence_fname in computational_sequence_list:
+				this_sequence=computational_sequence(join(recipe,computational_sequence_fname))
+				self.computational_sequences[this_sequence.metadata["root name"]]=this_sequence
+
+		if type(recipe) is dict:
+			for entry, address in recipe.items():
+				self.computational_sequences[entry]=computational_sequence(address,destination)
+
+		if len(self.computational_sequences.keys())==0:
+			log.error("Dataset failed to initialize ...", error=True)
 		
-		for entry, address in recipe.items():
-			self.computational_sequences[entry]=computational_sequence(address,destination)
+		log.success("Dataset initialized successfully ... ")
 	
 	def add_computational_sequences(self,recipe,destination):
 		for entry, address in recipe.iteritems():
@@ -33,7 +47,7 @@ class mmdataset:
 		for entry,compseq in self.computational_sequences.items():
 			compseq.bib_citations(outfile)
 
-	def intersect(self,active=True):
+	def _intersect(self,active=True):
 		log.status("Intersect was called ...")
 		all_vidids={}
 		violators=[]
@@ -51,8 +65,8 @@ class mmdataset:
 				log.error("%s entry is not shared among all sequences, removing it ..."%violator,error=False)
 				if active==True:
 					self._remove_id(violator)
-		if active==False:
-			log.error("%d violators remain, alignment will fail if called ..."%len(violators),error=False)
+		if active==False and len(violators)>0:
+			log.error("%d violators remain, alignment will fail if called ..."%len(violators),error=True)
 		
 		log.success("Intersect finished, dataset is ready to align ...")
 
@@ -74,7 +88,7 @@ class mmdataset:
 		refseq=self.computational_sequences[reference].data
 		#this for loop is for entry_key - for example video id or the identifier of the data entries
 		log.status("Alignment based on <%s> computational sequence started ..."%reference)
-		self.intersect()
+		self._intersect()
 
 		pbar = tqdm(total=len(refseq.keys()),unit=" Computational Sequence Entries",leave=False)
 		pbar.set_description("Overall Progress")
