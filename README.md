@@ -6,6 +6,8 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 
 # News
 
+Some examples are released to clarify confusions about downloading and aligning datasets.
+
 **Raw data now available for download outside SDK**. You can download the raw data as well. I strongly recommend sticking to SDK for running machine learning studies. If you want to extract your own features you can create computational sequences and share them with us and others. All raw data can be downloaded from http://immortal.multicomp.cs.cmu.edu/raw_datasets/. 
 
 Update: POM Dataset Added (version 1.0.3 announced). As the next step, we will add more tutorials and add functionalities for passive alignment. We will also release the raw data (currently too big so we are looking for solution on where to put them). 
@@ -41,7 +43,7 @@ export PYTHONPATH="/path/to/cloned/directory/CMU-MultimodalSDK:$PYTHONPATH"
 Make sure the following python packages are installed: h5py, validators, tqdm. The setup.py will install them for you. You can also manually install them using pip by:
 
 ```bash
-pip install h5py validators tqdm numpy 
+pip install h5py validators tqdm numpy argparse
 ```
 
 ## Usage
