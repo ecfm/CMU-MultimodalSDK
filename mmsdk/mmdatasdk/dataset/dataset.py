@@ -34,7 +34,7 @@ class mmdataset:
 		log.success("Dataset initialized successfully ... ")
 	
 	def add_computational_sequences(self,recipe,destination):
-		for entry, address in recipe.iteritems():
+		for entry, address in recipe.items():
 			if entry in self.computational_sequences:
 				log.error("Dataset already contains <%s> computational sequence ..."%entry)
 			self.computational_sequences[entry]=computational_sequence(address,destination)
@@ -47,8 +47,8 @@ class mmdataset:
 		for entry,compseq in self.computational_sequences.items():
 			compseq.bib_citations(outfile)
 
-	def _intersect(self,active=True):
-		log.status("Intersect was called ...")
+	def __unify_dataset(self,active=True):
+		log.status("Unify was called ...")
 		all_vidids={}
 		violators=[]
 		for seq_key in list(self.computational_sequences.keys()):
@@ -64,14 +64,14 @@ class mmdataset:
 			for violator in violators:
 				log.error("%s entry is not shared among all sequences, removing it ..."%violator,error=False)
 				if active==True:
-					self._remove_id(violator)
+					self.__remove_id(violator)
 		if active==False and len(violators)>0:
 			log.error("%d violators remain, alignment will fail if called ..."%len(violators),error=True)
 		
-		log.success("Intersect finished, dataset is ready to align ...")
+		log.success("Unify finished, dataset is ready to align ...")
 
 
-	def _remove_id(self,entry_id):
+	def __remove_id(self,entry_id):
 		for _,compseq in self.computational_sequences.items():
 			compseq._remove_id(entry_id)
 
@@ -88,7 +88,7 @@ class mmdataset:
 		refseq=self.computational_sequences[reference].data
 		#this for loop is for entry_key - for example video id or the identifier of the data entries
 		log.status("Alignment based on <%s> computational sequence started ..."%reference)
-		self._intersect()
+		self.__unify_dataset()
 
 		pbar = tqdm(total=len(refseq.keys()),unit=" Computational Sequence Entries",leave=False)
 		pbar.set_description("Overall Progress")
@@ -165,7 +165,7 @@ class mmdataset:
 			self.computational_sequences[seq_key].deploy(os.path.join(destination,filename))
 		
 	def __intersect_and_copy(self,ref_entry_key,ref,sub_compseq,epsilon):
-		relevant_entries=[x for x in sub_compseq.data.keys() if x.split('[')[0]==ref_entry_key]
+		relevant_entries=[x for x in sub_compseq.data.keys() if x.split('[')[0]==ref_entry_key.split('[')[0]]
 		sub=numpy.concatenate([sub_compseq.data[x]["intervals"] for x in relevant_entries],axis=0)
 		features=numpy.concatenate([sub_compseq.data[x]["features"] for x in relevant_entries],axis=0)
 	        #copying and inverting the ref
