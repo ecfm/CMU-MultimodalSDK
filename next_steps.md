@@ -7,7 +7,7 @@ Small updates
 2. release mosi covarep
 3. new covarep for POM
 4. implementation of passive align, comparison between computational sequences, and intersect/union.
-5. implementing the metadata update to contain the feature names
+5. If file is not found it says invalid computational sequence. 
 
 
 Long-term
