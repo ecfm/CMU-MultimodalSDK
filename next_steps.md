@@ -8,6 +8,7 @@ Small updates
 3. new covarep for POM
 4. implementation of passive align, comparison between computational sequences, and intersect/union.
 5. If file is not found it says invalid computational sequence. 
+6. Adding OpenFace 2.0 features. 
 
 
 Long-term
