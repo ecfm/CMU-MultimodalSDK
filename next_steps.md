@@ -9,6 +9,7 @@ Small updates
 4. implementation of passive align, comparison between computational sequences, and intersect/union.
 5. If file is not found it says invalid computational sequence. 
 6. Adding OpenFace 2.0 features. 
+7. mosi overlap
 
 
 Long-term
