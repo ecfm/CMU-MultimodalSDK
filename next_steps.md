@@ -2,6 +2,7 @@
 
 Small updates
 
+0. release the old codes MFN MARN Graph-MFN
 1. dimension names
 2. getting tensors
 3. new covarep for POM
