@@ -1,5 +1,6 @@
 import sys
 import h5py
+import os
 from tqdm import tqdm
 from mmsdk.mmdatasdk import log
 from mmsdk.mmdatasdk.configurations.metadataconfigs import *
@@ -9,6 +10,8 @@ from mmsdk.mmdatasdk.computational_sequence.integrity_check import *
 def readCSD(resource,destination=None):
 
 	if (resource is None): raise log.error("No resource specified for computational sequence!",error=True)	
+	if os.path.isfile(resource) is False:
+		log.error("%s file not found, please check the path ..."%resource,error=True)	
 	try:
 		h5handle=h5py.File('%s'%resource,'r')
 	except: 
