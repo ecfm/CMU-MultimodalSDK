@@ -24,4 +24,7 @@ Please report it ASAP on the issues tab in github or simply contact us through e
 
 Of course, mmdatasdk is built for that purpose. We will release tutorials on how to release your own dataset. If you are familiar with the format of computational sequences, that should be relatively easy to do. Furthermore, we are also implementing hasing checks to allow researchers to register their data, and simply share the hash to allow others to recreate their experiments reliably. 
 
+7. What about the old implementation of the SDK? 
+
+Through the very first implementation of the SDK, we learned a lot about necessary optimizations and how to manage the datasets. At this point in time the old version of SDK is completely deprecated. Please use the new SDK, called CMU Multimodal SDK (you are in the correct gituhb). 
 
