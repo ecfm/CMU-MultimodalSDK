@@ -2,9 +2,8 @@
 
 Small updates
 
-0. dimension names
-1. getting tensors
-2. release mosi covarep
+1. dimension names
+2. getting tensors
 3. new covarep for POM
 4. implementation of passive align, comparison between computational sequences, and intersect/union.
 5. If file is not found it says invalid computational sequence. 
