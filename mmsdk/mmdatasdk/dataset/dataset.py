@@ -10,8 +10,7 @@ epsilon=10e-4
 class mmdataset:
 
 	def __init__(self,recipe,destination=None):
-		
-		self.computational_sequences={}	
+		self.computational_sequences={}
 
 		if type(recipe) is str:
 			if os.path.isdir(recipe) is False:
@@ -30,9 +29,9 @@ class mmdataset:
 
 		if len(self.computational_sequences.keys())==0:
 			log.error("Dataset failed to initialize ...", error=True)
-		
+
 		log.success("Dataset initialized successfully ... ")
-	
+
 	def add_computational_sequences(self,recipe,destination):
 		for entry, address in recipe.items():
 			if entry in self.computational_sequences:
@@ -40,7 +39,6 @@ class mmdataset:
 			self.computational_sequences[entry]=computational_sequence(address,destination)
 
 	def bib_citations(self,outfile=None):
-		
 		outfile=sys.stdout if outfile is None else outfile
 		sdkbib='@article{zadeh2018multi, title={Multi-attention recurrent network for human communication comprehension}, author={Zadeh, Amir and Liang, Paul Pu and Poria, Soujanya and Vij, Prateek and Cambria, Erik and Morency, Louis-Philippe}, journal={arXiv preprint arXiv:1802.00923}, year={2018}}'
 		outfile.write('mmsdk bib: '+sdkbib+'\n\n')
@@ -67,7 +65,7 @@ class mmdataset:
 					self.__remove_id(violator)
 		if active==False and len(violators)>0:
 			log.error("%d violators remain, alignment will fail if called ..."%len(violators),error=True)
-		
+
 		log.success("Unify finished, dataset is ready to align ...")
 
 
@@ -75,12 +73,11 @@ class mmdataset:
 		for _,compseq in self.computational_sequences.items():
 			compseq._remove_id(entry_id)
 
-	
+
 
 	def align(self,reference,collapse_functions=None,replace=True):
 		aligned_output={}
 
-		
 		for sequence_name in self.computational_sequences.keys():
 			aligned_output[sequence_name]={}
 		if reference not in self.computational_sequences.keys():
@@ -95,7 +92,7 @@ class mmdataset:
 		for entry_key in list(refseq.keys()):
 			pbar_small=tqdm(total=refseq[entry_key]['intervals'].shape[0],unit=" Segments",leave=False)
 			pbar_small.set_description("Aligning %s"%entry_key)
-			for i in range(refseq[entry_key]['intervals'].shape[0]):	
+			for i in range(refseq[entry_key]['intervals'].shape[0]):
 				#interval for the reference sequence
 				ref_time=refseq[entry_key]['intervals'][i,:]
 				#we drop zero or very small sequence lengths - no align for those
@@ -105,14 +102,14 @@ class mmdataset:
 
 				#aligning all sequences (including ref sequence) to ref sequence
 				for otherseq_key in list(self.computational_sequences.keys()):
-					
+
 					if entry_key.split('[')[0] not in self.computational_sequences[otherseq_key]._get_entries_stripped():
 						log.error("The dataset does not have unified entry ids across computational sequences. Please call intersect first ...")
 					intersects,intersects_features=self.__intersect_and_copy(entry_key,ref_time,self.computational_sequences[otherseq_key],epsilon)
 					#there were no intersections between reference and subject computational sequences for the entry
 					if intersects.shape[0] == 0:
 						continue
-					#collapsing according to the provided functions	
+					#collapsing according to the provided functions
 					if type(collapse_functions) is list:
 						intersects,intersects_features=self.__collapse(intersects,intersects_features,collapse_functions)
 					if(intersects.shape[0]!=intersects_features.shape[0]):
@@ -133,8 +130,8 @@ class mmdataset:
 			log.status("Creating new dataset with aligned computational sequences")
 			newdataset=mmdataset({})
 			newdataset.__set_computational_sequences(aligned_output)
-			return newdataset	
-	
+			return newdataset
+
 	def __collapse(self,intervals,features,functions):
 		#we simply collapse the intervals to (1,2) matrix
 		new_interval=numpy.array([[intervals.min(),intervals.max()]])
@@ -145,14 +142,14 @@ class mmdataset:
 		except:
 			log.error("Cannot collapse given the set of function.", error=True)
 		return new_interval,new_features
-			
+
 	def __set_computational_sequences(self,new_computational_sequences_data):
 		self.computational_sequences={}
 		for sequence_name in list(new_computational_sequences_data.keys()):
 			self.computational_sequences[sequence_name]=computational_sequence(sequence_name)
 			self.computational_sequences[sequence_name].setData(new_computational_sequences_data[sequence_name],sequence_name)
 			self.computational_sequences[sequence_name].rootName=sequence_name
-				
+
 	def deploy(self,destination,filenames):
 		if os.path.isdir(destination) is False:
 			os.mkdir(destination)
@@ -163,29 +160,27 @@ class mmdataset:
 			if filename [:-4] != '.csd':
 				filename+='.csd'
 			self.computational_sequences[seq_key].deploy(os.path.join(destination,filename))
-		
+
 	def __intersect_and_copy(self,ref_entry_key,ref,sub_compseq,epsilon):
 		relevant_entries=[x for x in sub_compseq.data.keys() if x.split('[')[0]==ref_entry_key.split('[')[0]]
 		sub=numpy.concatenate([sub_compseq.data[x]["intervals"] for x in relevant_entries],axis=0)
 		features=numpy.concatenate([sub_compseq.data[x]["features"] for x in relevant_entries],axis=0)
-	        #copying and inverting the ref
-	        ref_copy=ref.copy()
-	        ref_copy[1]=-ref_copy[1]
-	        ref_copy=ref_copy[::-1]
+		#copying and inverting the ref
+		ref_copy=ref.copy()
+		ref_copy[1]=-ref_copy[1]
+		ref_copy=ref_copy[::-1]
 		sub_copy=sub.copy()
 		sub_copy[:,0]=-sub_copy[:,0]
 		#finding where intersect happens
-	        where_intersect=(numpy.all((sub_copy-ref_copy)>(-epsilon),axis=1)==True)
-	        intersectors=sub[where_intersect,:]
+		where_intersect=(numpy.all((sub_copy-ref_copy)>(-epsilon),axis=1)==True)
+		intersectors=sub[where_intersect,:]
 		intersectors=numpy.concatenate([numpy.maximum(intersectors[:,0],ref[0])[:,None],numpy.minimum(intersectors[:,1],ref[1])[:,None]],axis=1)
 		intersectors_features=features[where_intersect,:]
 		#checking for boundary cases and also zero length
 		where_nonzero_len=numpy.where(abs(intersectors[:,0]-intersectors[:,1])>epsilon)
 		intersectors_final=intersectors[where_nonzero_len]
 		intersectors_features_final=intersectors_features[where_nonzero_len]
-	        return intersectors_final,intersectors_features_final
+		return intersectors_final,intersectors_features_final
 
 	def unify():
 		pass
-
-	
