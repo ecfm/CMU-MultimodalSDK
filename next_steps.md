@@ -11,7 +11,7 @@ Small updates
 6. Adding OpenFace 2.0 features. 
 >7. mosi overlap
 8. latest version check
-
+9. country/gender/origin/ information for MOSI and MOSEI files. 
 
 Long-term
 
