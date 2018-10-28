@@ -2,6 +2,7 @@
 
 Small updates
 
+-1: adding new videos for MOSEI. 
 0. release the old codes MFN MARN Graph-MFN
 >1. dimension names
 2. getting tensors
@@ -12,6 +13,7 @@ Small updates
 >7. mosi overlap
 8. latest version check
 9. country/gender/origin/ information for MOSI and MOSEI files. 
+
 
 Long-term
 
