@@ -28,3 +28,7 @@ Of course, mmdatasdk is built for that purpose. We will release tutorials on how
 
 Through the very first implementation of the SDK, we learned a lot about necessary optimizations and how to manage the datasets. At this point in time the old version of SDK is completely deprecated. Please use the new SDK, called CMU Multimodal SDK (you are in the correct gituhb). 
 
+8. Do you share raw data?
+
+Yes, we do here is the link: http://immortal.multicomp.cs.cmu.edu/raw_datasets/. But we don't advocate going solo on processing everything again (recreating the wheel). If you want to process your own features, see item 6 in this FAQ.
+
