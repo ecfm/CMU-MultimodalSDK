@@ -14,7 +14,7 @@ Some examples are released to clarify confusions about downloading and aligning 
 
 **Raw data now available for download outside SDK**. You can download the raw data as well. I strongly recommend sticking to SDK for running machine learning studies. If you want to extract your own features you can create computational sequences and share them with us and others. All raw data can be downloaded from http://immortal.multicomp.cs.cmu.edu/raw_datasets/. 
 
-Update: POM Dataset Added (version 1.0.3 announced). As the next step, we will add more tutorials and add functionalities for passive alignment. We will also release the raw data (currently too big so we are looking for solution on where to put them). 
+Update: POM Dataset Added (version 1.0.3 announced). As the next step, we will add more tutorials and add functionalities for passive alignment. 
 
 **To see what our next steps are for the SDK please look at next_steps.md**
 
