@@ -1,4 +1,4 @@
-
+**We are planning on second version of the grand-challenge and workshop. This time, we have multiple languages, new test set for CMU-MOSEI and MELD dataset (as well as original CMU-MOSI and POM). Please take your time to vote for Second Grand-challenge and Workshop on Multimodal Language https://workshops-all-2019.limequery.com/771573?token=M5VaxOeOHTvF1nB&lang=en **. This voting is very important even if you are tentatively planning on attending. 
 
 # CMU-Multimodal SDK Version 1.0.3 (mmsdk)
 
