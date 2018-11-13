@@ -1,5 +1,3 @@
-**We are planning on second version of the grand-challenge and workshop. This time, we have multiple languages, new test set for CMU-MOSEI and MELD dataset (as well as original CMU-MOSI and POM). Please take your time to vote for Second Grand-challenge and Workshop on Multimodal Language (you may have received an email from Sebastian Riedel). This voting is very important even if you are tentatively planning on attending.**
-
 # CMU-Multimodal SDK Version 1.0.3 (mmsdk)
 
 CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets and rapidly build neural multimodal deep models. Hence the SDK comprises of two modules: 1) mmdatasdk: module for downloading and procesing multimodal datasets using computational sequences. 2) mmmodelsdk: tools to utilize complex neural models as well as layers for building new models (release Jan 1 2019). 
