@@ -4,9 +4,9 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 
 # News
 
-Upcoming updates on CMU-MOSEI, please pull the dataset again on November 25th (previously was 15th).
+BERT embeddings now available for CMU-MOSI. 
 
-CMU-MOSI COVAREP has been added. Please pull the SDK to be able to use it. 
+Upcoming updates on CMU-MOSEI, please pull the dataset again on November 25th (previously was 15th).
 
 Some examples are released to clarify confusions about downloading and aligning datasets.
 
