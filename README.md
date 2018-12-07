@@ -66,7 +66,7 @@ This will download the data using the links provided in *mmdatasdk.cmu_mosi.high
 The data that gets downloaded comes in different frequencies, however, they computational sequence keys will always be the same. For example if video v0 exists in glove embeddings, then v0 should exist in other computational sequences as well. The data with different frequency is applicable for machine learning tasks, however, sometimes the data needs to be aligned. The next stage is to align the data according to a modality. For example we would like to align all computational sequences according to the labels of a dataset. First, we fetch the opinion segment labels computational sequence for CMU-MOSI. 
 
 ```python
->>> cmumosi_highlevel.add_computational_sequence(mmdatasdk.cmu_mosi.labels,'cmumosi/')
+>>> cmumosi_highlevel.add_computational_sequences(mmdatasdk.cmu_mosi.labels,'cmumosi/')
 ```
 
 Next we align everything to the opinion segment labels. 
@@ -86,7 +86,7 @@ In recent papers, it has been a common practice to perform word-level alignment.
 >>> from mmsdk import mmdatasdk
 >>> cmumosi_highlevel=mmdatasdk.mmdataset(mmdatasdk.cmu_mosi.highlevel,'cmumosi/')
 >>> cmumosi_highlevel.align('glove_vectors',collapse_functions=[myavg])
->>> cmumosi_highlevel.add_computational_sequence(mmdatasdk.cmu_mosi.labels,'cmumosi/')
+>>> cmumosi_highlevel.add_computational_sequences(mmdatasdk.cmu_mosi.labels,'cmumosi/')
 >>> cmumosi_highlevel.align('Opinion Segment Labels')
 ```
 
