@@ -2,18 +2,21 @@
 
 Small updates
 
--1: adding new videos for MOSEI. 
+MOSEI updates:
+1. words done
+2. phonemes done
+3. glove done
+4. BERT pending
+5. FACET pending
+6. COVAREP pending
 
-0. release the old codes MFN MARN Graph-MFN
->1. dimension names
-2. getting tensors
->3. new covarep for POM
-4. implementation of passive align, comparison between computational sequences, and intersect/union.
-5. If file is not found it says invalid computational sequence. 
-6. Adding OpenFace 2.0 features. 
->7. mosi overlap
-8. latest version check
-9. country/gender/origin/ information for MOSI and MOSEI files. 
+-- release the old codes MFN MARN Graph-MFN
+>-- dimension names
+-- getting tensors
+-- implementation of passive align, comparison between computational sequences, and intersect/union.
+-- Adding OpenFace 2.0 features. 
+-- latest version check
+-- country/gender/origin/ information for MOSI and MOSEI files. 
 
 
 Long-term
