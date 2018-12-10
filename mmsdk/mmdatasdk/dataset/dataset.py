@@ -102,10 +102,12 @@ class mmdataset:
 
 				#aligning all sequences (including ref sequence) to ref sequence
 				for otherseq_key in list(self.computational_sequences.keys()):
-					#TODO: remember to remove self alignment - it causes instability
 					if entry_key.split('[')[0] not in self.computational_sequences[otherseq_key]._get_entries_stripped():
 						log.error("The dataset does not have unified entry ids across computational sequences. Please call intersect first ...")
-					intersects,intersects_features=self.__intersect_and_copy(entry_key,ref_time,self.computational_sequences[otherseq_key],epsilon)
+					if otherseq_key != reference:
+						intersects,intersects_features=self.__intersect_and_copy(entry_key,ref_time,self.computational_sequences[otherseq_key],epsilon)
+					else:
+						intersects,intersects_features=refseq[entry_key]['intervals'][i,:][None,:],refseq[entry_key]['features'][i,:][None,:]
 					#there were no intersections between reference and subject computational sequences for the entry
 					if intersects.shape[0] == 0:
 						continue
