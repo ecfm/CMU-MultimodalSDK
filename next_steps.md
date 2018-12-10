@@ -11,7 +11,7 @@ MOSEI updates:
 6. COVAREP pending
 
 -- release the old codes MFN MARN Graph-MFN
->-- dimension names
+-- dimension names
 -- getting tensors
 -- implementation of passive align, comparison between computational sequences, and intersect/union.
 -- Adding OpenFace 2.0 features. 
