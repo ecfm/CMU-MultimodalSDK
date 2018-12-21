@@ -1,4 +1,4 @@
-Please participate in the CMU Multimodal SDK user survey for $25 Amazon gift card. The deadline is January 5th 2019. https://goo.gl/forms/VBQdMqNZEIsccQpB2 
+Please participate in the CMU Multimodal SDK user survey for $25 Amazon gift card. Your opinion is very important to us :). The deadline for participating is January 5th 2019. https://goo.gl/forms/VBQdMqNZEIsccQpB2 
 
 # CMU-Multimodal SDK Version 1.0.3 (mmsdk)
 
