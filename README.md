@@ -1,6 +1,8 @@
+Please participate in the CMU Multimodal SDK user survey for a chance to win a $25 Amazon gift card in a raffle. Your opinion is very important to us :). The deadline for participating is January 5th 2019. https://goo.gl/forms/VBQdMqNZEIsccQpB2 
+
 # CMU-Multimodal SDK Version 1.0.3 (mmsdk)
 
-CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets and rapidly build neural multimodal deep models. Hence the SDK comprises of two modules: 1) mmdatasdk: module for downloading and procesing multimodal datasets using computational sequences. 2) mmmodelsdk: tools to utilize complex neural models as well as layers for building new models (release Jan 1 2019). 
+CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets and rapidly build neural multimodal deep models. Hence the SDK comprises of two modules: 1) mmdatasdk: module for downloading and procesing multimodal datasets using computational sequences. 2) mmmodelsdk: tools to utilize complex neural models as well as layers for building new models (release Jan 1 2019). The fusion models in prior papers will be released here. 
 
 # News
 

@@ -2,15 +2,15 @@
 
 Small updates
 
-MOSEI updates:
+MOSEI new updates:
 1. words done
 2. phonemes done
 3. glove done
 4. BERT pending
-5. FACET pending
+5. FACET done
 6. COVAREP pending
 
--- release the old codes MFN MARN Graph-MFN
+-- release the old codes MFN, MARN, Graph-MFN
 -- dimension names
 -- getting tensors
 -- implementation of passive align, comparison between computational sequences, and intersect/union.
