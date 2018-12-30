@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.autograd import Variable
 import torch.nn.functional as F
-from model import MultipleAttentionFusion
+from model import RecurrentFusion
 import numpy
 
 
@@ -15,18 +15,10 @@ full_in=numpy.array(numpy.zeros([32,20]))
 inputz=Variable(torch.Tensor(full_in),requires_grad=True)
 modalities=[inputx,inputy,inputz]
 
-my_attention =	nn.Sequential(nn.Linear(72,72*4))
-print(list(my_attention.children())[0].in_features)
-import time
-time.sleep(10)
-small_netx =	nn.Sequential(nn.Linear(160,10))
-small_nety =	nn.Sequential(nn.Linear(48,20))
-small_netz =	nn.Sequential(nn.Linear(80,30))
-smalls_nets=[small_netx,small_nety,small_netz]
-fmodel=MultipleAttentionFusion(my_attention,smalls_nets,4)
+fmodel=RecurrentFusion([40,12,20],100)
 
-out=fmodel.fusion(modalities)
-print([o.shape for o in out])
+out=fmodel.fusion(modalities,steps=5)
+print(out[0].shape,out[1].shape,out[2].shape,sum(out[0][4,:,:]-out[1]))
 
 #a=numpy.array([[1,2,3],[4,5,6]])
 #b=Variable(torch.Tensor(a))

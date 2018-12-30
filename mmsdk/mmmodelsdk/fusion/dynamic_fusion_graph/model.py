@@ -17,7 +17,7 @@ from collections import OrderedDict
 
 class DynamicFusionGraph(nn.Module):
 
-        def __init__(self,efficacy_model,pattern_model,pattern_out_dimensions,in_dimensions,out_dimension):
+        def __init__(self,efficacy_model,pattern_model,in_dimensions,out_dimension):
                 super(DynamicFusionGraph, self).__init__()
 
 		self.num_modalities=len(in_dimensions)
@@ -27,24 +27,24 @@ class DynamicFusionGraph(nn.Module):
 		#initializing the models inside the DFG
 		input_shapes=OrderedDict([(key,value) for key,value in zip(range(self.num_modalities),in_dimensions)])
 		networks={}
+		outputs={}
 		for key in powerset[self.num_modalities:]:
 			#connections coming from the unimodal components
 			unimodal_dims=0
 			for modality in key:
 				in_dim+=in_dimensions[modality]
 			multimodal_dims=((2**len(key)-2)-len(key))*pattern_out_dimensions
+			#for the network that outputs key component, what is the input dimension
 			final_dims=unimodal_dims+multimodal_dims
-			
-				if len(key==1):
-					in_dim+=
-
-		time.sleep(10)
+			input_shapes[key]=final_dims
+			pattern_copy=copy.deepcopy(pattern_model)
+			final_model=nn.Sequential([nn.Linear(input_shapes[key],list(pattern_copy.children())[0].in_featuers),pattern_copy)
+			networks[key]=final_model
+		#finished construction weights, now onto the t_network which summarizes the graph
+		t_in_dimension=sum(in_dimensions)
 		
-
-		self.tensor_size=reduce(lambda x, y: x*y, in_dimensions)
-		self.linear_layer=nn.Linear(self.tensor_size,out_dimension)
-		self.in_dimensions=in_dimensions
-		self.out_dimension=out_dimension
+		
+		t_network=
 
 	def fusion(self,in_modalities):
 
