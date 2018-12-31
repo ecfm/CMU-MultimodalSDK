@@ -21,6 +21,9 @@ class TensorFusion(nn.Module):
 		self.in_dimensions=in_dimensions
 		self.out_dimension=out_dimension
 
+	def __call__(self,in_modalities):
+		return self.fusion(in_modalities)
+
 	def fusion(self,in_modalities):
 
 		bs=in_modalities[0].shape[0]
@@ -39,6 +42,29 @@ class TensorFusion(nn.Module):
 		exit(-1)
 
 if __name__=="__main__":
+
 	print("This is a module and hence cannot be called directly ...")
-	exit(-1)
+	print("A toy sample will now run ...")
+	
+	from torch.autograd import Variable
+	import torch.nn.functional as F
+	import numpy
+
+	inputx=Variable(torch.Tensor(numpy.zeros([32,40])),requires_grad=True)
+	inputy=Variable(torch.Tensor(numpy.array(numpy.zeros([32,12]))),requires_grad=True)
+	inputz=Variable(torch.Tensor(numpy.array(numpy.zeros([32,20]))),requires_grad=True)
+	modalities=[inputx,inputy,inputz]
+	
+	fmodel=TensorFusion([40,12,20],100)
+	
+	out=fmodel(modalities)
+
+	print("Output")
+	print(out[0])
+	print("Toy sample finished ...")
+
+
+
+
+
 

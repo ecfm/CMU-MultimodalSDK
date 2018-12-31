@@ -23,6 +23,8 @@ class RecurrentFusion(nn.Module):
 		self.in_dimensions=in_dimensions
 		self.cell_size=cell_size
 		self.model=nn.LSTM(sum(in_dimensions),cell_size)
+	def __call__(self,in_modalities,steps=1):
+		return self.fusion(in_modalities,steps)
 
 	def fusion(self,in_modalities,steps=1):
 		bs=in_modalities[0].shape[0]
@@ -38,5 +40,23 @@ class RecurrentFusion(nn.Module):
 
 if __name__=="__main__":
 	print("This is a module and hence cannot be called directly ...")
-	exit(-1)
+	print("A toy sample will now run ...")
+	
+	from torch.autograd import Variable
+	import torch.nn.functional as F
+	import numpy
+
+	inputx=Variable(torch.Tensor(numpy.zeros([32,40])),requires_grad=True)
+	inputy=Variable(torch.Tensor(numpy.array(numpy.zeros([32,12]))),requires_grad=True)
+	inputz=Variable(torch.Tensor(numpy.array(numpy.zeros([32,20]))),requires_grad=True)
+	modalities=[inputx,inputy,inputz]
+	
+	fmodel=RecurrentFusion([40,12,20],100)
+	
+	out=fmodel(modalities,steps=5)
+
+	print("Output")
+	print(out[0])
+	print("Toy sample finished ...")
+
 
