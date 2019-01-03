@@ -8,7 +8,7 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 
 --> **mmmodelsdk is now released. Most of our fusion approaches are available under this new mmsdk module.**
 
-I am currently working on implementing some examples for mmmodelsdk fusion approaches under pytorch. In the meantime, if you need to recreate any of our previous model's performance urgently, we have the implementation of memory fusion and tensor approximation in related_repos folder. 
+I am currently working on implementing some examples for mmmodelsdk fusion approaches under pytorch. Please be patient since I have to move the code from theano to pytorch :). In the meantime, if you need to recreate any of our previous model's performance urgently, we have the implementation of memory fusion, tensor fusion and tensor approximation in related_repos folder. 
 
 BERT embeddings now available for CMU-MOSI.
 
