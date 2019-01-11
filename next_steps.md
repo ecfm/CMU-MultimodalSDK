@@ -2,9 +2,9 @@
 
 Small updates
 
--- latest version check
--- country/gender/origin/ information for MOSI and MOSEI files. 
--- release the old theano codes MFN, MARN, Graph-MFN
+1. latest version check
+2. country/gender/origin/ information for MOSI and MOSEI files. 
+3. release the old theano codes MFN, MARN, Graph-MFN
 
 
 Long-term
