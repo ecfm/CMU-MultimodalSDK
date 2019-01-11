@@ -131,7 +131,7 @@ class mmdataset:
 		else:
 			log.status("Creating new dataset with aligned computational sequences")
 			newdataset=mmdataset({})
-			newdataset.__set_computational_sequences(aligned_output)
+			newdataset.__set_computational_sequences(aligned_output,metadata_copy=False)
 			return newdataset
 
 	def __collapse(self,intervals,features,functions):
@@ -145,11 +145,21 @@ class mmdataset:
 			log.error("Cannot collapse given the set of function.", error=True)
 		return new_interval,new_features
 
-	def __set_computational_sequences(self,new_computational_sequences_data):
+
+	#setting the computational sequences in the dataset based on a given new_computational_sequence_data - may copy the metadata if there is already one
+	def __set_computational_sequences(self,new_computational_sequences_data,metadata_copy=True):
+	
+		#getting the old metadata from the sequence before replacing it. Even if this is a new computational sequence this will not cause an issue since old_metadat will just be empty
+		old_metadata={m:self.computational_sequences[m].metadata for m in list(self.computational_sequences.keys())}
 		self.computational_sequences={}
 		for sequence_name in list(new_computational_sequences_data.keys()):
 			self.computational_sequences[sequence_name]=computational_sequence(sequence_name)
 			self.computational_sequences[sequence_name].setData(new_computational_sequences_data[sequence_name],sequence_name)
+			if metadata_copy:
+				#if there is no metadata for this computational sequences from the previous one or no previous computational sequenece
+				if sequence_name not in list(old_metadata.keys()):
+					log.error ("Metadata not available to copy ..., please provide metadata before writing to disk later", error =False)
+				self.computational_sequences[sequence_name].setMetadata(old_metadata[sequence_name],sequence_name)
 			self.computational_sequences[sequence_name].rootName=sequence_name
 
 	def deploy(self,destination,filenames):
@@ -164,9 +174,16 @@ class mmdataset:
 			self.computational_sequences[seq_key].deploy(os.path.join(destination,filename))
 
 	def __intersect_and_copy(self,ref_entry_key,ref,sub_compseq,epsilon):
+		#first getting the relevent entries to the ref_entry_key 
 		relevant_entries=[x for x in sub_compseq.data.keys() if x.split('[')[0]==ref_entry_key.split('[')[0]]
 		sub=numpy.concatenate([sub_compseq.data[x]["intervals"] for x in relevant_entries],axis=0)
 		features=numpy.concatenate([sub_compseq.data[x]["features"] for x in relevant_entries],axis=0)
+
+		#sorting based on the first index (start) of the timestamps - making sure the sub is in a sorted manner
+		sorted_indices=sorted(range(sub.shape[0]),key=lambda x: sub[x,0])
+		sub=sub[sorted_indices,:]
+		features=features[sorted_indices,:]
+
 		#copying and inverting the ref
 		ref_copy=ref.copy()
 		ref_copy[1]=-ref_copy[1]
