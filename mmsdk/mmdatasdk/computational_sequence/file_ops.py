@@ -34,7 +34,7 @@ def writeCSD(data,metadata,rootName,destination):
 
 	#writing the data
 	dataHandle=rootHandle.create_group("data")
-	pbar = tqdm(total=len(data.keys()),unit=" Computational Sequence Entries")
+	pbar = tqdm(total=len(data.keys()),unit=" Computational Sequence Entries",leave=False)
 	for vid in data:
 		vidHandle=dataHandle.create_group(vid)
 		vidHandle.create_dataset("features",data=data[vid]["features"])
@@ -47,8 +47,10 @@ def writeCSD(data,metadata,rootName,destination):
 	metadataHandle=rootHandle.create_group("metadata")
 	for metadataKey in metadata.keys():
 		metadataHandle.create_dataset(metadataKey,(1,),dtype=h5py.special_dtype(vlen=unicode) if sys.version_info.major is 2 else h5py.special_dtype(vlen=str))
-		metadataHandle[metadataKey][0]=str(metadata[metadataKey])
+		cast_operator=unicode if sys.version_info.major is 2 else str
+		metadataHandle[metadataKey][0]=cast_operator(metadata[metadataKey])
 
+	writeh5Handle.close()
 	log.success("<%s> computational sequence metadata successfully wrote to %s"%(rootName,destination))
 	log.success("<%s> computational sequence successfully wrote to %s ..."%(rootName,destination))
 
