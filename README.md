@@ -6,7 +6,7 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 
 # News
 
---> Alignment of large datasets improved ~40x in speed. CMU-MOSEI now aligns in less than 3 hours. 
+--> Alignment function on large datasets improved ~40x in speed. CMU-MOSEI now aligns in less than 4 hours. Previously the full dataset took around 2-3 days to fully align, majority of which was spent on alignment function.
 
 --> Have a look at the newly released RAVEN model: https://github.com/victorywys/RAVEN - https://arxiv.org/pdf/1811.09362.pdf 
 
