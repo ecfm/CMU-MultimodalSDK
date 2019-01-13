@@ -6,6 +6,8 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 
 # News
 
+--> Alignment of large datasets improved ~40x in speed. CMU-MOSEI now aligns in less than 3 hours. 
+
 --> Have a look at the newly released RAVEN model: https://github.com/victorywys/RAVEN - https://arxiv.org/pdf/1811.09362.pdf 
 
 --> **mmmodelsdk is now released. Most of our fusion approaches are available under this new mmsdk module.**
