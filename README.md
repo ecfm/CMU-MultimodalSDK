@@ -11,13 +11,11 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 
 --> Have a look at the newly released RAVEN model: https://github.com/victorywys/RAVEN - https://arxiv.org/pdf/1811.09362.pdf 
 
---> **mmmodelsdk is now released. Most of our fusion approaches are available under this new mmsdk module.**
+--> BERT embeddings now available for CMU-MOSI.
 
-BERT embeddings now available for CMU-MOSI.
+--> **Raw data now available for download outside SDK - download from http://immortal.multicomp.cs.cmu.edu/raw_datasets/**. 
 
-**Raw data now available for download outside SDK - download from http://immortal.multicomp.cs.cmu.edu/raw_datasets/**. 
-
-**To see what our next steps are for the SDK please look at next_steps.md**
+--> **To see what our next steps are for the SDK please look at next_steps.md**
 
 
 ## CMU Multimodal Data SDK (mmdatasdk)
