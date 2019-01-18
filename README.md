@@ -9,7 +9,7 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 
 --> Alignment function on large datasets improved ~40x in speed. CMU-MOSEI now aligns in less than 4 hours. Previously the full dataset took around 2-3 days to fully align, majority of which was spent on alignment function.
 
---> Have a look at the newly released RAVEN model: https://github.com/victorywys/RAVEN - https://arxiv.org/pdf/1811.09362.pdf - tldr: while previously we averaged nonverbal information for each word under assumption that subword nonverbal behaviors are probably mostly constant, we recently discovered that better modeling of subword nonverbal behaviors actually helps a lot! More than originally we anticipated, we are able to achieve competative results with SOTA just using a LSTM on nonverbal shifts in word vectors. 
+--> Have a look at the newly released RAVEN model: https://github.com/victorywys/RAVEN - https://arxiv.org/pdf/1811.09362.pdf - tldr: while previously we averaged nonverbal information for each word under assumption that subword nonverbal behaviors are probably mostly constant, we recently discovered that better modeling of subword nonverbal behaviors actually helps a lot! More than we originally anticipated, we are able to achieve competative results with SOTA just using a LSTM on nonverbal shifts in word vectors. 
 
 --> BERT embeddings now available for CMU-MOSI.
 
