@@ -5,8 +5,6 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 
 # News
 
-Please participate in the CMU Multimodal SDK user survey for a chance to win a $25 Amazon gift card in a raffle. Your opinion is very important to us :). The deadline for participating is January 15th 2019 (deadline extended). https://goo.gl/forms/VBQdMqNZEIsccQpB2 
-
 --> Through our recent survey, we were able to get a good vision of what direction the SDK should go next. During the next month (Feb 2019) through ACL 2019 deadline (March 4th 2019), we will work on improving the mmmodelsdk. In the meantime, if you urgently need to recreate any of our previous model's results, we have the implementation of memory fusion, tensor fusion and tensor approximation in related_repos folder. Please don't hesitate to contact us with questions. 
 
 --> Alignment function on large datasets improved ~40x in speed. CMU-MOSEI now aligns in less than 4 hours. Previously the full dataset took around 2-3 days to fully align, majority of which was spent on alignment function.
