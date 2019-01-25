@@ -1,10 +1,12 @@
 from mmsdk.mmdatasdk import log
 from mmsdk.mmdatasdk.configurations.metadataconfigs import *
-
+from tqdm import tqdm
 
 #this function checks the heirarchy format of a given computatioanl sequence data. This will crash the program if data is in wrong format. If in correct format the return value is simply True 
 def validateDataIntegrity(data,rootName,which=True):
 	log.status("Checking the integrity of the data in <%s> computational sequence ..."%rootName)
+
+	pbar = tqdm(total=len(data.keys()),unit=" Computational Sequence Entries",leave=False)
 	failure=False
 	if (type(data) is not dict):
 		#this will cause the rest of the pipeline to crash - RuntimeError
@@ -24,10 +26,13 @@ def validateDataIntegrity(data,rootName,which=True):
 			if data[vid]["features"].shape[0] != data[vid]["intervals"].shape[0]:
 				if which: log.error("Video <%s> in <%s> computational sequence - features and intervals have different first dimensions. "%(vid,rootName),error=False)
 				failure=True
+			pbar.update(1)
 	#some other thing has happened! - RuntimeError
 	except:
 		if which:
 			log.error("<%s> computational sequence data itegrity could not be checked. "%rootName,error=True)
+		pbar.close()
+	pbar.close()
 
 	#failure during intervals and features check
 	if failure:

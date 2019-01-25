@@ -52,8 +52,13 @@ class mmdataset:
 
 	def __unify_dataset(self,active=True):
 		log.status("Unify was called ...")
+
+
 		all_vidids={}
 		violators=[]
+
+		
+
 		for seq_key in list(self.computational_sequences.keys()):
 			for vidid in list(self.computational_sequences[seq_key].data.keys()):
 				vidid=vidid.split('[')[0]
@@ -200,9 +205,15 @@ class mmdataset:
 		intersectors_features_final=intersectors_features[where_nonzero_len]
 		return intersectors_final,intersectors_features_final
 
+	#TODO: Need tqdm bar for this as well
 	def __get_relevant_entries(self,reference):
 		relevant_entries={}
 		relevant_entries_np={}
+
+				
+		#pbar = tqdm(total=count,unit=" Computational Sequence Entries",leave=False)
+
+
 		for otherseq_key in set(list(self.computational_sequences.keys()))-set([reference]):
 		        relevant_entries[otherseq_key]={}
 			relevant_entries_np[otherseq_key]={}
