@@ -1,4 +1,3 @@
-Please participate in the CMU Multimodal SDK user survey for a chance to win a $25 Amazon gift card in a raffle. Your opinion is very important to us :). The deadline for participating is January 15th 2019 (deadline extended). https://goo.gl/forms/VBQdMqNZEIsccQpB2 
 
 # CMU-Multimodal SDK Version 1.0.3 (mmsdk)
 
@@ -6,17 +5,17 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 
 # News
 
---> Have a look at the newly released RAVEN model: https://github.com/victorywys/RAVEN - https://arxiv.org/pdf/1811.09362.pdf 
+--> Through our recent survey, we were able to get a good vision of what direction the SDK should go next. During the next month (Feb 2019) through ACL 2019 deadline (March 4th 2019), we will work on improving the mmmodelsdk. In the meantime, if you urgently need to recreate any of our previous model's results, we have the implementation of memory fusion, tensor fusion and tensor approximation in related_repos folder. Please don't hesitate to contact us with questions. 
 
---> **mmmodelsdk is now released. Most of our fusion approaches are available under this new mmsdk module.**
+--> Alignment function on large datasets improved ~40x in speed. CMU-MOSEI now aligns in less than 4 hours. Previously the full dataset took around 2-3 days to fully align, majority of which was spent on alignment function.
 
-I am currently working on implementing some examples for mmmodelsdk fusion approaches under pytorch. Please be patient since I have to move the code from theano to pytorch :). In the meantime, if you need to recreate any of our previous model's performance urgently, we have the implementation of memory fusion, tensor fusion and tensor approximation in related_repos folder. 
+--> Have a look at the newly released RAVEN model: https://github.com/victorywys/RAVEN - https://arxiv.org/pdf/1811.09362.pdf - tldr: while previously we averaged nonverbal information for each word under assumption that subword nonverbal behaviors are probably mostly constant, we recently discovered that better modeling of subword nonverbal behaviors actually helps a lot! More than we originally anticipated, we are able to achieve competative results with SOTA just using a LSTM on nonverbal shifts in word vectors. 
 
-BERT embeddings now available for CMU-MOSI.
+--> BERT embeddings now available for CMU-MOSI.
 
-**Raw data now available for download outside SDK - download from http://immortal.multicomp.cs.cmu.edu/raw_datasets/**. 
+--> **Raw data now available for download outside SDK - download from http://immortal.multicomp.cs.cmu.edu/raw_datasets/**. 
 
-**To see what our next steps are for the SDK please look at next_steps.md**
+--> **To see what our next steps are for the SDK please look at next_steps.md**
 
 
 ## CMU Multimodal Data SDK (mmdatasdk)
