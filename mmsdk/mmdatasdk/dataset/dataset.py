@@ -229,7 +229,7 @@ class mmdataset:
 		                relev_features=self.computational_sequences[otherseq_key].data[key]["features"]         
 		                if len(relev_intervals.shape)<2:
 		                        relev_intervals=relev_intervals[None,:]
-		                        relev_features=relev_featuress[None,:]
+		                        relev_features=relev_features[None,:]
 		
 		                relevant_entries[otherseq_key][keystripped]["intervals"].append(relev_intervals)
 		                relevant_entries[otherseq_key][keystripped]["features"].append(relev_features)
