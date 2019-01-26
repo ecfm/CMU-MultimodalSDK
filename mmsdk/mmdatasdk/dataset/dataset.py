@@ -215,32 +215,32 @@ class mmdataset:
 
 
 		for otherseq_key in set(list(self.computational_sequences.keys()))-set([reference]):
-		        relevant_entries[otherseq_key]={}
+			relevant_entries[otherseq_key]={}
 			relevant_entries_np[otherseq_key]={}
-		        sub_compseq=self.computational_sequences[otherseq_key] 
-		        for key in list(sub_compseq.data.keys()):              
-		                keystripped=key.split('[')[0]                  
-		                if keystripped not in relevant_entries[otherseq_key]:                           
-		                        relevant_entries[otherseq_key][keystripped]={}
-		                        relevant_entries[otherseq_key][keystripped]["intervals"]=[]                     
-		                        relevant_entries[otherseq_key][keystripped]["features"]=[]                                                            
+			sub_compseq=self.computational_sequences[otherseq_key] 
+			for key in list(sub_compseq.data.keys()):              
+				keystripped=key.split('[')[0]                  
+				if keystripped not in relevant_entries[otherseq_key]:                           
+					relevant_entries[otherseq_key][keystripped]={}
+					relevant_entries[otherseq_key][keystripped]["intervals"]=[]                     
+					relevant_entries[otherseq_key][keystripped]["features"]=[]                                                            
 		        
-		                relev_intervals=self.computational_sequences[otherseq_key].data[key]["intervals"]                                             
-		                relev_features=self.computational_sequences[otherseq_key].data[key]["features"]         
-		                if len(relev_intervals.shape)<2:
-		                        relev_intervals=relev_intervals[None,:]
-		                        relev_features=relev_features[None,:]
-		
-		                relevant_entries[otherseq_key][keystripped]["intervals"].append(relev_intervals)
-		                relevant_entries[otherseq_key][keystripped]["features"].append(relev_features)
-		                        
-		        for key in list(relevant_entries[otherseq_key].keys()):
-		                relev_intervals_np=numpy.concatenate(relevant_entries[otherseq_key][key]["intervals"],axis=0)                                 
-		                relev_features_np=numpy.concatenate(relevant_entries[otherseq_key][key]["features"],axis=0)
-		                sorted_indices=sorted(range(relev_intervals_np.shape[0]),key=lambda x: relev_intervals_np[x,0])                               
-		                relev_intervals_np=relev_intervals_np[sorted_indices,:]                         
-		                relev_features_np=relev_features_np[sorted_indices,:]
+				relev_intervals=self.computational_sequences[otherseq_key].data[key]["intervals"]                                             
+				relev_features=self.computational_sequences[otherseq_key].data[key]["features"]         
+				if len(relev_intervals.shape)<2:
+					relev_intervals=relev_intervals[None,:]
+					relev_features=relev_features[None,:]
 
+				relevant_entries[otherseq_key][keystripped]["intervals"].append(relev_intervals)
+				relevant_entries[otherseq_key][keystripped]["features"].append(relev_features)
+		                        
+			for key in list(relevant_entries[otherseq_key].keys()):
+				relev_intervals_np=numpy.concatenate(relevant_entries[otherseq_key][key]["intervals"],axis=0)                                 
+				relev_features_np=numpy.concatenate(relevant_entries[otherseq_key][key]["features"],axis=0)
+				sorted_indices=sorted(range(relev_intervals_np.shape[0]),key=lambda x: relev_intervals_np[x,0])                               
+				relev_intervals_np=relev_intervals_np[sorted_indices,:]                         
+				relev_features_np=relev_features_np[sorted_indices,:]
+				
 				relevant_entries_np[otherseq_key][key]={}
 				relevant_entries_np[otherseq_key][key]["intervals"]=relev_intervals_np
 				relevant_entries_np[otherseq_key][key]["features"]=relev_features_np
