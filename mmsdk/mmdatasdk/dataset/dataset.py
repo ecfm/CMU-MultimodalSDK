@@ -210,7 +210,6 @@ class mmdataset:
 		relevant_entries={}
 		relevant_entries_np={}
 
-				
 		#pbar = tqdm(total=count,unit=" Computational Sequence Entries",leave=False)
 
 
