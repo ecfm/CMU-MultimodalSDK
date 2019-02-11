@@ -32,3 +32,7 @@ Through the very first implementation of the SDK, we learned a lot about necessa
 
 Yes, we do here is the link: http://immortal.multicomp.cs.cmu.edu/raw_datasets/. But we don't advocate going solo on processing everything again (recreating the wheel). If you want to process your own features, see item 6 in this FAQ.
 
+9. Do you share the data for publications prior to mid 2018?
+
+Yes, we do here is the link: http://immortal.multicomp.cs.cmu.edu/raw_datasets/old_processed_data/. These are exact data used for our experiments, already aligned at word level. You can certainly use this data, but I do advocate exploring the datasets using the SDK. For example try different alignments, or strategies. (Please note that CMU-MOSEI had some issues for some videos over their acoustic modality. They are now solved and CMU-MOSEI downloaded from SDK gets better performance than the one we ran experiments on for original paper)
+
