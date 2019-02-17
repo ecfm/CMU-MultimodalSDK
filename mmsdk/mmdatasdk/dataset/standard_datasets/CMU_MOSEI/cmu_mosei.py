@@ -8,3 +8,5 @@ highlevel["COVAREP"]='http://immortal.multicomp.cs.cmu.edu/CMU-MOSEI/acoustic/CM
 labels={}
 labels["Sentiment Labels"]="http://immortal.multicomp.cs.cmu.edu/CMU-MOSEI/labels/CMU_MOSEI_LabelsSentiment.csd"
 labels["Emotion Labels"]="http://immortal.multicomp.cs.cmu.edu/CMU-MOSEI/labels/CMU_MOSEI_LabelsEmotions.csd"
+extra={}
+extra["glove_vectors_with_sp"]='http://immortal.multicomp.cs.cmu.edu/CMU-MOSEI/language/CMU_MOSEI_TimestampedGloveVectors_with_SP.csd'
