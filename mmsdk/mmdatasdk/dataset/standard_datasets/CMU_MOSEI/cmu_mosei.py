@@ -10,3 +10,4 @@ labels["Sentiment Labels"]="http://immortal.multicomp.cs.cmu.edu/CMU-MOSEI/label
 labels["Emotion Labels"]="http://immortal.multicomp.cs.cmu.edu/CMU-MOSEI/labels/CMU_MOSEI_LabelsEmotions.csd"
 extra={}
 extra["glove_vectors_with_sp"]='http://immortal.multicomp.cs.cmu.edu/CMU-MOSEI/language/CMU_MOSEI_TimestampedGloveVectors_with_SP.csd'
+extra["OpenFace2.0"]='http://immortal.multicomp.cs.cmu.edu/CMU-MOSEI/visual/CMU_MOSEI_VisualOpenFace2.csd'
