@@ -18,8 +18,8 @@ from six.moves import reduce
 
 class RecurrentFusion(nn.Module):
 
-        def __init__(self,in_dimensions,cell_size):
-                super(RecurrentFusion, self).__init__()
+	def __init__(self,in_dimensions,cell_size):
+		super(RecurrentFusion, self).__init__()
 		self.in_dimensions=in_dimensions
 		self.cell_size=cell_size
 		self.model=nn.LSTM(sum(in_dimensions),cell_size)
@@ -34,7 +34,7 @@ class RecurrentFusion(nn.Module):
 			outputs,last_states=self.model(model_input,[hidden,cell])
 		return outputs,last_states[0],last_states[1]
 		
-        def forward(self, x):
+	def forward(self, x):
 		print("Not yet implemented for nn.Sequential")
 		exit(-1)
 
