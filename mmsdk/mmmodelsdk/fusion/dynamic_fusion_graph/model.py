@@ -23,7 +23,7 @@ from collections import OrderedDict
 
 class DynamicFusionGraph(nn.Module):
 
-        def __init__(self,pattern_model,in_dimensions,out_dimension,efficacy_model):
+    def __init__(self,pattern_model,in_dimensions,out_dimension,efficacy_model):
                 super(DynamicFusionGraph, self).__init__()
 
 		self.num_modalities=len(in_dimensions)
@@ -80,7 +80,7 @@ class DynamicFusionGraph(nn.Module):
 		t_output=self.t_network(t_input)
 		return t_output,outputs,efficacies
 
-        def forward(self, x):
+    def forward(self, x):
 		print("Not yet implemented for nn.Sequential")
 		exit(-1)
 
