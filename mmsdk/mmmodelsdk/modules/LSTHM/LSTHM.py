@@ -6,8 +6,8 @@ import torch.nn.functional as F
 
 class LSTHM(nn.Module):
 
-        def __init__(self,cell_size,in_size,hybrid_in_size):
-                super(LSTHM, self).__init__()
+	def __init__(self,cell_size,in_size,hybrid_in_size):
+		super(LSTHM, self).__init__()
 		self.cell_size=cell_size
 		self.in_size=in_size
 		self.W=nn.Linear(in_size,4*self.cell_size)
