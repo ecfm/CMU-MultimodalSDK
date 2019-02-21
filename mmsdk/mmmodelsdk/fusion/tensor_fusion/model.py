@@ -14,8 +14,8 @@ from six.moves import reduce
 
 class TensorFusion(nn.Module):
 
-        def __init__(self,in_dimensions,out_dimension):
-                super(TensorFusion, self).__init__()
+	def __init__(self,in_dimensions,out_dimension):
+		super(TensorFusion, self).__init__()
 		self.tensor_size=reduce(lambda x, y: x*y, in_dimensions)
 		self.linear_layer=nn.Linear(self.tensor_size,out_dimension)
 		self.in_dimensions=in_dimensions
@@ -37,7 +37,7 @@ class TensorFusion(nn.Module):
 		
 		return self.linear_layer(tensor_product)
 
-        def forward(self, x):
+	def forward(self, x):
 		print("Not yet implemented for nn.Sequential")
 		exit(-1)
 

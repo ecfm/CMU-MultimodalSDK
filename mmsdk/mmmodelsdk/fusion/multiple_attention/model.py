@@ -20,8 +20,8 @@ import torch.nn.functional as F
 
 class MultipleAttentionFusion(nn.Module):
 
-        def __init__(self,attention_model,dim_reduce_nets,num_atts):
-                super(MultipleAttentionFusion, self).__init__()
+	def __init__(self,attention_model,dim_reduce_nets,num_atts):
+		super(MultipleAttentionFusion, self).__init__()
 		self.attention_model=attention_model
 		self.dim_reduce_nets=dim_reduce_nets
 		self.num_atts=num_atts
@@ -56,7 +56,7 @@ class MultipleAttentionFusion(nn.Module):
 		#multiple attention done :)
 		return dim_reduced,out_modalities
 
-        def forward(self, x):
+	def forward(self, x):
 		print("Not yet implemented for nn.Sequential")
 		exit(-1)
 
