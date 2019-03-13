@@ -5,7 +5,7 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 
 # News
 
---> **We are working hard to make sure the newest features are available for download before EMNLP 2019 deadline. Updates include some fixes to the alignment outputs, as well as newest features for CMU-MOSI and CMU-MOSEI. Most likely time for this update will be around beginning or mid April (version 1.0.4). Thanks to Zhun Liu and Ying Shen for their dedication. 
+--> **We are working hard to make sure the newest features are available for download before EMNLP 2019 deadline. Updates include some fixes to the alignment outputs, as well as newest features for CMU-MOSI and CMU-MOSEI. Most likely time for this update will be around beginning or mid April (version 1.0.4). Thanks to Zhun Liu and Ying Shen for their dedication.**
 
 --> **Proprocessed datasets used in our papers are available at: http://immortal.multicomp.cs.cmu.edu/raw_datasets/old_processed_data/**. Still we highly recommend using SDK since you will have access to the latest updates for the datasets. 
 
