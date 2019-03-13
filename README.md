@@ -5,6 +5,8 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 
 # News
 
+--> **We are working hard to make sure the newest features are available for download before EMNLP 2019 deadline. Updates include some fixes to the alignment outputs, as well as newest features for CMU-MOSI and CMU-MOSEI. Most likely time for this update will be around beginning or mid April (version 1.0.4). Thanks to Zhun Liu and Ying Shen for their dedication. 
+
 --> **Proprocessed datasets used in our papers are available at: http://immortal.multicomp.cs.cmu.edu/raw_datasets/old_processed_data/**. Still we highly recommend using SDK since you will have access to the latest updates for the datasets. 
 
 --> Through our recent survey, we were able to get a good vision of what direction the SDK should go next. During the next month (Feb 2019) through ACL 2019 deadline (March 4th 2019), we will work on improving the mmmodelsdk. In the meantime, if you urgently need to recreate any of our previous model's results, we have the implementation of memory fusion, tensor fusion and tensor approximation in related_repos folder (other models are still unfortunately in theano and require some time to migrate to pytorch). Please don't hesitate to contact us with questions. 
@@ -16,8 +18,6 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 --> BERT embeddings now available for CMU-MOSI.
 
 --> **Raw data now available for download outside SDK - download from http://immortal.multicomp.cs.cmu.edu/raw_datasets/**. 
-
---> **To see what our next steps are for the SDK please look at next_steps.md**
 
 
 ## CMU Multimodal Data SDK (mmdatasdk)
