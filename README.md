@@ -106,6 +106,17 @@ def myavg(intervals,features):
 Multiple functions can be passed to *collapse_functions*, each of them will be applied one by one and will be concatenated as the final output. 
 
 ## Citations
+To cite the CMU Multimodal SDK:
+
+``` 
+@inproceedings{zadeh2018multi,
+  title={Multi-attention recurrent network for human communication comprehension},
+  author={Zadeh, Amir and Liang, Paul Pu and Poria, Soujanya and Vij, Prateek and Cambria, Erik and Morency, Louis-Philippe},
+  booktitle={Thirty-Second AAAI Conference on Artificial Intelligence},
+  year={2018}
+}
+```
+
 To acquire citations for all computational sequence resources you have used simply call the bib_citations method either from an mmdataset or computational_sequence object:	
 
 ```python
