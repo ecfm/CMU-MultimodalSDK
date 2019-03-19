@@ -48,6 +48,9 @@ class computational_sequence():
 
 	def __getitem__(self, key):
 		return self.data[key]
+	
+	def keys(self):
+		return self.data.keys()
 
 	def _remove_id(self,entry_id):
 		if entry_id in list(self.data.keys()):
