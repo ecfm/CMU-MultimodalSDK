@@ -46,7 +46,11 @@ class computational_sequence():
 	def _compare_entries(self,entry1,entry2):
 		return entry1.split('[')[0]==entry2.split('[')[0]
 
-
+	def __getitem__(self, key):
+		return self.data[key]
+	
+	def keys(self):
+		return self.data.keys()
 
 	def _remove_id(self,entry_id):
 		if entry_id in list(self.data.keys()):
