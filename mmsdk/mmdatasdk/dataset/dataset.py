@@ -36,6 +36,9 @@ class mmdataset:
 		if key not in list(self.computational_sequences.keys()):
 			log.error("Computational sequence does not exist ...",error=True)
 		return self.computational_sequences[key]
+	
+	def keys(self):
+		return self.computational_sequences.keys()
 
 	def add_computational_sequences(self,recipe,destination):
 		for entry, address in recipe.items():
