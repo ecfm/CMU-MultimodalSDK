@@ -26,7 +26,7 @@ def readURL(url,destination):
 	wrote = 0 
 	with open(destination, 'wb') as f:
 		log.status("Downloading from %s to %s..."%(url,destination))
-		for data in tqdm(r.iter_content(block_size), total=math.ceil(total_size//block_size) , unit='KB', unit_scale=True,leave=False):
+		for data in tqdm(r.iter_content(block_size), total=math.ceil(total_size//block_size) , unit='MB', unit_scale=True,leave=False):
 			wrote = wrote  + len(data)
 			f.write(data)
 	f.close()
