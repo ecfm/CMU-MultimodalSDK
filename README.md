@@ -5,9 +5,9 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 
 # News
 
---> **Version 1.0.4 announced**. New features added to CMU-MOSI, CMU-MOSEI and POM datasets. TLDR: Word alignment on CMU-MOSI is substantially improved, therefore the language modality is now working much better - previous alignment for MOSI is now deprecated. This new alignment is not applied to GloVe and BERT, only to the raw words. New features including OpenFace2, OpenSmile-IS09 are also added. Computational sequences for IEMOCAP are also released (only available by proof of email from USC, the zip file is password protected). Please check the next steps to see where we are going next. 
+--> **Version 1.0.4 announced**. Special thanks to Zhun Liu and Michael Grundie. New features added to CMU-MOSI, CMU-MOSEI and POM datasets. TLDR: Word alignment on CMU-MOSI is substantially improved, therefore the language modality is now working much better - previous alignment for MOSI is now deprecated. This new alignment is not applied to GloVe and BERT, only to the raw words. New features including OpenFace2, OpenSmile-IS09 are also added. Computational sequences for IEMOCAP are also released (only available by proof of email from USC, the zip file is password protected). Please check the next steps to see where we are going next. 
 
---> **Proprocessed datasets used in our papers are available at: http://immortal.multicomp.cs.cmu.edu/raw_datasets/old_processed_data/**. Still we highly recommend using SDK since you will have access to the latest updates for the datasets. 
+--> **Old preprocessed datasets used in our papers are available at: http://immortal.multicomp.cs.cmu.edu/raw_datasets/old_processed_data/**. Still we highly recommend using SDK since you will have access to the latest updates for the datasets. 
 
 --> Alignment function on large datasets improved ~40x in speed. CMU-MOSEI now aligns in less than 4 hours. Previously the full dataset took around 2-3 days to fully align, majority of which was spent on alignment function.
 
