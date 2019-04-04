@@ -8,6 +8,7 @@ highlevel["glove_vectors"]='http://immortal.multicomp.cs.cmu.edu/POM/language/PO
 highlevel["FACET 4.1"]='http://immortal.multicomp.cs.cmu.edu/POM/visual/POM_Facet_41.csd'
 highlevel["FACET 4.2"]='http://immortal.multicomp.cs.cmu.edu/POM/visual/POM_Facet_42.csd'
 highlevel["COVAREP"]='http://immortal.multicomp.cs.cmu.edu/POM/acoustic/POM_COVAREP.csd'
+highlevel["OpenFace"]='http://immortal.multicomp.cs.cmu.edu/POM/acoustic/POM_OpenFace2.csd'
 
 
 labels={}
