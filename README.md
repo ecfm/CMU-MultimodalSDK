@@ -5,6 +5,8 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 
 # News
 
+--> A nice tutorial on how to use the SDK is prepared by Zhun Liu [here](https://github.com/Justin1904/CMU-MultimodalSDK-Tutorials)
+
 --> **Version 1.0.4 announced**. Special thanks to Zhun Liu and Michael Grundie. New features added to CMU-MOSI, CMU-MOSEI and POM datasets. TLDR: Word alignment on CMU-MOSI is substantially improved, therefore the language modality is now working much better - previous alignment for MOSI is now deprecated. This new alignment is not applied to GloVe and BERT, only to the raw words. New features including OpenFace2, OpenSmile-IS09 are also added. Computational sequences for IEMOCAP are also released (only available by proof of email from USC, the zip file is password protected). Please check the next_steps.md to see where we are going next. 
 
 --> **Old preprocessed datasets used in our papers are available at: http://immortal.multicomp.cs.cmu.edu/raw_datasets/old_processed_data/**. Still we highly recommend using SDK since you will have access to the latest updates for the datasets. 
