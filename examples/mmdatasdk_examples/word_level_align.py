@@ -36,6 +36,13 @@ cmumosi_highlevel.align('glove_vectors',collapse_functions=[myavg])
 
 
 #Aligning to the computational labels, thus removing the unsupervised components of CMU-MOSI
+#After alignment to say words, let's say video X word 10 can have no descriptor for some csd, say OpenSmile09. 
+#In that case, you are in charge of putting in your imputated values for X[10] and that computational sequence. 
+#Intervals should be the same as X[10] for whatever csd you aligned to (say 'glove_vectors'), features should ...
+#be the same dimension as the features in the csd that X[10] is missing, for example you can get info from X[9] and 
+#make it all zeros for X[10]
+ 
+print ("If the next line fails, then some of your detectors have gaps in them. Refer to comment in the code ...")
 cmumosi_highlevel.add_computational_sequences(mmdatasdk.cmu_mosi.labels,'cmumosi/')
 cmumosi_highlevel.align('Opinion Segment Labels')
 
