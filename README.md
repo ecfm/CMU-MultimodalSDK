@@ -5,7 +5,7 @@ CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets 
 
 # News
 
---> A nice tutorial on how to use the SDK is prepared by Zhun Liu [here](https://github.com/Justin1904/CMU-MultimodalSDK-Tutorials)
+--> SDK is not trivial to use and the machine learning scientits are still involved in a lot of decision on how to handle cases where some csd has time gaps (like detector fails or nan values): a nice tutorial on how to use the SDK is prepared by Zhun Liu [here](https://github.com/Justin1904/CMU-MultimodalSDK-Tutorials)
 
 --> **Version 1.0.4 announced**. Special thanks to Zhun Liu and Michael Grundie. New features added to CMU-MOSI, CMU-MOSEI and POM datasets. TLDR: Word alignment on CMU-MOSI is substantially improved, therefore the language modality is now working much better - previous alignment for MOSI is now deprecated. This new alignment is not applied to GloVe and BERT, only to the raw words - **hence I removed the glove and BERT for now - if you decide to build your own BERT you should consider running BERT on each segment not on the entire video since it is a contextual word embedding.** New features including OpenFace2, OpenSmile-IS09 are also added. Computational sequences for IEMOCAP are also released (only available by proof of email from USC, the zip file is password protected). Please check the next_steps.md to see where we are going next. 
 
