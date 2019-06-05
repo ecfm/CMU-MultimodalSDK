@@ -82,7 +82,7 @@ class mmdataset:
 		if active==False and len(violators)>0:
 			log.error("%d violators remain, alignment will fail if called ..."%len(violators),error=True)
 
-		log.success("Unify finished, dataset is compatible for alignment ...")
+		log.success("Unify completed ...")
 
 
 	def __remove_id(self,entry_id):
