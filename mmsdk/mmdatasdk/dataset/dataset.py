@@ -128,7 +128,7 @@ class mmdataset:
 					if type(collapse_functions) is list:
 						intersects,intersects_features=self.__collapse(intersects,intersects_features,collapse_functions)
 					if(intersects.shape[0]!=intersects_features.shape[0]):
-						log.error("Dimension mismatch between intervals and features when aligning <%s> computational sequences to <%s> computational sequence"%(otherseq_key,reference))
+						log.error("Dimension mismatch between intervals and features when aligning <%s> computational sequences to <%s> computational sequence"%(otherseq_key,reference),error=True)
 					aligned_output[otherseq_key][entry_key+"[%d]"%i]={}
 					aligned_output[otherseq_key][entry_key+"[%d]"%i]["intervals"]=intersects
 					aligned_output[otherseq_key][entry_key+"[%d]"%i]["features"]=intersects_features
