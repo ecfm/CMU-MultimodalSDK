@@ -161,6 +161,44 @@ class mmdataset:
 			log.error("Cannot collapse given the set of function.", error=True)
 		return new_interval,new_features
 
+	#TODO: This is not passive-align safe
+	def revert(self,replace=True):
+		reverted_dataset={x:{} for x in self.keys()}
+		log.status("Revert was called ...")
+		if len(self.keys())==0:
+			log.error("The dataset contains no computational sequences ... Exiting!",error=True)
+		self.unify()
+		all_keys=self[self.keys()[0]].keys()
+		if len(all_keys)==0:
+			log.error("No entries in computational sequences or unify found no shared entries ... Exiting!")
+
+		unique_unnumbered_entries={}
+
+		for key in all_keys:
+			if key.split('[')[0] not in unique_unnumbered_entries:
+				unique_unnumbered_entries[key.split('[')[0]]=[]
+			unique_unnumbered_entries[key.split('[')[0]].append(int(key.split('[')[1][:-1]))
+
+		pbar = tqdm(total=len(unique_unnumbered_entries.keys()),unit=" Unique Sequence Entries",leave=False)
+		pbar.set_description("Reversion Progress")
+		for key in unique_unnumbered_entries.keys():
+			unique_unnumbered_entries[key].sort()
+			for cs_key in reverted_dataset.keys():
+				intervals=numpy.concatenate([self[cs_key][str('%s[%d]'%(key,i))]["intervals"] for i in unique_unnumbered_entries[key]],axis=0)
+				features=numpy.concatenate([self[cs_key][str('%s[%d]'%(key,i))]["features"] for i in unique_unnumbered_entries[key]],axis=0)
+				reverted_dataset[cs_key][key]={"intervals":intervals,"features":features}
+			pbar.update(1)
+		pbar.close()
+		log.success("Reversion completed ...")
+		if replace is True:
+			log.status("Replacing dataset content with reverted computational sequences")
+			self.__set_computational_sequences(reverted_dataset)
+			return None
+		else:
+			log.status("Creating new dataset with reverted computational sequences")
+			newdataset=mmdataset({})
+			newdataset.__set_computational_sequences(reverted_dataset,metadata_copy=False)
+			return newdataset	
 
 	#setting the computational sequences in the dataset based on a given new_computational_sequence_data - may copy the metadata if there is already one
 	def __set_computational_sequences(self,new_computational_sequences_data,metadata_copy=True):
