@@ -50,7 +50,9 @@ class computational_sequence():
 		return self.data[key]
 	
 	def __setitem__(self,key,value):
-		self.data[key]=value
+		self.data[key]={}
+		self.data[key]["intervals"]=value["intervals"]
+		self.data[key]["features"]=value["features"]
 	
 	def keys(self):
 		return self.data.keys()
