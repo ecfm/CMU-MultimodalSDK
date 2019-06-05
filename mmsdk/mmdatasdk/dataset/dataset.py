@@ -53,6 +53,9 @@ class mmdataset:
 		for entry,compseq in self.computational_sequences.items():
 			compseq.bib_citations(outfile)
 
+	def unify(self,active=True):
+		self.__unify_dataset(active)
+
 	def __unify_dataset(self,active=True):
 		log.status("Unify was called ...")
 
