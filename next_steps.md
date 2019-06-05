@@ -9,4 +9,5 @@
 
 
 **High priority fixes**
+0. A faster implementation of unify based on muliple set intersection
 
