@@ -36,7 +36,7 @@ class mmdataset:
 		if key not in list(self.computational_sequences.keys()):
 			log.error("Computational sequence does not exist ...",error=True)
 		return self.computational_sequences[key]
-	
+
 	def keys(self):
 		return self.computational_sequences.keys()
 
@@ -63,7 +63,6 @@ class mmdataset:
 		all_vidids={}
 		violators=[]
 
-		
 
 		for seq_key in list(self.computational_sequences.keys()):
 			for vidid in list(self.computational_sequences[seq_key].data.keys()):
@@ -200,9 +199,27 @@ class mmdataset:
 			newdataset.__set_computational_sequences(reverted_dataset,metadata_copy=False)
 			return newdataset	
 
+	def imputate(self,ref_key,imputation_fn=numpy.zeros):
+		log.status("Imputation called ...")
+		other_keys=list(self.keys())
+		other_keys.remove(ref_key)
+		other_keys_dims={x:list(self[x][self[x].keys()[0]]["features"].shape[1:]) for x in other_keys}
+		pbar = tqdm(total=len(self[ref_key].keys()),unit=" Reference Computational Sequence Entries",leave=False)
+		pbar.set_description("Imputation Progress")
+		for seg_key in self[ref_key].keys():
+			for other_key in other_keys:
+				try:
+					self[other_key][seg_key]
+				except:
+					self[other_key][seg_key]={"intervals":self[ref_key][seg_key]["intervals"],"features":imputation_fn([1]+other_keys_dims[other_key])}
+			pbar.update(1)
+		pbar.close()
+		log.success("Imputation completed ...")
+
+
 	#setting the computational sequences in the dataset based on a given new_computational_sequence_data - may copy the metadata if there is already one
 	def __set_computational_sequences(self,new_computational_sequences_data,metadata_copy=True):
-	
+
 		#getting the old metadata from the sequence before replacing it. Even if this is a new computational sequence this will not cause an issue since old_metadat will just be empty
 		old_metadata={m:self.computational_sequences[m].metadata for m in list(self.computational_sequences.keys())}
 		self.computational_sequences={}
@@ -283,9 +300,9 @@ class mmdataset:
 				sorted_indices=sorted(range(relev_intervals_np.shape[0]),key=lambda x: relev_intervals_np[x,0])                               
 				relev_intervals_np=relev_intervals_np[sorted_indices,:]                         
 				relev_features_np=relev_features_np[sorted_indices,:]
-				
+
 				relevant_entries_np[otherseq_key][key]={}
 				relevant_entries_np[otherseq_key][key]["intervals"]=relev_intervals_np
 				relevant_entries_np[otherseq_key][key]["features"]=relev_features_np
-				
+
 		return relevant_entries_np
