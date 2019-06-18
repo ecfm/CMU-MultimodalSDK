@@ -66,12 +66,13 @@ class mmdataset:
 
 		for seq_key in list(self.computational_sequences.keys()):
 			for vidid in list(self.computational_sequences[seq_key].data.keys()):
-				vidid=vidid.split('[')[0]
+				vidid=vidid #.split('[')[0]
 				all_vidids[vidid]=True
 
 		for vidid in list(all_vidids.keys()):
 			for seq_key in list(self.computational_sequences.keys()):
-				if not any([vidid_in_seq for vidid_in_seq in self.computational_sequences[seq_key].data.keys() if vidid_in_seq[:len(vidid)]==vidid]):
+				if not any([vidid_in_seq for vidid_in_seq in self.computational_sequences[seq_key].data.keys()
+							if vidid_in_seq[:len(vidid)]==vidid]):
 					violators.append(vidid)
 		if len(violators) >0 :
 			for violator in violators:
@@ -90,6 +91,7 @@ class mmdataset:
 
 
 	def align(self,reference,collapse_functions=None,replace=True):
+		print('No split [ version')
 		aligned_output={}
 
 		for sequence_name in self.computational_sequences.keys():
@@ -278,31 +280,31 @@ class mmdataset:
 			relevant_entries[otherseq_key]={}
 			relevant_entries_np[otherseq_key]={}
 			sub_compseq=self.computational_sequences[otherseq_key] 
-			for key in list(sub_compseq.data.keys()):              
-				keystripped=key.split('[')[0]                  
-				if keystripped not in relevant_entries[otherseq_key]:                           
-					relevant_entries[otherseq_key][keystripped]={}
-					relevant_entries[otherseq_key][keystripped]["intervals"]=[]                     
-					relevant_entries[otherseq_key][keystripped]["features"]=[]                                                            
+			for vid_id in list(sub_compseq.data.keys()):
+				vid_id_stripped=vid_id #.split('[')[0]
+				if vid_id_stripped not in relevant_entries[otherseq_key]:
+					relevant_entries[otherseq_key][vid_id_stripped]={}
+					relevant_entries[otherseq_key][vid_id_stripped]["intervals"]=[]
+					relevant_entries[otherseq_key][vid_id_stripped]["features"]=[]
 		        
-				relev_intervals=self.computational_sequences[otherseq_key].data[key]["intervals"]                                             
-				relev_features=self.computational_sequences[otherseq_key].data[key]["features"]         
+				relev_intervals=self.computational_sequences[otherseq_key].data[vid_id]["intervals"]
+				relev_features=self.computational_sequences[otherseq_key].data[vid_id]["features"]
 				if len(relev_intervals.shape)<2:
 					relev_intervals=relev_intervals[None,:]
 					relev_features=relev_features[None,:]
 
-				relevant_entries[otherseq_key][keystripped]["intervals"].append(relev_intervals)
-				relevant_entries[otherseq_key][keystripped]["features"].append(relev_features)
+				relevant_entries[otherseq_key][vid_id_stripped]["intervals"].append(relev_intervals)
+				relevant_entries[otherseq_key][vid_id_stripped]["features"].append(relev_features)
 		                        
-			for key in list(relevant_entries[otherseq_key].keys()):
-				relev_intervals_np=numpy.concatenate(relevant_entries[otherseq_key][key]["intervals"],axis=0)                                 
-				relev_features_np=numpy.concatenate(relevant_entries[otherseq_key][key]["features"],axis=0)
+			for vid_id_stripped in list(relevant_entries[otherseq_key].keys()):
+				relev_intervals_np=numpy.concatenate(relevant_entries[otherseq_key][vid_id_stripped]["intervals"],axis=0)
+				relev_features_np=numpy.concatenate(relevant_entries[otherseq_key][vid_id_stripped]["features"],axis=0)
 				sorted_indices=sorted(range(relev_intervals_np.shape[0]),key=lambda x: relev_intervals_np[x,0])                               
 				relev_intervals_np=relev_intervals_np[sorted_indices,:]                         
 				relev_features_np=relev_features_np[sorted_indices,:]
 
-				relevant_entries_np[otherseq_key][key]={}
-				relevant_entries_np[otherseq_key][key]["intervals"]=relev_intervals_np
-				relevant_entries_np[otherseq_key][key]["features"]=relev_features_np
+				relevant_entries_np[otherseq_key][vid_id_stripped]={}
+				relevant_entries_np[otherseq_key][vid_id_stripped]["intervals"]=relev_intervals_np
+				relevant_entries_np[otherseq_key][vid_id_stripped]["features"]=relev_features_np
 
 		return relevant_entries_np
