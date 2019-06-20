@@ -199,7 +199,7 @@ class mmdataset:
 			newdataset.__set_computational_sequences(reverted_dataset,metadata_copy=False)
 			return newdataset	
 
-	def imputate(self,ref_key,imputation_fn=numpy.zeros):
+	def impute(self,ref_key,imputation_fn=numpy.zeros):
 		log.status("Imputation called ...")
 		other_keys=list(self.keys())
 		other_keys.remove(ref_key)
