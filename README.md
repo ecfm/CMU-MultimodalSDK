@@ -1,9 +1,11 @@
 
-# CMU-Multimodal SDK Version 1.0.5 (mmsdk)
+# CMU-Multimodal SDK Version 1.1 (mmsdk)
 
 CMU-Multimodal SDK provides tools to easily load well-known multimodal datasets and rapidly build neural multimodal deep models. Hence the SDK comprises of two modules: 1) mmdatasdk: module for downloading and procesing multimodal datasets using computational sequences. 2) mmmodelsdk: tools to utilize complex neural models as well as layers for building new models. The fusion models in prior papers will be released here. 
 
 # News
+
+--> **Version 1.1 announced**. Social-IQ 1.0 has been released. 
 
 --> **Version 1.0.5 announced**. Two new functions got added: revert and imputate. Revert takes an aligned computational sequence with segment ids (i.e. y[z]) and builds a computational sequence without segment ids (i.e. y) by stacking intervals and features. Imputate fills the gaps in alignment, say computational sequence x does not have segment y[z] then that segment can be filled with say zeros with the same shape as required by x. A reference computational sequence is needed for this purpose to provide intervals. The imputation feature shape will be (1 by shape of x featureset). These two functions take a lot of guess work out of the equation when developing models. Tutorials coming soon :)
 
