@@ -58,7 +58,7 @@ def validateMetadataIntegrity(metadata,rootName,which=True):
 		failure=True
 		#if failed before
 	if failure:
-		log.error(msgstring="<%s> computational sequence does not have all the required metadata ..."%rootName,error=True)
+		log.error(msgstring="<%s> computational sequence does not have all the required metadata ... continuing "%rootName,error=False)
 	else:
 		log.success("<%s> computational sequence metadata in correct format"%rootName)
 	return True
