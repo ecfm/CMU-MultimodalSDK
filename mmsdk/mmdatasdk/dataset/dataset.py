@@ -205,7 +205,7 @@ class mmdataset:
 		log.status("Imputation called ...")
 		other_keys=list(self.keys())
 		other_keys.remove(ref_key)
-		other_keys_dims={x:list(self[x][self[x].keys()[0]]["features"].shape[1:]) for x in other_keys}
+		other_keys_dims={x:list(self[x][list(self[x].keys())[0]]["features"].shape[1:]) for x in other_keys}
 		pbar = tqdm(total=len(self[ref_key].keys()),unit=" Reference Computational Sequence Entries",leave=False)
 		pbar.set_description("Imputation Progress")
 		for seg_key in self[ref_key].keys():
