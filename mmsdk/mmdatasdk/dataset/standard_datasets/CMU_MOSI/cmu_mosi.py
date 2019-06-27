@@ -1,5 +1,5 @@
 raw={}
-raw["CMU_MOSI_ModifiedTimestampedWords"]='http://immortal.multicomp.cs.cmu.edu/CMU-MOSI/language/CMU_MOSI_TimestampedWords.csd'
+raw["words"]='http://immortal.multicomp.cs.cmu.edu/CMU-MOSI/language/CMU_MOSI_TimestampedWords.csd'
 raw["phonemes"]='http://immortal.multicomp.cs.cmu.edu/CMU-MOSI/language/CMU_MOSI_TimestampedPhones.csd'
 
 highlevel={}
