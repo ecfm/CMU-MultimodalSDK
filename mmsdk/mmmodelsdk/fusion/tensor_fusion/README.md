@@ -2,7 +2,7 @@
 
 This is the code for [Tensor Fusion Network for Multimodal Sentiment Analysis](http://aclweb.org/anthology/D17-1115) published in EMNLP 2017 and presented in multimodal session. 
 
-##FQA: 
+## FAQ: 
 
 #### Why are results  for TFN  different from TFN paper to say MFN paper?
 
